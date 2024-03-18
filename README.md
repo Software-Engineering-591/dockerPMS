@@ -8,7 +8,9 @@ I suggest using Pycharm Professional as it should be an out-of-the-box solution.
 
 ### Structure
 
-- `DjangoPMS/DjangoPMS` - Top Level of the program. Things like settings and Urls will be registered here
+- `DjangoPMS/DjangoPMS` - Top Level of the program. Things like settings and Exposing URLs will be registered here.
+- `DjangoPMS/backend` - Backend for the program. Things like models, API will be registered here.
+- `DjangoPMS/frontend` - frontend for the program. Things HTML, CSS, Views and URLs will be registered here.
 
 
 ### Running the project
