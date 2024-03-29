@@ -1,5 +1,8 @@
 FROM python:3.12-alpine
 
+# Get GeoDjango dependencies
+RUN apk add --no-cache geos gdal 
+
 WORKDIR /usr/src/app
 # prevent Python from writing .pyc files
 ENV PYTHONDONTWRITEBYTECODE=1
