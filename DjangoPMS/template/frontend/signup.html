@@ -1,0 +1,13 @@
+{% extends 'frontend/base.html' %}
+
+{% block head %}
+<title>Sign Up Page</title>
+{% endblock %}
+
+{% block body %}
+<form action={% url 'signup' %} method="POST">
+  {% csrf_token %}
+  {{ form }}
+  <button class="btn">Create Account</button>
+</form>
+{% endblock %}

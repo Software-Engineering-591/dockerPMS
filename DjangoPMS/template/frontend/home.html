@@ -5,5 +5,15 @@
 {% endblock %}
 
 {% block body %}
+{% if user.is_authenticated %}
+<p>Hello {{user.username}}</p>
+<form action={% url 'api:logout' %} method="POST">
+  {% csrf_token %}
+  <button class="btn">Log Out</button>
+</form>
+{% else %}
 <p>Hello World</p>
+<a href={% url 'login' %}><button class="btn">Login</button></a>
+<a href={% url 'signup' %}><button class="btn">Sign Up</button></a>
+{% endif %}
 {% endblock %}
