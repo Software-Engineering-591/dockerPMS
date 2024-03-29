@@ -1,8 +1,5 @@
-version: '3.12'
-
 services:
   django:
-    container_name: django
     build:
       context: ./DjangoPMS
     command: python manage.py runserver 0.0.0.0:8000
@@ -11,9 +8,34 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_DEBUG=1
+      - DJANGO_DEBUG=true
       - ALLOWED_HOSTS=localhost,127.0.0.1
       - DJANGO_SECRET_KEY=django-insecure-n7)p+1qf)1uj(6c^a0ovck&6r34wcn+5+-11lh^3e!7g#9yh0s
       - DJANGO_SUPERUSER_USERNAME=admin
       - DJANGO_SUPERUSER_EMAIL=admin@example.com
       - DJANGO_SUPERUSER_PASSWORD=admin
+      - DB_USER=root
+      - DB_PASSWORD=secret
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgis/postgis:13-3.1-alpine
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=secret
+    ports:
+      # If you have postgres installed on your system, please change the port number
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+volumes:
+  pg_data:
+
+

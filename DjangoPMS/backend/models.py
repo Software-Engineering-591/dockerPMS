@@ -15,4 +15,5 @@ class Admin(BaseUser):
     pass
 
 
-# Remember to run "python manage.py makemigrations" to create the model on the database
+class Driver(BaseUser):
+    pass
