@@ -18,30 +18,22 @@ class Admin(BaseUser):
 class Driver(BaseUser):
     pass
 
+
 class Payment(models.Model):
-    PAYMENT_CHOICES = (
-        ('credit_card', 'Credit Card'),
-        ('cash', 'Cash'),
-        ('online', 'Online')
-    )
-    STATUS_CHOICES = (
-        ('pending', 'Pending'),
-        ('completed', 'Completed'),
-        ('failed', 'Failed')
-    )
     amount = models.DecimalField(max_digits=6, decimal_places=2)
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES)
-    pay_time = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now=True)
     # Link to the driver and the parking slot
-    Driver = models.ForeignKey('Driver', on_delete=models.CASCADE)
-    slot = models.ForeignKey('Slot', on_delete=models.CASCADE)
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+
 
 class Slot(models.Model):
+    class Status(models.TextChoices):
+        RESERVED = "R"
+        AVAILABLE = "A"
+        DISABLED = "D"
+
+    status = models.CharField(choices=Status, max_length=1, default=Status.AVAILABLE)
     number = models.CharField(max_length=10)
-    location = models.TextField()
-    size = models.CharField(max_length=10)
-    is_available = models.BooleanField(default=True)
-    price_per_hour = models.DecimalField(max_digits=5, decimal_places=2)
+
     # Links driver class
-    current_driver = models.ForeignKey('Driver', on_delete=models.SET_NULL, null=True, blank=True)
+    driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, default=None)
