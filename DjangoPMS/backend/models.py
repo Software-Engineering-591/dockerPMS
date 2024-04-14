@@ -33,7 +33,7 @@ class Payment(models.Model):
     payment_method = models.CharField(max_length=20, choices=PAYMENT_CHOICES)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES)
     pay_time = models.DateTimeField(auto_now_add=True)
-    # Link to the user and the parking slot
+    # Link to the driver and the parking slot
     Driver = models.ForeignKey('Driver', on_delete=models.CASCADE)
     slot = models.ForeignKey('Slot', on_delete=models.CASCADE)
 
@@ -43,5 +43,5 @@ class Slot(models.Model):
     size = models.CharField(max_length=10)
     is_available = models.BooleanField(default=True)
     price_per_hour = models.DecimalField(max_digits=5, decimal_places=2)
-    # Assuming you have a User model to link to
+    # Links driver class
     current_driver = models.ForeignKey('Driver', on_delete=models.SET_NULL, null=True, blank=True)
