@@ -17,3 +17,23 @@ class Admin(BaseUser):
 
 class Driver(BaseUser):
     pass
+
+
+class Payment(models.Model):
+    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    timestamp = models.DateTimeField(auto_now=True)
+    # Link to the driver and the parking slot
+    driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+
+
+class Slot(models.Model):
+    class Status(models.TextChoices):
+        RESERVED = "R"
+        AVAILABLE = "A"
+        DISABLED = "D"
+
+    status = models.CharField(choices=Status, max_length=1, default=Status.AVAILABLE)
+    number = models.CharField(max_length=10)
+
+    # Links driver class
+    driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, default=None)
