@@ -26,12 +26,12 @@ class Slot(models.Model):
     pass
 
 class Message(models.Model):
-    Message_text = models.TextField(max_length=1000)
-    timestamp = models.DateTimeField(default=timezone.now)
-    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender", default=User)
-    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver", default=User)
-    def __str__(self):
-        return self.Message_text
+        Message_text = models.TextField(max_length=1000)
+        timestamp = models.DateTimeField(default=timezone.now)
+        sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender", null=False)
+        receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver", null=False)
+        def __str__(self):
+            return self.Message_text
 
 
 
