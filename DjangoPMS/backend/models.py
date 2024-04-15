@@ -22,31 +22,6 @@ class Admin(BaseUser):
 class Driver(BaseUser):
     pass
 
-
-
-class Message(models.Model):
-        message_text = models.TextField(max_length=1000)
-        timestamp = models.DateTimeField(default=timezone.now)
-        sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
-        receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
-        def __str__(self):
-            return self.Message_text
-
-
-
-class Request(models.Model):
-    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE, null=False)
-    slot = models.ForeignKey(Slot, on_delete=models.CASCADE, null=False)
-    arrival = models.DateTimeField()
-    departure = models.DateTimeField()
-    class CurrentStatus(models.TextChoices):
-        P = "Pending"
-        A = "Approved"
-        R = "Rejected"
-
-    status = models.CharField(max_length=1, choices=CurrentStatus.choices, default=CurrentStatus.P)
-
-
 class Payment(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     timestamp = models.DateTimeField(auto_now=True)
@@ -65,4 +40,28 @@ class Slot(models.Model):
 
     # Links driver class
     driver = models.ForeignKey(Driver, on_delete=models.SET_NULL, null=True, default=None)
+
+
+
+class Message(models.Model):
+        message_text = models.TextField(max_length=1000)
+        timestamp = models.DateTimeField(default=timezone.now)
+        sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sender")
+        receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
+        def __str__(self):
+            return self.message_text
+
+
+
+class Request(models.Model):
+    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
+    slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
+    departure = models.DateTimeField()
+    class CurrentStatus(models.TextChoices):
+        Pending = "P"
+        Approved = "A"
+        Rejected = "R"
+
+    status = models.CharField(max_length=1, choices=CurrentStatus, default=CurrentStatus.Pending)
+
 
