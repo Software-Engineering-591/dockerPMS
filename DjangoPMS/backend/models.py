@@ -23,6 +23,8 @@ class Driver(BaseUser):
     pass
 
 
+
+
 class Message(models.Model):
         Message_text = models.TextField(max_length=1000)
         timestamp = models.DateTimeField(default=timezone.now)
