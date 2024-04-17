@@ -1,0 +1,38 @@
+.box1 {
+  /*background: #3f4344;*/
+  /*border-radius: 75px;*/
+  text-align: center;
+  /*color: white;*/
+  padding: 20px;
+  margin: 10px 150px;
+  height: 16rem;
+}
+
+.inbox1 {
+  background: #adaaaa;
+  border-radius: 75px;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  margin: 10px 50px;
+  height: 13rem;
+}
+
+.box2 {
+  /*background: #3f4344;*/
+  /*border-radius: 80px;*/
+  text-align: center;
+  /*color: white;*/
+  padding: 20px;
+  margin: 10px 150px;
+  height: 15rem;
+}
+
+.inbox2 {
+  background: #adaaaa;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  margin: 200px 500px;
+  height: 15rem;
+}

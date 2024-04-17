@@ -1,13 +1,19 @@
 {% extends 'frontend/base.html' %}
 
 {% block head %}
-<title>Log In Page</title>
+    <title>Login | UEA PMS</title>
 {% endblock %}
 
 {% block body %}
-<form action={% url 'login' %} method="POST">
-  {% csrf_token %}
-  {{ form }}
-  <button class="btn">Login</button>
-</form>
+    <h1 class="text-center text-4xl font-semibold my-6">
+        Welcome back!
+    </h1>
+    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded bg-base-300">
+        <form action={% url 'login' %} method="POST" class="mb-4 mt-5">
+            {% csrf_token %}
+            {{ form }}
+            <button class="btn btn-primary mt-5 items-center container" type="submit">Login</button>
+        </form>
+        <p class="mt-2 mb-4">New user? <a href="{% url 'signup' %}" class="text decoration-solid underline">Sign up</a></p>
+    </div>
 {% endblock %}

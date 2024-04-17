@@ -1,13 +1,24 @@
 {% extends 'frontend/base.html' %}
 
 {% block head %}
-<title>Sign Up Page</title>
+    <title>Signup | UEA PMS</title>
 {% endblock %}
 
 {% block body %}
-<form action={% url 'signup' %} method="POST">
-  {% csrf_token %}
-  {{ form }}
-  <button class="btn">Create Account</button>
-</form>
+    {#<form action={% url 'signup' %} method="POST">#}
+    {#  {% csrf_token %}#}
+    {#  {{ form }}#}
+    {#  <button class="btn">Create Account</button>#}
+    {#</form>#}
+    <h1 class="text-center text-4xl font-semibold my-6">
+        Sign Up
+    </h1>
+    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded bg-base-300">
+        <form action={% url 'signup' %} method="POST" class="mb-4 mt-5">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button class="btn btn-primary mt-5 items-center container">Create Account</button>
+        </form>
+    <p class="mt-2 mb-4">Already have an account? <a href="{% url 'login' %}" class="text decoration-solid underline">Sign in</a></p>
+    </div>
 {% endblock %}
