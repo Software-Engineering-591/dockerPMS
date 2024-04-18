@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 from glob import glob
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'backend.apps.BackendConfig',
     'tz_detect',
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -98,18 +100,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    #     },
 ]
 
 
@@ -141,3 +143,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Needed for when setting the website public
 CSRF_TRUSTED_ORIGINS = ['https://d08a-81-99-227-205.ngrok-free.app']
+
+LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
