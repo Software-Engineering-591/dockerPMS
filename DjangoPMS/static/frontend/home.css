@@ -1,15 +1,12 @@
 .box1 {
-  /*background: #3f4344;*/
-  /*border-radius: 75px;*/
   text-align: center;
-  /*color: white;*/
   padding: 20px;
+  color: white;
   margin: 10px 150px;
-  height: 16rem;
 }
 
 .inbox1 {
-  background: #adaaaa;
+  background: #797979;
   border-radius: 75px;
   text-align: center;
   color: white;
@@ -18,21 +15,20 @@
   height: 13rem;
 }
 
-.box2 {
-  /*background: #3f4344;*/
-  /*border-radius: 80px;*/
-  text-align: center;
-  /*color: white;*/
-  padding: 20px;
-  margin: 10px 150px;
-  height: 15rem;
-}
-
 .inbox2 {
-  background: #adaaaa;
+  background: #797979;
+  border-radius: 80px;
+  border: #797979;
   text-align: center;
   color: white;
   padding: 20px;
-  margin: 200px 500px;
-  height: 15rem;
+  margin: 10px 50px;
+}
+
+.animate{
+  font-family: monospace;
+  font-size: 100px;
+  background-image: linear-gradient(43deg, #ff551f 0%, #e5881b 46%, #ead67a 100%);
+  -webkit-background-clip: text;
+  color: transparent;
 }

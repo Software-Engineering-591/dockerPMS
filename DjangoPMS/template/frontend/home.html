@@ -1,95 +1,173 @@
 {% extends 'frontend/base.html' %}
-
+{% load static %}
 {% block head %}
-    {% load static %}
     <title>Home | UEA PMS</title>
     <link rel="stylesheet" href={% static 'frontend/home.css' %}>
 {% endblock %}
 
 {% block body %}
-    {% if user.is_authenticated %}
-        <p>Hello {{ user.username }}</p>
-        <form action={% url 'api:logout' %} method="POST">
-            {% csrf_token %}
-            <button class="btn">Log Out</button>
-        </form>
-    {% else %}
-        <div class="h-auto w-full mx-auto">
-            <div class="box1 bg-base-100">
-                <!--this is the box showing the availability-->
-                <div class="inbox1">
-                    <div class="radial-progress bg-primary text-primary-content border-4 border-primary float-left"
-                         style="--value:75;--size:10rem;"
-                         role="progressbar">150 spaces
-                    </div>
-                    <div class="ml-10">
-                        <ul>
-                            <li><p class="float-center text-5xl mt-5">UEA main car park</p></li>
-                            <li class="mt-10 text-base">
-                                <p>
-                                    <i class="fa-regular fa-map-pin"></i>
-                                    <a href="https://maps.app.goo.gl/JiDhTKCqdRmBZBm68" class="underline m-3"><span>University
+    <section>
+        <div class="box1">
+            <!--this is the box showing the availability-->
+            <div class="inbox1">
+                <div class="radial-progress bg-primary text-primary-content border-4 border-primary float-left"
+                     style="--value:75;--size:10rem;"
+                     role="progressbar">150 spaces
+                </div>
+                <div class="ml-10">
+                    <ul>
+                        <li><p class="float-center text-5xl mt-5">UEA main car park</p></li>
+                        <li><p class="float-center text-base mt-5">Status
+                            <!--needs if statement here for the status-->
+                            <span class="badge badge-success">OPEN</span>
+                        </li>
+                        <li class="mt-5 text-base">
+                            <p>
+                                <i class="fa-regular fa-map-pin"></i>
+                                <a href="https://maps.app.goo.gl/JiDhTKCqdRmBZBm68" class="underline m-3"><span>University
                                         Dr,
                                         NR4 7LP</span></a>
-                                    <i class="fa-solid fa-square-parking mr-1"></i><span
-                                        class="mr-3">200 total spaces</span>
-                                    <i class="fa-solid fa-clock mr-1"></i>
-                                    <span>updated at {% now "H:i" %}</span>
-                                </p>
-                            </li>
-                        </ul>
+                                <i class="fa-solid fa-square-parking mr-1"></i><span
+                                    class="mr-3">200 total spaces</span>
+                                <i class="fa-solid fa-clock mr-1"></i>
+                                <span>updated at {% now "H:i" %}</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--this is the button links to the get quote form-->
+    <section>
+        <div class="box1">
+            <div class="border-4 rounded-3xl inbox2">
+                <form action='/' method="POST" class="m-5 text-center">
+                    {% csrf_token %}
+                    <div>
+                        <p class="text-2xl mt-5"><b>Arrival</b></p>
+                        <div class="bg-base-200 rounded-3xl">
+                            <label for="id_arrival_date"><b>Arrival Date:</b></label>{{ form.dateFrom }}
+                            {% if form.dateFrom.errors %}
+                                <div class="text-sm text-center mb-5">
+                                    {% for error in form.dateFrom.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <label for="id_arrival_time"><b>Arrival Time:</b></label>{{ form.timeFrom }}
+                            {% if form.timeFrom.errors %}
+                                <div class="text-sm text-center">
+                                    {% for error in form.timeFrom.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
+                    <p class="text-2xl mt-5"><b>Departure</b></p>
+                    <div class="bg-base-300 rounded-3xl">
+                        <label for="id_departure_date"><b>Departure Date:</b></label>{{ form.dateTo }}
+                        {% if form.dateTo.errors %}
+                            <div class="text-sm text-center mb-5">
+                                {% for error in form.dateTo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <label for="id_departure_time" class="my-5"><b>Departure Time:</b></label>{{ form.timeTo }}
+                        {% if form.timeTo.errors %}
+                            <div class="text-sm text-center">
+                                {% for error in form.timeTo.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <button class="btn btn-primary mt-5 items-center text-xl" type="submit">Get Quote</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <!--this is for the car park information and charge-->
+
+    <section>
+        <div class="box1">
+            <div class="mx-96"><p
+                    class="text-3xl m-5 border-2 border-transparent rounded-3xl bg-gradient-to-r from-orange-600 via-red-700 to-orange-600 text-white">
+                Opening time
+            </p></div>
+            <table class="table text-center">
+                <tbody>
+                <tr>
+                    <td>Everyday</td>
+                    <td>24 hours</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="box1">
+            <div class="mx-96"><p
+                    class="text-3xl m-5 border-2 border-transparent rounded-3xl bg-gradient-to-r from-violet-900 via-pink-900 to-violet-900 text-white">
+                Parking charge</p></div>
+            <table class="table text-center">
+                <tbody>
+                <tr>
+                    <td>Up to an hour</td>
+                    <td>£2.5</td>
+                </tr>
+                <tr>
+                    <td>1-2 hours</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>2-5 hours</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>5-8 hours</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Over 8 hours</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>6.00pm-00.59am</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>1.00am-6.00am</td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <p class="text-sm mt-5">There is a maximum 24-hour charge of £25.00. Lost tickets
+                may be charged at the 8+ hours rate of £25.00</p>
+        </div>
+    </section>
+
+    <!--this is for the animation down the page-->
+    <section>
+        <div class="box1">
+            <p class="m-5 text-2xl">Some photos of UEA main car park</p>
+            <div class="carousel w-full">
+                <div id="item1" class="carousel-item w-full">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Car_park_at_UEA_-_geograph.org.uk_-_4331642.jpg"
+                         class="w-full h-max"/>
+                </div>
+                <div id="item2" class="carousel-item w-full">
+                    <img src="https://s0.geograph.org.uk/geophotos/03/31/62/3316246_22d69722.jpg"
+                         class="w-full h-fit"/>
                 </div>
             </div>
-            <!--this is the button links to the get quote form-->
-            <div class="box2 bg-base-100">
-                {#                <div>#}
-                {#                    <button class="btn btn-primary mt-5 items-center text-xl">Get Quote</button>#}
-                {#                </div>#}
-                <div class="border-4 rounded-3xl m-10 p-10 md-content">
-                    <form action='' method="POST" class="m-5">
-                        {% csrf_token %}
-                        <div>
-                            <p><b>--Arrival--</b></p>
-                            <label for="id_arrival_date">Arrival Date:</label>{{ form.dateFrom }}
-                            <label for="id_arrival_time">Arrival Time:</label>{{ form.timeFrom }}
-                        </div>
-                        <div class="mt-5">
-                            <p><b>--Departure--</b></p>
-                            <label for="id_departure_date">Departure Date:</label>{{ form.dateTo }}
-{#                            {% if form.dateTo.errors %}#}
-{#                                <div class="alert alert-danger">#}
-{#                                    {% for error in form.dateTo.errors %}#}
-{#                                        {{ error }}#}
-{#                                    {% endfor %}#}
-{#                                </div>#}
-{#                            {% endif %}#}
-                            <label for="id_departure_time">Departure Time:</label>{{ form.timeTo }}
-{#                            {% if form.timeTo.errors %}#}
-{#                                <div class="alert alert-danger">#}
-{#                                    {% for error in form.timeTo.errors %}#}
-{#                                        {{ error }}#}
-{#                                    {% endfor %}#}
-{#                                </div>#}
-{#                            {% endif %}#}
-                        </div>
-                        <div>
-                            <button class="btn btn-secondary mt-5 items-center text-xl" type="submit">Get Quote</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="flex justify-center w-full py-2 gap-2">
+                <a href="#item1" class="btn btn-xs">1</a>
+                <a href="#item2" class="btn btn-xs">2</a>
             </div>
-            <!--this is for the car park charge-->
-        <div>
-
         </div>
-
-            <!--this is for the animation down the page-->
-        <div>
-
-        </div>
-        </div>
-        {#<a href={% url 'login' %}><button class="btn">Login</button></a>#}
-        {#<a href={% url 'signup' %}><button class="btn">Sign Up</button></a>#}
-    {% endif %}
+    </section>
 {% endblock %}

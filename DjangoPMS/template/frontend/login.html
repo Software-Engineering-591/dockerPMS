@@ -5,15 +5,16 @@
 {% endblock %}
 
 {% block body %}
-    <h1 class="text-center text-4xl font-semibold my-6">
+    <h1 class="text-center text-4xl font-semibold my-6 font-sans">
         Welcome back!
     </h1>
-    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded bg-base-300">
+    <div class="box1">
+    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded-xl bg-base-300">
         <form action={% url 'login' %} method="POST" class="mb-4 mt-5">
             {% csrf_token %}
             {{ form }}
             <button class="btn btn-primary mt-5 items-center container" type="submit">Login</button>
         </form>
         <p class="mt-2 mb-4">New user? <a href="{% url 'signup' %}" class="text decoration-solid underline">Sign up</a></p>
-    </div>
+    </div></div>
 {% endblock %}

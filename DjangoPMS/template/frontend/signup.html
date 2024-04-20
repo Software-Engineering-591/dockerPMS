@@ -5,15 +5,10 @@
 {% endblock %}
 
 {% block body %}
-    {#<form action={% url 'signup' %} method="POST">#}
-    {#  {% csrf_token %}#}
-    {#  {{ form }}#}
-    {#  <button class="btn">Create Account</button>#}
-    {#</form>#}
     <h1 class="text-center text-4xl font-semibold my-6">
         Sign Up
     </h1>
-    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded bg-base-300">
+    <div class="input-bordered flex flex-col items-center mx-10 md:mx-20 my-5 border-4 rounded-xl bg-base-300">
         <form action={% url 'signup' %} method="POST" class="mb-4 mt-5">
             {% csrf_token %}
             {{ form.as_p }}

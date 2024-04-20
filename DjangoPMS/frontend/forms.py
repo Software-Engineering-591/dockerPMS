@@ -12,7 +12,7 @@ class QuoteForm(forms.Form):
     dateTo = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
     timeTo = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
 
-    def clean_dateFrom(self):
+    def cleanQuoteFrom(self):
 
         cleaned_data = super().clean()
         dateFrom = cleaned_data.get("dateFrom")
@@ -23,5 +23,5 @@ class QuoteForm(forms.Form):
         if dateFrom and dateTo:
             if dateTo < dateFrom:
                 raise ValidationError("A departure date must be after the arrival date")
-            elif dateTo == dateFrom and timeTo < timeFrom:
+            elif dateTo == dateFrom and timeTo <= timeFrom:
                 raise ValidationError("A departure time must be after the arrival time on the same date")
