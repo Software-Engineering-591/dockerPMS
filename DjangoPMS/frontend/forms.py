@@ -7,6 +7,6 @@ class MessageForm(forms.ModelForm):
         model = Message
         fields = ['message_text']
         widgets = {
-            'message_text': forms.Textarea(attrs={'class' : 'w-full rounded bg-gray-400 text-black' }),
+            'message_text': forms.Textarea(attrs={'class' : 'w-full h-1/2 rounded bg-gray-400 text-black mt-20 ' }),
         }
 

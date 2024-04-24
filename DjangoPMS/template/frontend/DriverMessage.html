@@ -18,16 +18,17 @@
   <div class="card-body bg-white">
       {% for Message in Messages %}
           {% if Message.sender == request.user or Message.receiver == request.user%}
-              {% if Message.sender.username == "admin" %}
-                  <div class="chat chat-start">
-                  <div class="chat-header">Administrator
-                      <time class="text-xs opacity-50">{{Message.timestamp }}</time>
-                  </div>
+              {% if Message.sender.is_superuser %}
+                    <div class="chat chat-start">
+                      <div class="chat-header">Administrator
+                        <time class="text-xs opacity-50">{{Message.timestamp }}</time>
+                      </div>
 
-                  <div class="chat-bubble">
-                    {{ Message.message_text }}
-                  </div>
-                  </div>
+                     <div class="chat-bubble break-all">
+                        {{ Message.message_text }}
+                    </div>
+                    </div>
+
 
               {% else %}
                 <div class="chat chat-end">
@@ -37,17 +38,19 @@
                 <div class="chat-bubble">
                 {{ Message.message_text }}
                 </div>
-          </div>
+                </div>
               {% endif %}
           {% endif %}
       {% endfor %}
       {# form section #}
   {% block form %}
-      <div class="flex flex-col w-full h-full">
+      <div class="flex flex-col w-full h-full mt-20">
           <form action="" method="post" class="flex flex-col justify-end w-full h-full sticky">
           {% csrf_token %}
-              <div class="">   {{ form.message_text }}</div>
-          <button id="submit" class="btn "> submit</button>
+              <div class="">   {{ form.message_text }}
+              <button id="submit" class="btn text-right "> submit</button>
+              </div>
+
           </form>
       </div>
   {% endblock %}
