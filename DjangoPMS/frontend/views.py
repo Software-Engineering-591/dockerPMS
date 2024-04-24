@@ -13,11 +13,7 @@ from .forms import QuoteForm
 
 @require_GET
 def home(request):
-    form = QuoteForm(request.POST)
-    if form.is_valid():
-        print(request.POST)
-        return redirect("index")
-    return render(request, "frontend/home.html", {'form':form})
+    return render(request, "frontend/home.html", {'form': QuoteForm()})
 
 @require_http_methods(["GET", "POST"])
 def signup(request):
