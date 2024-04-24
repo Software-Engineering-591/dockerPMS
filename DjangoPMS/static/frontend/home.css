@@ -2,11 +2,10 @@
   text-align: center;
   padding: 20px;
   color: white;
-  margin: 10px 150px;
+  margin: 30px 150px;
 }
 
 .inbox1 {
-  background: #797979;
   border-radius: 75px;
   text-align: center;
   color: white;
@@ -16,19 +15,9 @@
 }
 
 .inbox2 {
-  background: #797979;
   border-radius: 80px;
-  border: #797979;
   text-align: center;
   color: white;
   padding: 20px;
   margin: 10px 50px;
-}
-
-.animate{
-  font-family: monospace;
-  font-size: 100px;
-  background-image: linear-gradient(43deg, #ff551f 0%, #e5881b 46%, #ead67a 100%);
-  -webkit-background-clip: text;
-  color: transparent;
 }

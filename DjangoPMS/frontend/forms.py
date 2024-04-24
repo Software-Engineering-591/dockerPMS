@@ -1,27 +1,23 @@
 from django import forms
 from django.core.exceptions import ValidationError
 
-
 class QuoteForm(forms.Form):
-    # dateFrom = forms.DateField(required=True, label='Arrival date')
-    # timeFrom = forms.TimeField(required=True, label='Arrival time')
-    # dateTo = forms.DateField(required=True, label='Departure date')
-    # timeTo = forms.TimeField(required=True, label='Departure time')
-    dateFrom = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    timeFrom = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
-    dateTo = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
-    timeTo = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
+    date_from = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    time_from = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
+    date_to = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    time_to = forms.TimeField(widget=forms.widgets.TimeInput(attrs={'type': 'time'}))
 
-    def cleanQuoteFrom(self):
+    def clear_quote_form(self):
 
         cleaned_data = super().clean()
-        dateFrom = cleaned_data.get("dateFrom")
-        timeFrom = cleaned_data.get("timeFrom")
-        dateTo = cleaned_data.get("dateTo")
-        timeTo = cleaned_data.get("timeTo")
+        date_from = cleaned_data.get("dateFrom")
+        time_from = cleaned_data.get("timeFrom")
+        date_to = cleaned_data.get("dateTo")
+        time_to = cleaned_data.get("timeTo")
 
-        if dateFrom and dateTo:
-            if dateTo < dateFrom:
+        if date_from and date_to:
+            if date_to < date_from:
                 raise ValidationError("A departure date must be after the arrival date")
-            elif dateTo == dateFrom and timeTo <= timeFrom:
+            elif date_to == date_from and time_to <= time_from:
                 raise ValidationError("A departure time must be after the arrival time on the same date")
+
