@@ -1,0 +1,7 @@
+#reserve_leaflet {
+  height: 100%;
+}
+.lot .leaflet-popup-content-wrapper,
+.lot .leaflet-popup-tip {
+  background-color: oklch(var(--b1)) !important;
+}

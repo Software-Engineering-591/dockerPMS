@@ -1,12 +1,20 @@
-from backend.models import Driver, Message
 from django.contrib.auth.models import User
 from frontend.forms import messageForm
+from dataclasses import dataclass
+import json
+import dataclasses
+
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_GET
 from .forms import QuoteForm
 from django.db.models import Q
+from django.template.loader import render_to_string
+from django.views.generic import TemplateView
+
+from backend.models import Driver, ParkingLot, Message
+
 # Create your views here.
 
 
@@ -103,3 +111,37 @@ def adminMessageContext(request, sender):
 @require_GET
 def contact(request):
     return render(request, 'frontend/contact.html')
+
+
+latlng = tuple[float, float]
+
+
+@dataclass(slots=True, frozen=True)
+class LeafletLot:
+    point: latlng
+    poly: list[latlng]
+    popup_html: str
+
+
+class EnhancedJSONEncoder(json.JSONEncoder):
+    def default(self, o):
+        if dataclasses.is_dataclass(o):
+            return dataclasses.asdict(o)
+        return super().default(o)
+
+
+class ReserveView(TemplateView):
+    template_name = 'frontend/reserve/init.html'
+
+    def get_context_data(self, **kwargs):
+        lot_geodata = [
+            LeafletLot(
+                point=(lot.poly.centroid.y, lot.poly.centroid.x),
+                poly=tuple(zip(lot.poly[0].y, lot.poly[0].x)),
+                popup_html=render_to_string('frontend/reserve/popup.html'),
+            )
+            for lot in ParkingLot.objects.all()
+        ]
+        return {
+            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder),
+        }

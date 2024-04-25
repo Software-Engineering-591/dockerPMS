@@ -80,7 +80,7 @@ class Request(models.Model):
 
 
 class ParkingLot(models.Model):
-    poly = gis_models.PolygonField()
+    poly = gis_models.PolygonField(geography=True)
     name = models.CharField(max_length=100)
 
     def __str__(self):

@@ -9,5 +9,6 @@ urlpatterns = [
     path('message/', views.driverMessaging, name='message'),
     path('adminMessage/', views.adminMessages, name='admin'),
     path('adminMessage/<sender>/', views.adminMessageContext, name='adminMessageContext')
+    path('reserve/', views.ReserveView.as_view(), name='reserve'),
 ]
 
