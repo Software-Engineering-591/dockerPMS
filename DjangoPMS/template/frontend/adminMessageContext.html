@@ -1,28 +1,28 @@
 {% extends 'frontend/base.html' %}
-<html lang="en" data-theme="sunset">
-
-{%  load static %}
-
+{% load static %}
 {% block body %}
     {% if request.user.is_authenticated %}
-    {#  Setting up body  #}
-    <body class="h-screen">
-    <div class="flex justify-center items-center h-screen">
+        {% if request.user.is_superuser %}
+<body class=" flex justify-center items-center w-screen h-screen">
+<div class="flex justify-center items-center w-screen h-screen">
 
-    <div class="card w-9/12 h-3/4 bg-base-100 shadow-xl overflow-x-hidden">
-    {#  Title for message box  #}
-    <div class="card-title flex justify-center bg-grey bg-scroll border-black rounded border-solid
-            border-4 static top-0 z-100">
-        Admin Messages
-    </div>
-    {#  Message box template  #}
-     <div class="w-full h-full bg-base-100 shadow-xl overflow-y-auto overflow-x-hidden">
-  <div class="card-body bg-white">
-      {% for Message in Messages %}
+<div class="card flex content-end h-3/4 w-1/4 border-4 border-black">
+<div class="card-title flex justify-center bg-grey">Inbox</div>
+    {% for Sender in Senders %}
+        {% if Sender.sender != request.user %}
+            <a href="{% url 'AdminMessageContext' Sender.sender.id %}">
+            <div class="chat-bubble w-full hover:bg-white" id="chatbox"> {{ Sender.sender }}</div>
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="card flex content-end h-3/4 w-1/2 bg-white overflow-y-auto border-4 border-black">
+    <div class="card-title flex justify-center bg-grey border-4 border-black rounded"> {{ Sender }} </div>
+{% for Message in Messages %}
           {% if Message.sender == request.user or Message.receiver == request.user%}
               {% if Message.sender.is_superuser %}
                     <div class="chat chat-start">
-                      <div class="chat-header">Administrator
+                      <div class="chat-header"> Me
                         <time class="text-xs opacity-50">{{Message.timestamp }}</time>
                       </div>
 
@@ -34,7 +34,7 @@
 
               {% else %}
                 <div class="chat chat-end">
-                <div class="chat-header">Me
+                <div class="chat-header"> {{ Message.sender }}
                      <time class="text-xs opacity-50">{{Message.timestamp }}</time>
                 </div>
                 <div class="chat-bubble">
@@ -44,8 +44,8 @@
               {% endif %}
           {% endif %}
       {% endfor %}
-      {# form section #}
-  {% block form %}
+
+    {% block form %}
       <div class="flex flex-col w-full h-full mt-20 sticky">
           <form action="" method="post" class="flex flex-col justify-end w-full h-full sticky">
           {% csrf_token %}
@@ -56,10 +56,10 @@
           </form>
       </div>
   {% endblock %}
-  </div>
-    </div>
-    </div>
-    </div>
-    </body>
+
+</div>
+</div>
+</body>
+    {% endif %}
     {% endif %}
 {% endblock %}

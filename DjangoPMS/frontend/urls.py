@@ -6,5 +6,6 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('login/', views.login, name='login'),
     path('Message/', views.DriverMessaging, name='Message'),
-    # path('AdminMessage/', views.AdminMessages, name='Admin')
+    path('AdminMessage/', views.AdminMessages, name='Admin'),
+    path('AdminMessage/<sender>/', views.AdminMessageContext, name='AdminMessageContext')
 ]
