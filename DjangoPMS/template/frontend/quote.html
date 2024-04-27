@@ -1,5 +1,6 @@
 {% extends 'frontend/base.html' %}
 
+
 {% block head %}
 <title>Quote - Parking System</title>
 {% endblock %}
@@ -7,30 +8,28 @@
 {% block body %}
 {% if user.is_authenticated %}
     <h1>Parking Quote</h1>
-    <p>Get your parking quote here.</p>
+    <p>Here is your parking quote:</p>
+    <div>
+        <strong>Assigned Slot:</strong> {{ assigned_slot }}
+    </div>
+    <div>
+        <strong>Current Credit:</strong> £{{ current_credit }}
+    </div>
+    <div>
+        <strong>Parking Charge:</strong> £{{ parking_charge }}
+    </div>
 
-    <form action="{% url 'parking_quote' %}" method="post">
-        {% csrf_token %}
-        <label for="assigned_slot">Assigned parking slot</label>
-        <input type="text" id="assigned_slot" name="slot" value="{{ assigned_slot }}" readonly>
-
-        <label for="credit">Credit</label>
-        <input type="text" id="credit" name="credit" value="£{{ current_credit }}" readonly>
-
-        {% if current_credit < parking_charge %}
-            <p>Top up your credit to proceed.</p>
-            <button formaction="{% url 'top_up' %}">Top up</button>
-        {% else %}
-            <label for="parking_charge">Parking charge</label>
-            <input type="text" id="parking_charge" name="charge" value="£{{ parking_charge }}" readonly>
-
-            <button type="submit">Send request</button>
-        {% endif %}
-    </form>
-
-    <a href="{% url 'previous_page' %}">Back</a>
+    {% if current_credit < parking_charge %}
+        <p>You need to top up your credit to proceed.</p>
+        <a href="{% url 'topup' %}"><button>Top Up</button></a>
+    {% else %}
+        <form action="{% url 'submit_parking_request' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Confirm Parking</button>
+        </form>
+    {% endif %}
 {% else %}
     <p>You need to be logged in to view this page.</p>
-    <a href="{% url 'login' %}"><button class="btn">Login</button></a>
+    <a href="{% url 'login' %}"><button>Login</button></a>
 {% endif %}
 {% endblock %}
