@@ -34,3 +34,8 @@ def login(request):
         auth.login(request, user)
         return redirect('index')
     return render(request, "frontend/login.html", {"form": form})
+
+
+@require_GET
+def contact(request):
+    return render(request, "frontend/contact.html")
