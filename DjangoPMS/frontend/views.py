@@ -1,15 +1,19 @@
 from backend.models import Driver
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
+from .forms import QuoteForm
+
 
 # Create your views here.
 
 
 @require_GET
 def home(request):
-    return render(request, "frontend/home.html")
+    return render(request, "frontend/home.html", {'form': QuoteForm()})
 
 @require_http_methods(["GET", "POST"])
 def signup(request):
@@ -30,6 +34,7 @@ def login(request):
         auth.login(request, user)
         return redirect('index')
     return render(request, "frontend/login.html", {"form": form})
+
 
 @require_GET
 def contact(request):

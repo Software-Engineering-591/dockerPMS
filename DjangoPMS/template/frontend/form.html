@@ -1,0 +1,53 @@
+<form action='/reserve' method="POST" class="m-5 text-center">
+    {% csrf_token %}
+    <div>
+        <p class="text-2xl mt-5"><b>Arrival</b></p>
+        <div class="bg-base-200 rounded-3xl">
+            <label for="id_arrival_date"><b>Arrival
+                Date:</b></label>{{ form.date_from }}
+            {% if form.date_from.errors %}
+                <div class="text-sm text-center mb-5">
+                    {% for error in form.date_from.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <label for="id_arrival_time"><b>Arrival
+                Time:</b></label>{{ form.time_from }}
+            {% if form.time_from.errors %}
+                <div class="text-sm text-center">
+                    {% for error in form.time_from.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    <p class="text-2xl mt-5"><b>Departure</b></p>
+    <div class="bg-base-300 rounded-3xl">
+        <label for="id_departure_date"><b>Departure
+            Date:</b></label>{{ form.date_to }}
+        {% if form.date_to.errors %}
+            <div class="text-sm text-center mb-5">
+                {% for error in form.date_to.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+        <label for="id_departure_time" class="my-5"><b>Departure
+            Time:</b></label>{{ form.time_to }}
+        {% if form.time_to.errors %}
+            <div class="text-sm text-center">
+                {% for error in form.time_to.errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+    <div>
+        <button class="btn btn-primary mt-5 items-center text-xl" type="submit">
+            Send
+        </button>
+    </div>
+</form>

@@ -1,19 +1,203 @@
 {% extends 'frontend/base.html' %}
-
+{% load tz_detect %}
+{% load static %}
 {% block head %}
-<title>Home Page</title>
+    <title>Home | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
 {% endblock %}
 
 {% block body %}
-{% if user.is_authenticated %}
-<p>Hello {{user.username}}</p>
-<form action={% url 'api:logout' %} method="POST">
-  {% csrf_token %}
-  <button class="btn">Log Out</button>
-</form>
-{% else %}
-<p>Hello World</p>
-<a href={% url 'login' %}><button class="btn">Login</button></a>
-<a href={% url 'signup' %}><button class="btn">Sign Up</button></a>
-{% endif %}
+    {% include 'frontend/nav2.html' %}
+    <main>
+        <section>
+            <div class="box1">
+                <!--this is the box showing the availability-->
+                <div>
+                    <div class="flex w-full">
+                        <div class="grid h-96 flex-grow card bg-base-100 place-items-center">
+                            <div class="radial-progress bg-primary text-primary-content border-4 border-primary"
+                                 style="--value:75;--size:15rem;"
+                                 role="progressbar">150 spaces<span>available</span>
+                            </div>
+                        </div>
+                        <div class="grid h-96 flex-grow card bg-base-200 place-items-center">
+                            <div>
+                                <ul>
+                                    <li><p class="float-center text-5xl font-bold mt-5">UEA car park</p></li>
+                                    <li><p class="float-center text-base mt-5">Status
+                                        <span class="badge badge-success">OPEN</span>
+                                    </li>
+                                </ul>
+                                <div>
+                                    <div>
+                                        <ul class="menu bg-base-200 w-full rounded-box m-3">
+                                            <li>
+                                                <a href="https://maps.app.goo.gl/JiDhTKCqdRmBZBm68">
+                                                    <svg viewBox="0 0 24 24" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg"
+                                                         class="h-5 w-5">
+                                                        <path d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z"
+                                                              stroke="#ffffff" stroke-width="2"
+                                                              stroke-linecap="round"
+                                                              stroke-linejoin="round"></path>
+                                                        <path d="M12 12C13.1046 12 14 11.1046 14 10C14 8.89543 13.1046 8 12 8C10.8954 8 10 8.89543 10 10C10 11.1046 10.8954 12 12 12Z"
+                                                              stroke="#ffffff" stroke-width="2"
+                                                              stroke-linecap="round"
+                                                              stroke-linejoin="round"></path>
+                                                    </svg>
+                                                    <span class="underline">University Dr, NR4 7LP</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a>
+                                                    <svg viewBox="0 0 24 24" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg"
+                                                         class="h-5 w-5">
+                                                        <path fill-rule="evenodd"
+                                                              clip-rule="evenodd"
+                                                              d="M11 6C9.34315 6 8 7.34315 8 9V17C8 17.5523 8.44772 18 9 18C9.55229 18 10 17.5523 10 17V14L12.0045 14C12.2149 13.9987 12.426 13.974 12.6332 13.9395C12.9799 13.8817 13.4575 13.7642 13.9472 13.5194C14.4409 13.2725 14.9649 12.8866 15.3633 12.289C15.7659 11.6851 16 10.9249 16 9.99996C16 9.07499 15.7659 8.31478 15.3633 7.71092C14.9649 7.11332 14.4408 6.7274 13.9472 6.48058C13.4575 6.23573 12.9799 6.11828 12.6332 6.06049C12.4248 6.02575 12.2117 6.0001 12 6H11ZM10 12V9C10 8.44772 10.4477 8 11 8L12.0004 8.00018C12.3603 8.01218 12.7318 8.10893 13.0528 8.26944C13.3092 8.39762 13.5351 8.5742 13.6992 8.82033C13.8591 9.06021 14 9.42497 14 9.99996C14 10.575 13.8591 10.9397 13.6992 11.1796C13.5351 11.4258 13.3091 11.6023 13.0528 11.7305C12.7318 11.891 12.3603 11.9878 12.0003 11.9998L10 12Z"
+                                                              fill="#ffffff"></path>
+                                                        <path
+                                                                fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M20 1C21.6569 1 23 2.34315 23 4V20C23 21.6569 21.6569 23 20 23H4C2.34315 23 1 21.6569 1 20V4C1 2.34315 2.34315 1 4 1H20ZM20 3C20.5523 3 21 3.44772 21 4V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V4C3 3.44772 3.44772 3 4 3H20Z"
+                                                                fill="#ffffff"></path>
+                                                    </svg>
+                                                    200 total spaces
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a>
+                                                    <svg viewBox="0 0 24 24" fill="none"
+                                                         xmlns="http://www.w3.org/2000/svg"
+                                                         class="h-5 w-5">
+                                                        <path
+                                                                d="M12 7V12L14.5 10.5M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"
+                                                                stroke="#ffffff" stroke-width="2" stroke-linecap="round"
+                                                                stroke-linejoin="round"></path>
+                                                    </svg>
+                                                    <span>{% tz_detect %} updated at {% now "H:i" %}</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section>
+            <div class="hero min-h-fit bg-base-200">
+                <div class="hero-content flex-col lg:flex-row-reverse">
+                    <img src="https://s0.geograph.org.uk/geophotos/03/80/86/3808660_a63e6b9d.jpg"
+                         class="max-w-sm rounded-lg shadow-2xl" alt="car park"/>
+                    <div class="divider divider-horizontal divider-secondary"></div>
+                    <div>
+                        <h1 class="text-5xl font-bold">Reserve your space!</h1>
+                        <p class="py-6 text-xl">Hassle-free way to park on campus</p>
+                        <div class="collapse bg-base-200">
+                            <input type="checkbox" class="peer"/>
+                            <div class="collapse-title rounded-xl w-fit">
+                                <button class="btn btn-primary text-xl">Get Quote</button>
+                            </div>
+                            <div class="collapse-content bg-base-200">
+                                <p></p>
+                                <div class="border-4 rounded-3xl">
+                                    {% csrf_token %}
+                                    {% include 'frontend/form.html' %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--this is for the car park information and charge-->
+        <section>
+            <div class="divider mt-10"></div>
+            <div class="flex w-full my-10">
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center m-5">
+                    <div>
+                        <div>
+                            <p class="text-3xl border-2 border-transparent rounded-xl bg-base-100 p-2 text-center">
+                                Opening time</p>
+                        </div>
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Monday - Saturday</td>
+                                <td>06:00-21.00</td>
+                            </tr>
+                            <tr>
+                                <td>Sunday</td>
+                                <td>09:00-20.00</td>
+                            </tr>
+                            <tr>
+                                <td>Bank holiday</td>
+                                <td>09:00-18.00</td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center m-5">
+                    <div>
+                        <div><p class="text-3xl border-2 border-transparent rounded-xl bg-base-100 p-2 text-center">
+                            Parking charge</p></div>
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th>Time period</th>
+                                <th>Credits</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Per hour</td>
+                                <td>250</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-sm mt-5 text-center">There is a maximum 24-hour charge of 2500 credits</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--this is for the animation down the page-->
+        <section>
+            <div class="divider"></div>
+            <div>
+                <p class="text-3xl rounded-xl mt-5 p-2 text-center">More photos of UEA car park</p>
+            </div>
+            <div class="box1">
+                <div class="carousel w-full">
+                    <div id="item1" class="carousel-item w-full">
+                        <img src="https://s0.geograph.org.uk/geophotos/03/31/62/3316246_22d69722.jpg"
+                             class="w-full h-full rounded-3xl"/>
+                    </div>
+                    <div id="item2" class="carousel-item w-full">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/UEA_-_Main_car_park_-_geograph.org.uk_-_4373438.jpg"
+                             class="w-full h-full rounded-3xl"/>
+                    </div>
+                </div>
+                <div class="flex justify-center w-full py-2 gap-2">
+                    <a href="#item1" class="btn btn-xs">1</a>
+                    <a href="#item2" class="btn btn-xs">2</a>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        {% include 'frontend/site_footer.html' %}
+    </footer>
 {% endblock %}
