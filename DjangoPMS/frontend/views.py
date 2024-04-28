@@ -67,6 +67,7 @@ def AdminMessageContext(request, sender):
     Messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
     senders = Message.objects.order_by('sender').distinct('sender')
     Driver = get_object_or_404(User, pk=sender)
+
     if request.method == "POST":
         form = MessageForm(request.POST)
         admin = User.objects.filter(is_superuser=True)
