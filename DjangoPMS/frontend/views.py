@@ -11,7 +11,7 @@ from django.views.decorators.http import require_http_methods, require_GET
 from .forms import QuoteForm
 from django.db.models import Q
 from django.template.loader import render_to_string
-from django.views.generic import TemplateView
+from django.views.generic import DetailView, TemplateView
 
 from backend.models import Driver, ParkingLot, Message
 
@@ -119,7 +119,7 @@ latlng = tuple[float, float]
 @dataclass(slots=True, frozen=True)
 class LeafletLot:
     point: latlng
-    poly: list[latlng]
+    poly: tuple[latlng]
     popup_html: str
 
 
@@ -145,3 +145,8 @@ class ReserveView(TemplateView):
         return {
             'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder),
         }
+
+
+class LotView(DetailView):
+    model = ParkingLot
+    template_name = 'frontend/lot.html'
