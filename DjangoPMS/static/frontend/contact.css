@@ -1,0 +1,32 @@
+.swap{
+    position: absolute;
+    padding-top: 5%;
+    right: 95%;
+    bottom: 94.5%;
+}
+
+.profile{
+    position: absolute;
+    left: 93%;
+    bottom: 94%;
+}
+
+a:link{
+    color: white;
+    text-decoration: underline;
+}
+
+a:visited{
+    color: whitesmoke;
+}
+
+a:hover{
+    background-color: grey;
+    color: white;
+}
+
+main{
+    padding-top: 5%;
+    text-align: center;
+}
+
