@@ -4,24 +4,25 @@
 {% block body %}
     {% if request.user.is_authenticated %}
         {% if request.user.is_superuser %}
-<body class="flex justify-center items-center w-screen h-screen">
+
+<body class="flex w-screen h-screen">
+ <a href="{% url 'index' %}"><button class="btn btn-outline">Home</button></a>
 <div class="flex justify-center items-center w-screen h-screen">
 
 <div class="card flex content-end h-3/4 w-2/12 border-4 border-gray-800 overflow-x-hidden overflow-y-auto rounded-r-md">
 <div class="card-title flex justify-center border-4 border-gray-800 bg-gray-800">Inbox</div>
     {% for Sender in Senders %}
         {% if Sender.sender != request.user %}
-            <a href="{% url 'AdminMessageContext' Sender.sender.id %}">
+            <a href="{% url 'adminMessageContext' Sender.sender.id %}">
             <div class="card-body h-auto w-full hover:bg-white bg-gray-800 border-2 border-gray-700"> {{ Sender.sender }}</div>
             </a>
         {% endif %}
     {% endfor %}
 </div>
-<div class="card flex content-end h-3/4 w-1/2 bg-white overflow-y-auto border-4 border-gray-800 rounded-l-md ">
-</div>
 
-
+{#EMPTY SECTION FOR MESSAGE CONTEXT PAGE#}
+<div class="card flex content-end h-3/4 w-1/2 bg-white overflow-y-auto border-4 border-gray-800 rounded-l-md "></div>
 </body>
-    {% endif %}
-    {% endif %}
+{% endif %}
+{% endif %}
 {% endblock %}

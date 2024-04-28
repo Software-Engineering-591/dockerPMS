@@ -1,7 +1,7 @@
 from django import forms
 from backend.models import Message
 from django.core.exceptions import ValidationError
-class MessageForm(forms.ModelForm):
+class messageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['message_text']

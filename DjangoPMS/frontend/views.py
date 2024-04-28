@@ -1,6 +1,6 @@
 from backend.models import Driver, Message
 from django.contrib.auth.models import User
-from frontend.forms import MessageForm
+from frontend.forms import messageForm
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
@@ -37,53 +37,51 @@ def login(request):
     return render(request, "frontend/login.html", {"form": form})
 
 @require_http_methods(["GET", "POST"])
-def DriverMessaging(request):
-    Messages = Message.objects.order_by("timestamp")
+def driverMessaging(request):
+    messages = Message.objects.order_by("timestamp")
     if request.method == "POST":
-        form = MessageForm(request.POST)
+        form = messageForm(request.POST)
         admin = User.objects.get(is_superuser=True)
         if form.is_valid():
-            Message_temp = form.save(commit=False)
-            Message_temp.receiver = admin
-            Message_temp.sender = request.user
-            Message_temp.save()
-            return redirect('/Message/')
+            message_temp = form.save(commit=False)
+            message_temp.receiver = admin
+            message_temp.sender = request.user
+            message_temp.save()
+            return redirect('/message/')
     else:
-        form = MessageForm()
+        form = messageForm()
 
     context = {
-        "Messages" : Messages,
+        "Messages" : messages,
         "form" : form
     }
 
-    return render(request, "frontend/DriverMessage.html", {"form": form, "Messages" : Messages})
+    return render(request, "frontend/driverMessage.html", {"form": form, "Messages" : messages})
 
 @require_http_methods(["GET", "POST"])
-def AdminMessages(request):
-    Messages = Message.objects.order_by("timestamp")
+def adminMessages(request):
+    messages = Message.objects.order_by("timestamp")
     senders = Message.objects.order_by('sender').distinct('sender')
-    return render(request, "frontend/adminMessage.html", {"Messages" : Messages, "Senders" : senders})
+    return render(request, "frontend/adminMessage.html", {"Messages" : messages, "Senders" : senders})
 
 @require_http_methods(["GET", "POST"])
-
-def AdminMessageContext(request, sender):
-    Messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
+def adminMessageContext(request, sender):
+    messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
     senders = Message.objects.order_by('sender').distinct('sender')
-    Driver = get_object_or_404(User, pk=sender)
+    driver = get_object_or_404(User, pk=sender)
 
     if request.method == "POST":
-        form = MessageForm(request.POST)
-        admin = User.objects.filter(is_superuser=True)
+        form = messageForm(request.POST)
         if form.is_valid():
-            Message_temp = form.save(commit=False)
-            Message_temp.receiver = Driver
-            Message_temp.sender = request.user
-            Message_temp.save()
-            return redirect(f'/AdminMessage/{sender}/')
+            message_temp = form.save(commit=False)
+            message_temp.receiver = driver
+            message_temp.sender = request.user
+            message_temp.save()
+            return redirect(f'/adminMessage/{sender}/')
     else:
-        form = MessageForm()
-    return render(request, 'frontend/adminMessageContext.html', {"Messages" : Messages, "Senders" : senders,
-                                                        "form" : form, "Sender" : Driver})
+        form = messageForm()
+    return render(request, 'frontend/adminMessageContext.html', {"Messages" : messages, "Senders" : senders,
+                                                        "form" : form, "Sender" : driver})
 @require_GET
 def contact(request):
     return render(request, "frontend/contact.html")
