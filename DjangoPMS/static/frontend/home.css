@@ -1,0 +1,23 @@
+.box1 {
+  text-align: center;
+  padding: 20px;
+  color: white;
+  margin: 30px 150px;
+}
+
+.inbox1 {
+  border-radius: 75px;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  margin: 10px 50px;
+  height: 13rem;
+}
+
+.inbox2 {
+  border-radius: 80px;
+  text-align: center;
+  color: white;
+  padding: 20px;
+  margin: 10px 50px;
+}

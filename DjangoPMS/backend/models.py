@@ -20,7 +20,10 @@ class Admin(BaseUser):
 
 
 class Driver(BaseUser):
-    pass
+    credit = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 class Payment(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2)

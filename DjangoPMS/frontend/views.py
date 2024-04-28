@@ -3,15 +3,18 @@ from django.contrib.auth.models import User
 from frontend.forms import MessageForm
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
+from .forms import QuoteForm
 from django.db.models import Q
 # Create your views here.
 
 
 @require_GET
 def home(request):
-    return render(request, "frontend/home.html")
+    return render(request, "frontend/home.html", {'form': QuoteForm()})
 
 @require_http_methods(["GET", "POST"])
 def signup(request):
@@ -81,3 +84,6 @@ def AdminMessageContext(request, sender):
         form = MessageForm()
     return render(request, 'frontend/adminMessageContext.html', {"Messages" : Messages, "Senders" : senders,
                                                         "form" : form, "Sender" : Driver})
+@require_GET
+def contact(request):
+    return render(request, "frontend/contact.html")
