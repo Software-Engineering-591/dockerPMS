@@ -59,6 +59,7 @@ class Message(models.Model):
 class Request(models.Model):
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
     slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
+    arrival = models.DateTimeField()
     departure = models.DateTimeField()
     class CurrentStatus(models.TextChoices):
         Pending = "P"

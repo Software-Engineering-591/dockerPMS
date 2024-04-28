@@ -1,5 +1,13 @@
 from django import forms
+from backend.models import Message
 from django.core.exceptions import ValidationError
+class messageForm(forms.ModelForm):
+    class Meta:
+        model = Message
+        fields = ['message_text']
+        widgets = {
+            'message_text': forms.Textarea(attrs={'class' : 'w-full h-1/2 rounded bg-gray-400 text-black mt-20 ' }),
+        }
 
 class QuoteForm(forms.Form):
     date_from = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
