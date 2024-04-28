@@ -89,23 +89,23 @@
         </section>
         <section>
             <div class="hero min-h-fit bg-base-200">
-                <div class="hero-content flex-col lg:flex-row-reverse p-20">
+                <div class="hero-content flex-col lg:flex-row-reverse">
                     <img src="https://s0.geograph.org.uk/geophotos/03/80/86/3808660_a63e6b9d.jpg"
                          class="max-w-sm rounded-lg shadow-2xl" alt="car park"/>
                     <div class="divider divider-horizontal divider-secondary"></div>
                     <div>
-                        <h1 class="text-6xl font-bold">Reserve your space!</h1>
+                        <h1 class="text-5xl font-bold">Reserve your space!</h1>
                         <p class="py-6 text-xl">Hassle-free way to park on campus</p>
                         <div class="collapse bg-base-200">
                             <input type="checkbox" class="peer"/>
-                            <div class="collapse-title m-5 rounded-xl w-fit">
+                            <div class="collapse-title rounded-xl w-fit">
                                 <button class="btn btn-primary text-xl">Get Quote</button>
                             </div>
                             <div class="collapse-content bg-base-200">
                                 <p></p>
                                 <div class="border-4 rounded-3xl">
-                                {% csrf_token %}
-                                   {% include 'frontend/form.html' %}
+                                    {% csrf_token %}
+                                    {% include 'frontend/form.html' %}
                                 </div>
                             </div>
                         </div>
@@ -116,93 +116,78 @@
 
         <!--this is for the car park information and charge-->
         <section>
-            <div class="box1">
-                <div class="mx-96"><p
-                        class="text-3xl m-5 border-2 border-transparent rounded-3xl bg-base-100">
-                    Opening time
-                </p></div>
-                <table class="table text-center">
-                    <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th>Time</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Monday - Saturday</td>
-                        <td>06:00-21.00</td>
-                    </tr>
-                    <tr>
-                        <td>Sunday</td>
-                        <td>09:00-20.00</td>
-                    </tr>
-                    <tr>
-                        <td>Bank holiday</td>
-                        <td>09:00-18.00</td>
-                    </tr>
+            <div class="divider mt-10"></div>
+            <div class="flex w-full my-10">
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center m-5">
+                    <div>
+                        <div>
+                            <p class="text-3xl border-2 border-transparent rounded-xl bg-base-100 p-2 text-center">
+                                Opening time</p>
+                        </div>
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Time</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Monday - Saturday</td>
+                                <td>06:00-21.00</td>
+                            </tr>
+                            <tr>
+                                <td>Sunday</td>
+                                <td>09:00-20.00</td>
+                            </tr>
+                            <tr>
+                                <td>Bank holiday</td>
+                                <td>09:00-18.00</td>
+                            </tr>
 
-                    </tbody>
-                </table>
-            </div>
-            <div class="box1">
-                <div class="mx-96"><p
-                        class="text-3xl m-5 border-2 border-transparent rounded-3xl bg-base-100">
-                    Parking charge</p></div>
-                <table class="table text-center">
-                    <thead>
-                    <tr>
-                        <th>Time period</th>
-                        <th>Credits</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Up to an hour</td>
-                        <td>250</td>
-                    </tr>
-                    <tr>
-                        <td>1-2 hours</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>2-5 hours</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>5-8 hours</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>Over 8 hours</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>18:00-00:59</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td>1:00-6:00</td>
-                        <td></td>
-                    </tr>
-                    </tbody>
-                </table>
-                <p class="text-sm mt-5">There is a maximum 24-hour charge of 2500 credits</p>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center m-5">
+                    <div>
+                        <div><p class="text-3xl border-2 border-transparent rounded-xl bg-base-100 p-2 text-center">
+                            Parking charge</p></div>
+                        <table class="table text-center">
+                            <thead>
+                            <tr>
+                                <th>Time period</th>
+                                <th>Credits</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Per hour</td>
+                                <td>250</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <p class="text-sm mt-5 text-center">There is a maximum 24-hour charge of 2500 credits</p>
+                    </div>
+                </div>
             </div>
         </section>
 
         <!--this is for the animation down the page-->
         <section>
+            <div class="divider"></div>
+            <div>
+                <p class="text-3xl rounded-xl mt-5 p-2 text-center">More photos of UEA car park</p>
+            </div>
             <div class="box1">
-                <p class="m-5 text-2xl">Some photos of UEA main car park</p>
                 <div class="carousel w-full">
                     <div id="item1" class="carousel-item w-full">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Car_park_at_UEA_-_geograph.org.uk_-_4331642.jpg"
-                             class="w-full h-max"/>
+                        <img src="https://s0.geograph.org.uk/geophotos/03/31/62/3316246_22d69722.jpg"
+                             class="w-full h-full rounded-3xl"/>
                     </div>
                     <div id="item2" class="carousel-item w-full">
-                        <img src="https://s0.geograph.org.uk/geophotos/03/31/62/3316246_22d69722.jpg"
-                             class="w-full h-fit"/>
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/UEA_-_Main_car_park_-_geograph.org.uk_-_4373438.jpg"
+                             class="w-full h-full rounded-3xl"/>
                     </div>
                 </div>
                 <div class="flex justify-center w-full py-2 gap-2">
