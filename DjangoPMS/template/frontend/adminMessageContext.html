@@ -1,0 +1,72 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block body %}
+    {% if request.user.is_authenticated %}
+    {% if request.user.is_superuser %}
+
+
+<body class=" flex w-screen h-screen">
+<a href="{% url 'index' %}"><button class="btn btn-outline">Home</button></a>
+
+
+<div class="flex justify-center items-center w-screen h-screen">
+
+<div class="card flex content-end h-3/4 w-2/12 border-4 border-gray-800 overflow-x-hidden overflow-y-auto rounded-r-md">
+<div class="card-title flex justify-center border-4 border-gray-800 bg-gray-800">Inbox</div>
+    {% for Sender in Senders %}
+        {% if Sender.sender != request.user %}
+            <a href="{% url 'adminMessageContext' Sender.sender.id %}">
+            <div class="card-body h-auto w-full hover:bg-white bg-gray-800 border-2 border-gray-700"> {{ Sender.sender }}</div></a>
+        {% endif %}
+    {% endfor %}
+</div>
+
+{#    Message box for clicked user#}
+<div class="card flex content-end h-3/4 w-1/2 bg-white border-4 border-gray-800 rounded-l-md ">
+<div class="card-title flex justify-center bg-gray-800 static"> {{ Sender }} </div>
+<div class="card-body h-full w-full bg-white overflow-y-auto">
+{% for Message in Messages %}
+      {% if Message.sender == request.user or Message.receiver == request.user%}
+          {% if Message.sender.is_superuser %}
+
+                <div class="chat chat-start">
+                  <div class="chat-header"> Me
+                    <time class="text-xs opacity-50">{{Message.timestamp }}</time>
+                  </div>
+
+                  <div class="chat-bubble break-all">
+                    {{ Message.message_text }}
+                  </div>
+                </div>
+          {% else %}
+                <div class="chat chat-end">
+                  <div class="chat-header">
+                      {{ Message.sender }}
+                     <time class="text-xs opacity-50">{{Message.timestamp }}</time>
+                  </div>
+                  <div class="chat-bubble">
+                  {{ Message.message_text }}
+                  </div>
+                </div>
+          {% endif %}
+      {% endif %}
+{% endfor %}
+
+{# FORM TO SEND MESSAGES BACK#}
+ {% block form %}
+      <div class="flex flex-col w-full h-full mt-20 sticky">
+          <form action="" method="post" class="flex flex-col justify-end w-full h-full sticky">
+              {% csrf_token %}
+              <div class="">   {{ form.message_text }}
+              <button id="submit" class="btn text-right "> submit</button>
+              </div>
+          </form>
+      </div>
+{% endblock %}
+</div>
+</div>
+</div>
+</body>
+{% endif %}
+{% endif %}
+{% endblock %}

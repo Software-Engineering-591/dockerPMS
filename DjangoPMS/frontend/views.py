@@ -1,17 +1,20 @@
-from backend.models import Driver
+from backend.models import Driver, Message
+from django.contrib.auth.models import User
+from frontend.forms import messageForm
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
-from django.contrib import messages
-from django.conf import settings
-
+from .forms import QuoteForm
+from django.db.models import Q
 # Create your views here.
 
 
 @require_GET
 def home(request):
-    return render(request, "frontend/home.html")
+    return render(request, "frontend/home.html", {'form': QuoteForm()})
 
 @require_http_methods(["GET", "POST"])
 def signup(request):
@@ -33,53 +36,52 @@ def login(request):
         return redirect('index')
     return render(request, "frontend/login.html", {"form": form})
 
-
-def topup(request):
-    min_topup = 10.00  # Example minimum top-up amount
-
-    if request.method == 'POST':
-        top_up_amount = request.POST.get('amount', 0)
-        if float(top_up_amount) >= min_topup:
-            messages.success(request, 'Your account has been successfully topped up by £{}.'.format(top_up_amount))
-        else:
-            messages.error(request, 'The top-up amount must be at least £{}.'.format(min_topup))
-
-    return render(request, 'frontend/topup.html', {'min_topup': min_topup})
-
-#parking caculation
-def calculate_parking(parked_time):
-
-    # Retrieve hourly rate from settings i dont know how to implement this in settings.py pls help
-    hourly_rate = settings.PARKING_HOURLY_RATE
-
-    # Calculate total hours parked
-    total_hours = parked_time.total_seconds() / 3600  # convert seconds to hours
-
-    # Calculate the charge using the hourly rate
-    total_charge = total_hours * hourly_rate
-
-
-    # Round the charge to 2 decimal places
-    return round(total_charge, 2)
-
-
-# In  settings.py file
-settings.PARKING_HOURLY_RATE = 250
-
-
-
-
 @require_http_methods(["GET", "POST"])
-def quote(request):
-    # Assume these values are fetched or calculated appropriately
-    assigned_slot = 'A110'
-    current_credit = 100.00  # Example user credit
-    parking_charge = 280  # Example parking charge
+def driverMessaging(request):
+    messages = Message.objects.order_by("timestamp")
+    if request.method == "POST":
+        form = messageForm(request.POST)
+        admin = User.objects.get(is_superuser=True)
+        if form.is_valid():
+            message_temp = form.save(commit=False)
+            message_temp.receiver = admin
+            message_temp.sender = request.user
+            message_temp.save()
+            return redirect('/message/')
+    else:
+        form = messageForm()
 
     context = {
-        'assigned_slot': assigned_slot,
-        'current_credit': current_credit,
-        'parking_charge': parking_charge,
+        "Messages" : messages,
+        "form" : form
     }
 
-    return render(request, 'frontend/quote.html', context)
+    return render(request, "frontend/driverMessage.html", {"form": form, "Messages" : messages})
+
+@require_http_methods(["GET", "POST"])
+def adminMessages(request):
+    messages = Message.objects.order_by("timestamp")
+    senders = Message.objects.order_by('sender').distinct('sender')
+    return render(request, "frontend/adminMessage.html", {"Messages" : messages, "Senders" : senders})
+
+@require_http_methods(["GET", "POST"])
+def adminMessageContext(request, sender):
+    messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
+    senders = Message.objects.order_by('sender').distinct('sender')
+    driver = get_object_or_404(User, pk=sender)
+
+    if request.method == "POST":
+        form = messageForm(request.POST)
+        if form.is_valid():
+            message_temp = form.save(commit=False)
+            message_temp.receiver = driver
+            message_temp.sender = request.user
+            message_temp.save()
+            return redirect(f'/adminMessage/{sender}/')
+    else:
+        form = messageForm()
+    return render(request, 'frontend/adminMessageContext.html', {"Messages" : messages, "Senders" : senders,
+                                                        "form" : form, "Sender" : driver})
+@require_GET
+def contact(request):
+    return render(request, "frontend/contact.html")

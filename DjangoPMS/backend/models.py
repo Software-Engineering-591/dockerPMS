@@ -20,7 +20,10 @@ class Admin(BaseUser):
 
 
 class Driver(BaseUser):
-    pass
+    credit = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.user.username
 
 class Payment(models.Model):
     amount = models.DecimalField(max_digits=6, decimal_places=2)
@@ -56,6 +59,7 @@ class Message(models.Model):
 class Request(models.Model):
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
     slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
+    arrival = models.DateTimeField()
     departure = models.DateTimeField()
     class CurrentStatus(models.TextChoices):
         Pending = "P"
