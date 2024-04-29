@@ -2,34 +2,87 @@
 
 
 {% block head %}
-<title>Quote - Parking System</title>
+    {% load static %}
+ <div class=" text-white p-4 flex justify-between items-center">
+  <div>
+    <!-- Replace 'path-to-your-logo.png' with the actual path to your logo file -->
+    <img src="{% static 'frontend/images/uea-logo.png' %}" alt="UEA Logo" class="h30 w-40"> <!-- Tailwind classes for height and width -->
+  </div>
+  <div class="text-center">
+    <h1 class="text-3xl font-semibold">UEA Parking System</h1>
+    <p class="text-1g">Campus parking made easy</p>
+  </div>
+  <!-- If there is no content on the right, it's a good practice to maintain the spacing for flex justification -->
+  <div></div>
+</div>
+
+
 {% endblock %}
 
 {% block body %}
-{% if user.is_authenticated %}
-    <h1>Parking Quote</h1>
-    <p>Here is your parking quote:</p>
-    <div>
-        <strong>Assigned Slot:</strong> {{ assigned_slot }}
-    </div>
-    <div>
-        <strong>Current Credit:</strong> £{{ current_credit }}
-    </div>
-    <div>
-        <strong>Parking Charge:</strong> £{{ parking_charge }}
-    </div>
+    <ul class="steps">
+  <li class="step step-primary">Register</li>
+  <li class="step step-primary">Choose plan</li>
+  <li class="step step-primary">Purchase</li>
+  <li class="step">Receive Product</li>
+</ul>
 
-    {% if current_credit < parking_charge %}
-        <p>You need to top up your credit to proceed.</p>
-        <a href="{% url 'topup' %}"><button>Top Up</button></a>
-    {% else %}
-        <form action="{% url 'submit_parking_request' %}" method="post">
+
+<div class="min-h-screen  flex flex-col justify-center items-center">
+  {% if user.is_authenticated %}
+    <div class=" p-8 rounded shadow-md w-full max-w-2xl">
+      <div class="mb-4">
+        <h1 class="text-lg font-bold text-center mb-6">Parking Quote</h1>
+
+        <div class="flex justify-between items-center mb-4">
+          <span>Assigned parking slot</span>
+          <span class="font-semibold">{{ assigned_slot }}</span>
+        </div>
+
+        <div class="flex justify-between items-center mb-4">
+          <span>Credit</span>
+          <div class="flex items-center">
+            <span class="font-semibold">£{{ current_credit }}</span>
+            {% if current_credit < parking_charge %}
+                <button class="btn" onclick="topup_modal.showModal()">Top Up</button>
+
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center mb-6">
+          <span>Parking charge</span>
+          <span class="font-semibold">£{{ parking_charge }}</span>
+        </div>
+
+        {% if current_credit >= parking_charge %}
+          <form action="{% url 'submit_parking_request' %}" method="post" class="text-center">
             {% csrf_token %}
-            <button type="submit">Confirm Parking</button>
-        </form>
-    {% endif %}
-{% else %}
-    <p>You need to be logged in to view this page.</p>
-    <a href="{% url 'login' %}"><button>Login</button></a>
-{% endif %}
+            <button type="submit" class="px-6 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-green-600 hover:bg-green-700">Send request</button>
+          </form>
+        {% else %}
+          <div class="text-center my-4">
+            <p class="text-red-500">You need to top up your credit to proceed.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <div class="text-center">
+      <p>Please log in to view your parking quote.</p>
+      <a href="{% url 'login' %}" class="mt-4 px-6 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-blue-600 hover:bg-blue-700">Login</a>
+    </div>
+  {% endif %}
+
+</div>
+    <div class=" text-white p-4 flex justify-between items-center">
+  <div class="text-left">
+    <p>Contact details</p>
+  </div>
+  <div class="text-right">
+    <p>© 2024 UEA Parking System group 209</p>
+  </div>
+</div>
+
+    {% include 'frontend/topup.html' %}
 {% endblock %}
