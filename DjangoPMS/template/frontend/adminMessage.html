@@ -13,7 +13,7 @@
       </div>
       {% for Sender in Senders %}
       {% if Sender.sender != request.user %}
-      <a href="{% url 'admin_msg_ctx' Sender.sender.id %}">
+      <a href="{% url 'msg_ctx' Sender.sender.id %}">
         <div
           class="card-body h-auto w-full hover:bg-base-200 bg-base-100 border-2 border-neutral"
         >

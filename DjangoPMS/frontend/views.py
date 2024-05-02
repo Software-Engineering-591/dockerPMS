@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
-
+from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot
 
 from .forms import QuoteForm, MessageForm
@@ -93,7 +93,7 @@ def admin_message_ctx(request, sender):
             message.receiver = driver
             message.sender = request.user
             message.save()
-            return redirect(f'/admin_message/{sender}/')
+            return redirect('msg_ctx', sender)
     else:
         form = MessageForm()
     return render(
@@ -158,10 +158,14 @@ class LotView(DetailView):
     template_name = 'frontend/lot.html'
 
 
-@require_GET
-def messaging(request):
-    print(dir(request.user))
+@login_required()
+def messaging(request, sender=None):
     if hasattr(request.user, 'admin'):
-        return admin_messages(request)
+        return (
+            admin_message_ctx(request, sender)
+            if sender
+            else admin_messages(request)
+        )
+
     else:
         return driver_messaging(request)

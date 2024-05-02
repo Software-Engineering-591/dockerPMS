@@ -14,6 +14,9 @@ import os
 from pathlib import Path
 from glob import glob
 
+from django.urls import reverse_lazy
+
+
 # Grab GeoDjango libraries
 GDAL_LIBRARY_PATH = glob('/usr/lib/libgdal.so.*')[0]
 GEOS_LIBRARY_PATH = glob('/usr/lib/libgeos_c.so.*')[0]
@@ -145,3 +148,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = ['https://d08a-81-99-227-205.ngrok-free.app']
 
 LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
+
+
+LOGIN_URL = reverse_lazy('login')
