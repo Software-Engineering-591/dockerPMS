@@ -4,8 +4,6 @@
 <script src="{% static 'frontend/message_load.js' %}" defer></script>   
 {% endblock %}
 {% block body %}
-{% if request.user.is_authenticated %}
-{% if request.user.is_superuser %}
 {% include 'frontend/nav.html' %}
 <main class="h-auto place-items-center grid">
   <div
@@ -78,7 +76,5 @@
     </div>
   </div>
 </main>
-{% endif %}
-{% endif %}
 {% include 'frontend/footer.html' %}
 {% endblock %}

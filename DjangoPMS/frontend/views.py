@@ -64,7 +64,7 @@ def driver_messaging(request):
 
     return render(
         request,
-        'frontend/driverMessage.html',
+        'frontend/message/driver.html',
         {'form': form, 'Messages': messages},
     )
 
@@ -75,7 +75,7 @@ def admin_messages(request):
     senders = Message.objects.order_by('sender').distinct('sender')
     return render(
         request,
-        'frontend/adminMessage.html',
+        'frontend/message/admin.html',
         {'Messages': messages, 'Senders': senders},
     )
 
@@ -98,7 +98,7 @@ def admin_message_ctx(request, sender):
         form = MessageForm()
     return render(
         request,
-        'frontend/adminMessageContext.html',
+        'frontend/message/admin_ctx.html',
         {
             'Messages': messages,
             'Senders': senders,
