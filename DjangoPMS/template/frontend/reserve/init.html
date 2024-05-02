@@ -15,13 +15,14 @@
 {% endblock %}
 
 {% block body %}
-<div class="flex w-full">
+<main class="flex w-full">
   <div class="grid flex-grow card bg-base-300 rounded-box place-items-center">
     <a href={% url 'index' %} class="btn btn-outline btn-accent btn-sm m-2 absolute left-0 top-0">Go Home</a>
+    {% include 'frontend/reserve/form.html' %}
   </div>
   <div class="divider divider-horizontal"></div>
   <div class="h-screen flex-grow card bg-base-300 rounded-box w-2/3">
     {% leaflet_map "reserve_leaflet" callback="window.map_init_basic" %}
   </div>
-</div>
+</main>
 {% endblock %}

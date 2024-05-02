@@ -1,19 +1,19 @@
-from django.contrib.auth.models import User
-from frontend.forms import messageForm
-from dataclasses import dataclass
-import json
 import dataclasses
+import json
+from dataclasses import dataclass
 
 from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.shortcuts import redirect, render, get_object_or_404
-from django.views.decorators.http import require_http_methods, require_GET
-from .forms import QuoteForm
+from django.contrib.auth.models import User
 from django.db.models import Q
+from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 
-from backend.models import Driver, ParkingLot, Message
+from backend.models import Driver, Message, ParkingLot
+
+from .forms import QuoteForm, MessageForm
 
 # Create your views here.
 
@@ -46,19 +46,19 @@ def login(request):
 
 
 @require_http_methods(['GET', 'POST'])
-def driverMessaging(request):
+def driver_messaging(request):
     messages = Message.objects.order_by('timestamp')
     if request.method == 'POST':
-        form = messageForm(request.POST)
+        form = MessageForm(request.POST)
         admin = User.objects.get(is_superuser=True)
         if form.is_valid():
-            message_temp = form.save(commit=False)
-            message_temp.receiver = admin
-            message_temp.sender = request.user
-            message_temp.save()
+            message = form.save(commit=False)
+            message.receiver = admin
+            message.sender = request.user
+            message.save()
             return redirect('/message/')
     else:
-        form = messageForm()
+        form = MessageForm()
 
     context = {'Messages': messages, 'form': form}
 
@@ -70,7 +70,7 @@ def driverMessaging(request):
 
 
 @require_http_methods(['GET', 'POST'])
-def adminMessages(request):
+def admin_messages(request):
     messages = Message.objects.order_by('timestamp')
     senders = Message.objects.order_by('sender').distinct('sender')
     return render(
@@ -81,21 +81,21 @@ def adminMessages(request):
 
 
 @require_http_methods(['GET', 'POST'])
-def adminMessageContext(request, sender):
+def admin_message_ctx(request, sender):
     messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
     senders = Message.objects.order_by('sender').distinct('sender')
     driver = get_object_or_404(User, pk=sender)
 
     if request.method == 'POST':
-        form = messageForm(request.POST)
+        form = MessageForm(request.POST)
         if form.is_valid():
-            message_temp = form.save(commit=False)
-            message_temp.receiver = driver
-            message_temp.sender = request.user
-            message_temp.save()
-            return redirect(f'/adminMessage/{sender}/')
+            message = form.save(commit=False)
+            message.receiver = driver
+            message.sender = request.user
+            message.save()
+            return redirect(f'/admin_message/{sender}/')
     else:
-        form = messageForm()
+        form = MessageForm()
     return render(
         request,
         'frontend/adminMessageContext.html',
@@ -138,15 +138,30 @@ class ReserveView(TemplateView):
             LeafletLot(
                 point=(lot.poly.centroid.y, lot.poly.centroid.x),
                 poly=tuple(zip(lot.poly[0].y, lot.poly[0].x)),
-                popup_html=render_to_string('frontend/reserve/popup.html'),
+                popup_html=render_to_string(
+                    'frontend/reserve/popup.html', {'parkinglot': lot}
+                ),
             )
             for lot in ParkingLot.objects.all()
         ]
         return {
             'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder),
+            'form': QuoteForm(self.request.POST),
         }
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
 
 
 class LotView(DetailView):
     model = ParkingLot
     template_name = 'frontend/lot.html'
+
+
+@require_GET
+def messaging(request):
+    print(dir(request.user))
+    if hasattr(request.user, 'admin'):
+        return admin_messages(request)
+    else:
+        return driver_messaging(request)

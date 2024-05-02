@@ -1,1 +1,19 @@
-<p>Hello world!<br />This is a nice popup.</p>
+<div class="flex w-full">
+  <div
+    class="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center"
+  >
+    <div
+      class="radial-progress bg-primary text-primary-content border-4 border-primary"
+      style="--value: 70"
+      role="progressbar"
+    >
+      70%
+    </div>
+  </div>
+  <div class="divider divider-horizontal">OR</div>
+  <div
+    class="grid h-20 flex-grow card bg-base-300 rounded-box place-items-center"
+  >
+    <a href={% url 'lot' parkinglot.id %} class="btn btn-outline btn-accent btn-sm">Go to {{parkinglot.name}}</a>
+  </div>
+</div>

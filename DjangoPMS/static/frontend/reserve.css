@@ -3,5 +3,7 @@
 }
 .lot .leaflet-popup-content-wrapper,
 .lot .leaflet-popup-tip {
-  background-color: oklch(var(--b1)) !important;
+  background-color: oklch(var(--b1));
+  width: auto;
+  height: auto;
 }
