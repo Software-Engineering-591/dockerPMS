@@ -5,9 +5,8 @@
 {% endblock %}
 
 {% block body %}
-    <nav>
-        {% include 'frontend/nav2.html' %}
-    </nav>
+    {% include 'frontend/nav.html' %}
+    <main>
     <h1 class="text-center text-4xl font-semibold my-6 font-sans">
         Welcome back!
     </h1>
@@ -37,7 +36,8 @@
                 up</a></p>
         </div>
     </div>
+    </main>
     <footer>
-        {% include 'frontend/site_footer.html' %}
+        {% include 'frontend/footer.html' %}
     </footer>
 {% endblock %}
