@@ -1,7 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth.models import User
 from backend.models import Message
+from django.http import request
 
 
 class MessageForm(forms.ModelForm):
@@ -49,3 +50,17 @@ class QuoteForm(forms.Form):
                 raise ValidationError(
                     'A departure time must be after the arrival time on the same date'
                 )
+
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'Your new firstname'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Your new lastname'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Your new email'})
+        }
+
+
+# class Password

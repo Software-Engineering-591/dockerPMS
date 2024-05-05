@@ -1,45 +1,46 @@
 {% load static %}
 <!doctype html>
+<script src="https://unpkg.com/htmx.org@1.9.12"></script>
 <html lang="en" data-theme="corporate" x-data="{darkMode: $persist(true)}">
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <meta
-      name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
     />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
     <link
-      rel="shortcut icon"
-      type="image/png"
-      href="{% static 'favicon.ico' %}"
+            rel="shortcut icon"
+            type="image/png"
+            href="{% static 'favicon.ico' %}"
     />
-    <link rel="stylesheet" href="{% static 'frontend/base.css' %}" />
+    <link rel="stylesheet" href="{% static 'frontend/base.css' %}"/>
     <link
-      href="https://cdn.jsdelivr.net/npm/daisyui@4.9.0/dist/full.min.css"
-      rel="stylesheet"
-      type="text/css"
+            href="https://cdn.jsdelivr.net/npm/daisyui@4.9.0/dist/full.min.css"
+            rel="stylesheet"
+            type="text/css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Alpine Plugins -->
     <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"
+            defer
+            src="https://cdn.jsdelivr.net/npm/@alpinejs/persist@3.x.x/dist/cdn.min.js"
     ></script>
     <!-- Alpine Core -->
     <script
-      defer
-      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
     ></script>
     <input
-      type="checkbox"
-      value="sunset"
-      x-model="darkMode"
-      class="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2 hidden"
+            type="checkbox"
+            value="sunset"
+            x-model="darkMode"
+            class="toggle theme-controller bg-base-content row-start-1 col-start-1 col-span-2 hidden"
     />
     {% block head %} {% endblock %}
-  </head>
+</head>
 
-  <body>
-    {% block body %} {% endblock %}
-  </body>
+<body>
+{% block body %} {% endblock %}
+</body>
 </html>

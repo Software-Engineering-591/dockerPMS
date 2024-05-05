@@ -1,19 +1,21 @@
 import dataclasses
 import json
 from dataclasses import dataclass
-
-from django.contrib import auth
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib import auth, messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot
+from .forms import QuoteForm, MessageForm, UserProfileForm
 
-from .forms import QuoteForm, MessageForm
 
 # Create your views here.
 
@@ -169,3 +171,42 @@ def messaging(request, sender=None):
 
     else:
         return driver_messaging(request)
+
+
+@require_http_methods(["GET", "POST"])
+def profile(request: HttpRequest):
+    user = request.user
+
+    # POST
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=request.user)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile"))
+    else:
+        form = UserProfileForm()
+
+    # GET
+    form = UserProfileForm()
+    context = {
+        "profile_form": form,
+    }
+    return render(request, "frontend/profile/profile.html", context)
+
+
+def change_password(request: HttpRequest):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('profile')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, "frontend/profile/change_password.html", {
+        'form': form
+    })
+
+
