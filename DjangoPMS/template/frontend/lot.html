@@ -1,0 +1,45 @@
+{% extends 'frontend/base.html' %} {% block body %}
+<div class="flex flex-col w-full border-opacity-50">
+  <div class="flex card bg-base-300 rounded-box flex-row">
+    <img
+      class="artboard artboard-horizontal phone-2 rounded-xl border-8 border-primary"
+      src="https://s0.geograph.org.uk/geophotos/03/80/86/3808660_a63e6b9d.jpg"
+    />
+    <div class="divider divider-horizontal"></div>
+    <div class="flex flex-col flex-grow justify-center space-y-16">
+      <div class="flex gap-4">
+        <div class="badge badge-primary">Free</div>
+        <progress
+          class="progress progress-error w-1/2 h-auto"
+          value="30"
+          max="100"
+        ></progress>
+        <div class="badge badge-primary">40/40</div>
+      </div>
+      <div class="flex gap-4">
+        <div class="badge badge-primary">Free</div>
+        <progress
+          class="progress progress-error w-1/2 h-auto"
+          value="30"
+          max="100"
+        ></progress>
+        <div class="badge badge-primary">40/40</div>
+      </div>
+      <div class="flex gap-4">
+        <div class="badge badge-primary">Free</div>
+        <progress
+          class="progress progress-error w-1/2 h-auto"
+          value="30"
+          max="100"
+        ></progress>
+        <div class="badge badge-primary">40/40</div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
+    <button class="btn btn-wide">Reserve a Slot!</button>
+  </div>
+  <div class="text-xl">{% lorem %}</div>
+</div>
+{% include 'frontend/footer.html' %} {% endblock %}
