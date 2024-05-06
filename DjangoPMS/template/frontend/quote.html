@@ -1,0 +1,43 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block head %}
+<title>Quote | UEA PMS</title>
+<link rel="stylesheet" href="{% static 'frontend/home.css' %}">
+{% endblock %}
+
+{% block body %}
+<ul class="steps">
+    <li class="step step-primary">Register</li>
+    <li class="step step-primary">Choose plan</li>
+    <li class="step step-primary">Purchase</li>
+    <li class="step">Receive Product</li>
+</ul>
+
+<div class="min-h-screen flex flex-col justify-center items-center">
+    <div class="flex flex-col w-full lg:flex-row">
+        <!-- Left divider: Assigned lot and driver contact details -->
+        <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
+            <div>
+                <h3 class="font-bold text-lg">Assigned Lot: {{ assigned_slot }}</h3>
+                <p>Driver Name: {{ user.first_name }} {{ user.last_name }}</p>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="divider lg:divider-horizontal">OR</div>
+
+        <!-- Right divider: Total charge and Top-up button -->
+        <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
+            <div>
+                <h3 class="font-bold text-lg">Total Carge: £</h3>
+                <button class="btn" onclick="topup_modal.showModal()">Top Up</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    {% include 'frontend/footer.html' %}
+    {% include "frontend/topup.html" %}
+
+{% endblock %}
