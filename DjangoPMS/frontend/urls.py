@@ -10,4 +10,5 @@ urlpatterns = [
     path('message/<int:sender>', views.messaging, name='msg_ctx'),
     path('reserve/', views.ReserveView.as_view(), name='reserve'),
     path('lot/<int:pk>', views.LotView.as_view(), name='lot'),
+    path('admin/', views.AdminView.as_view(), name='admin'),
 ]

@@ -169,3 +169,7 @@ def messaging(request, sender=None):
 
     else:
         return driver_messaging(request)
+
+
+class AdminView(TemplateView):
+    template_name = 'frontend/admin.html'

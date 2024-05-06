@@ -1,0 +1,39 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Admin</title>
+    <link rel="stylesheet" href="{% static 'frontend/admin.css' %}"/>
+{% endblock %}
+
+{% block body %}
+    {% include "frontend/nav.html" %}
+    <main>
+       <div class="radial-progress bg-primary text-primary-content border-4 border-primary" style="--value:50;" role="progressbar">
+           50 spaces taken
+
+       </div>
+
+        <div class="adminDropdown">
+            <div tabindex="0" role="button" class="btn m-1">Parking</div>
+            <div tabindex="0"
+                 class="adminDropdown-content z-[1] card card-compact p-2 shadow bg-primary text-primary-content">
+                <div class="card-body">
+                    <h3 class="card-title">Card title!</h3>
+                    <p>you can use any element as a dropdown.</p>
+                </div>
+            </div>
+
+            <div tabindex="0" role="button" class="btn m-1">Driver</div>
+            <div tabindex="0"
+                 class="adminDropdown-content z-[1] card card-compact p-2 shadow bg-primary text-primary-content">
+                <div class="card-body">
+                    <h3 class="card-title">Card title!</h3>
+                    <p>you can use any element as a dropdown.</p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    {% include "frontend/footer.html" %}
+{% endblock %}
