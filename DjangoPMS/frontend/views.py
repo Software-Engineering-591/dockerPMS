@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
-from backend.models import Driver, Message, ParkingLot
+from backend.models import Driver, Message, ParkingLot, Slot, BaseUser, Admin
 
 from .forms import QuoteForm, MessageForm
 
@@ -20,7 +20,8 @@ from .forms import QuoteForm, MessageForm
 
 @require_GET
 def home(request):
-    return render(request, 'frontend/home.html', {'form': QuoteForm()})
+    available_space = get_available_space_api
+    return render(request, 'frontend/home.html', {'form': QuoteForm(), 'available_space': available_space})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -47,15 +48,15 @@ def login(request):
 
 @require_http_methods(['GET', 'POST'])
 def driver_messaging(request):
-    messages = Message.objects.order_by('timestamp')
+    driver = Driver.objects.get(user=request.user)
+    messages = driver.messages
     if request.method == 'POST':
         form = MessageForm(request.POST)
         admin = User.objects.get(is_superuser=True)
         if form.is_valid():
             message = form.save(commit=False)
             message.receiver = admin
-            message.sender = request.user
-            message.save()
+            driver.send_message(message)
             return redirect('/message/')
     else:
         form = MessageForm()
@@ -71,18 +72,18 @@ def driver_messaging(request):
 
 @require_http_methods(['GET', 'POST'])
 def admin_messages(request):
-    messages = Message.objects.order_by('timestamp')
     senders = Message.objects.order_by('sender').distinct('sender')
     return render(
         request,
         'frontend/message/admin.html',
-        {'Messages': messages, 'Senders': senders},
+        {'Senders': senders},
     )
 
 
 @require_http_methods(['GET', 'POST'])
 def admin_message_ctx(request, sender):
-    messages = Message.objects.filter(Q(sender=sender) | Q(receiver=sender))
+    admin = Admin.objects.get(user=request.user)
+    messages = admin.messages
     senders = Message.objects.order_by('sender').distinct('sender')
     driver = get_object_or_404(User, pk=sender)
 
@@ -92,7 +93,7 @@ def admin_message_ctx(request, sender):
             message = form.save(commit=False)
             message.receiver = driver
             message.sender = request.user
-            message.save()
+            admin.send_message(message)
             return redirect('msg_ctx', sender)
     else:
         form = MessageForm()
@@ -169,3 +170,10 @@ def messaging(request, sender=None):
 
     else:
         return driver_messaging(request)
+def get_total_space_api():
+    return ParkingLot.get_total_space
+@require_GET
+def get_reserved_space_api():
+    return ParkingLot.get_reserved_space
+def get_available_space_api():
+    return ParkingLot.get_available_space()

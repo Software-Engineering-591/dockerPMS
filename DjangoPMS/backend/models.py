@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.gis.db import models as gis_models
-
+from django.db.models import Q
 
 # Create your models here.
 
@@ -12,6 +12,11 @@ class BaseUser(models.Model):
 
     class Meta:
         abstract = True
+    @property
+    def messages(self):
+        return Message.objects.filter(Q(sender=self.user) | Q(receiver=self.user))
+    def send_message(self, message):
+        Message.objects.create(sender=self.user, message_text=message.message_text, receiver=message.receiver)
 
 
 class Admin(BaseUser):
@@ -85,3 +90,14 @@ class ParkingLot(models.Model):
 
     def __str__(self):
         return str(self.name)
+    @staticmethod
+    def get_total_space():
+        return Slot.objects.count()
+    @staticmethod
+    def get_reserved_space():
+        return Slot.objects.filter(status='R').count()
+    @staticmethod
+    def get_available_space():
+        return Slot.objects.filter(status='A').count()
+
+
