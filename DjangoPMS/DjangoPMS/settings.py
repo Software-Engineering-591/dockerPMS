@@ -16,14 +16,12 @@ from glob import glob
 
 from django.urls import reverse_lazy
 
-
 # Grab GeoDjango libraries
 GDAL_LIBRARY_PATH = glob('/usr/lib/libgdal.so.*')[0]
 GEOS_LIBRARY_PATH = glob('/usr/lib/libgeos_c.so.*')[0]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -35,7 +33,6 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 DEBUG = os.environ.get('DJANGO_DEBUG', 'true') == 'true'
 
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost,').split(',')
-
 
 # Application definition
 
@@ -83,7 +80,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'DjangoPMS.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -97,7 +93,6 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT', 5432),
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -117,7 +112,6 @@ AUTH_PASSWORD_VALIDATORS = [
     #     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -128,7 +122,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -149,5 +142,11 @@ CSRF_TRUSTED_ORIGINS = ['https://d08a-81-99-227-205.ngrok-free.app']
 
 LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
 
-
 LOGIN_URL = reverse_lazy('login')
+
+# Email
+# import django.contrib.auth.backends
+
+EMAIL_BACKEND = 'django.contrib.auth.backends.filebased.EmailBackend'
+EMAIL_FILE_PATH = BASE_DIR / 'test_inbox'
+PASSWORD_RESET_TIMEOUT = 60

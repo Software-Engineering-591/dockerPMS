@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm, PasswordResetForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponseRedirect
@@ -14,7 +14,7 @@ from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot
-from .forms import QuoteForm, MessageForm, UserProfileForm
+from .forms import QuoteForm, MessageForm, UserProfileForm, RegisterForm
 
 
 # Create your views here.
@@ -26,15 +26,22 @@ def home(request):
 
 
 @require_http_methods(['GET', 'POST'])
-def signup(request):
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-        user = form.save()
-        driver = Driver.objects.create(user=user)
-        driver.save()
-        auth.login(request, user)
-        return redirect('index')
-    return render(request, 'frontend/signup.html', {'form': form})
+def signup(request:HttpRequest):
+    # POST
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            driver = Driver.objects.create(user=user)
+            driver.save()
+            auth.login(request, user)
+            return HttpResponseRedirect(reverse('index'))
+    else:
+        form = RegisterForm()
+
+    # GET
+    context = {'form': form}
+    return render(request, 'frontend/signup.html', context)
 
 
 @require_http_methods(['GET', 'POST'])
@@ -174,12 +181,13 @@ def messaging(request, sender=None):
 
 
 @require_http_methods(["GET", "POST"])
+@login_required()
 def profile(request: HttpRequest):
     user = request.user
 
     # POST
     if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=request.user)
+        form = UserProfileForm(request.POST, instance=user)
 
         if form.is_valid():
             form.save()
@@ -188,13 +196,14 @@ def profile(request: HttpRequest):
         form = UserProfileForm()
 
     # GET
-    form = UserProfileForm()
+    form = UserProfileForm(instance=user)
     context = {
-        "profile_form": form,
+        "form": form,
     }
     return render(request, "frontend/profile/profile.html", context)
 
 
+@login_required()
 def change_password(request: HttpRequest):
     if request.method == 'POST':
         form = PasswordChangeForm(request.user, request.POST)
@@ -210,3 +219,23 @@ def change_password(request: HttpRequest):
     })
 
 
+@require_http_methods(["GET", "POST"])
+def password_reset(request: HttpRequest):
+    # POST
+    if request.method == 'POST':
+        form = PasswordResetForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return redirect('login')
+    else:
+        form = PasswordResetForm(request.user)
+
+    # GET
+    form = PasswordResetForm()
+    context = {
+        "form": form,
+    }
+    return render(request, "frontend/profile/password_reset.html", {
+        'form': form
+    })

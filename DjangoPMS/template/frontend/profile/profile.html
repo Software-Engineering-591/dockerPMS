@@ -48,19 +48,24 @@
                 <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
                     <form action="{% url 'profile' %}" method="POST">
                         {% csrf_token %}
-                        <b>Set a new first name</b>
+                        {{ form.non_field_errors }}
+                        <h2 class="menu-title text-3xl">Update profile</h2>
+                        <b>New first name</b>
                         <label class="input input-bordered flex items-center gap-2 m-2">
-                            {{ profile_form.first_name }}
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
                         </label>
-                        <b>Set a new last name</b>
+                        <b>New last name</b>
                         <label class="input input-bordered flex items-center gap-2 m-2">
-                            {{ profile_form.last_name }}
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
                         </label>
-                        <b>Set a new email address</b>
+                        <b>New email</b>
                         <label class="input input-bordered flex items-center gap-2 m-2">
-                            {{ profile_form.email }}
+                            {{ form.email }}
+                            {{ form.email.errors }}
                         </label>
-                        <button class="btn btn-primary mt-5 items-center container">Save changes</button>
+                        <button class="btn btn-primary items-center container w-48">Save changes</button>
                     </form>
                 </div>
             </div>

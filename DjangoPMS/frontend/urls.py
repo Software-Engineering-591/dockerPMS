@@ -12,4 +12,5 @@ urlpatterns = [
     path('lot/<int:pk>', views.LotView.as_view(), name='lot'),
     path("profile/", views.profile, name="profile"),
     path("change_password/", views.change_password, name="change_password"),
+    path("password_reset/", views.password_reset, name="password_reset")
 ]
