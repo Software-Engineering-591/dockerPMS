@@ -7,18 +7,37 @@
 {% endblock %}
 
 {% block body %}
-<ul class="steps">
-    <li class="step step-primary">Register</li>
-    <li class="step step-primary">Choose plan</li>
-    <li class="step step-primary">Purchase</li>
-    <li class="step">Receive Product</li>
-</ul>
+    {% include 'frontend/nav.html' %}
 
-<div class="min-h-screen flex flex-col justify-center items-center">
+<main class="min-h-screen flex flex-col justify-center items-center">
     <div class="flex flex-col w-full lg:flex-row">
-        <!-- Left divider: Assigned lot and driver contact details -->
-        <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
-            <div>
+        <!-- Left divider: Profile and Assigned lot -->
+        <div class="grid flex-grow card bg-base-300 rounded-box place-items-center p-4" style="border: 2px solid orange;">
+            <ul class="menu bg-base-300 w-fit rounded-box text-xl text-base-content">
+                <li>
+                    <h2 class="menu-title text-3xl">Contact Details</h2>
+                    <a class="">
+                        <span><b>Username :</b> {{ user.username }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span><b>First name :</b> {{ user.first_name }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span><b>Last name :</b> {{ user.last_name }}</span>
+                    </a>
+                </li>
+                <li>
+                    <a>
+                        <span><b>Email address :</b> {{ user.email }}</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="mt-4 bg-orange-500 text-white p-2 rounded-lg">
+                <h2 class="menu-title text-3xl">Payment</h2>
                 <h3 class="font-bold text-lg">Assigned Lot: {{ assigned_slot }}</h3>
                 <p>Driver Name: {{ user.first_name }} {{ user.last_name }}</p>
             </div>
@@ -28,14 +47,14 @@
         <div class="divider lg:divider-horizontal">OR</div>
 
         <!-- Right divider: Total charge and Top-up button -->
-        <div class="grid flex-grow h-32 card bg-base-300 rounded-box place-items-center">
+        <div class="grid flex-grow card bg-base-300 rounded-box place-items-center p-4" style="border: 2px solid orange;">
             <div>
-                <h3 class="font-bold text-lg">Total Carge: £</h3>
-                <button class="btn" onclick="topup_modal.showModal()">Top Up</button>
+                <h3 class="font-bold text-lg">Total Charge: £{{ parking_charge }}</h3>
+                <button class="btn" onclick="document.getElementById('topup_modal').showModal()">Top Up</button>
             </div>
         </div>
     </div>
-</div>
+</main>
 
     {% include 'frontend/footer.html' %}
     {% include "frontend/topup.html" %}

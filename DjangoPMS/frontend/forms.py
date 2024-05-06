@@ -1,7 +1,10 @@
 from django import forms
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 import datetime
-from backend.models import Message
+from backend.models import Message, User
+from django.http import request
 
 class MessageForm(forms.ModelForm):
     class Meta:
@@ -94,5 +97,11 @@ class TopUpForm(forms.Form):
         # You can add more validation to check if email is associated with a user etc.
         return email
 
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
 
-
+class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ("email",)

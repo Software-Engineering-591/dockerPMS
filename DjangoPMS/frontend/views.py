@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
@@ -13,15 +14,9 @@ from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
 from django.shortcuts import render, redirect
-from django.shortcuts import render
 
 
-
-
-
-
-
-from .forms import QuoteForm, MessageForm, TopUpForm
+from .forms import QuoteForm, MessageForm, TopUpForm, UserProfileForm, RegisterForm
 
 # Create your views here.
 
@@ -251,3 +246,25 @@ def topup(request):
     else:
         form = TopUpForm()  # An unbound form for GET request
         return render(request, 'frontend/topup.html', {'form': form})
+
+@require_http_methods(["GET", "POST"])
+@login_required()
+def profile(request: HttpRequest):
+    user = request.user
+
+    # POST
+    if request.method == 'POST':
+        form = UserProfileForm(request.POST, instance=user)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse("profile"))
+    else:
+        form = UserProfileForm()
+
+    # GET
+    form = UserProfileForm(instance=user)
+    context = {
+        "form": form,
+    }
+    return render(request, "frontend/profile/profile.html", context)
