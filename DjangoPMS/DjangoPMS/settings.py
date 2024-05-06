@@ -144,16 +144,22 @@ LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
 
 LOGIN_URL = reverse_lazy('login')
 
-# Email
-import django.core.mail.backends.filebased
+# Here is a test for sending email
+# import django.core.mail.backends.filebased
 # EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 # EMAIL_FILE_PATH = BASE_DIR / 'test_inbox'
 # PASSWORD_RESET_TIMEOUT = 60*5
 
+from django.core.mail import send_mail
+# SMTP Configuration
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'ortinfargo@gmail.com'
-EMAIL_HOST_PASSWORD = 'w%w;eR\'P9FT\'C%!'
+EMAIL_HOST_PASSWORD = 'toxm fqlb qufp bisv'
+EMAIL_SUBJECT_PREFIX = '[UEAParkingSystem]'
+DEFAULT_FROM_EMAIL = 'UEA Parking Management System Team 209'
+EMAIL_SUBJECT = EMAIL_SUBJECT_PREFIX + 'Please reset your password'
+# 5-min link
 PASSWORD_RESET_TIMEOUT = 60*5

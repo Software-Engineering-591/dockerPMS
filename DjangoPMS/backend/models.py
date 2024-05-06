@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 from django.utils import timezone
 from django.contrib.gis.db import models as gis_models
 
@@ -85,3 +85,5 @@ class ParkingLot(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+

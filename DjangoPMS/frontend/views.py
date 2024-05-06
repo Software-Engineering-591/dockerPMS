@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm, PasswordResetForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.http import HttpRequest, HttpResponseRedirect
@@ -219,24 +219,3 @@ def change_password(request: HttpRequest):
     })
 
 
-# @require_http_methods(["GET", "POST"])
-# def password_reset(request: HttpRequest):
-#     return render(request, "frontend/profile/password_reset.html", PasswordResetForm)
-    # POST
-    # if request.method == 'POST':
-    #     form = PasswordResetForm(request.user, request.POST)
-    #     if form.is_valid():
-    #         user = form.save()
-    #         update_session_auth_hash(request, user)
-    #         return redirect('login')
-    # else:
-    #     form = PasswordResetForm(request.user)
-    #
-    # # GET
-    # form = PasswordResetForm()
-    # context = {
-    #     "form": form,
-    # }
-    # return render(request, "frontend/profile/password_reset.html", {
-    #     'form': form
-    # })
