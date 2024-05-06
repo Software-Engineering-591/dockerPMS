@@ -219,23 +219,24 @@ def change_password(request: HttpRequest):
     })
 
 
-@require_http_methods(["GET", "POST"])
-def password_reset(request: HttpRequest):
+# @require_http_methods(["GET", "POST"])
+# def password_reset(request: HttpRequest):
+#     return render(request, "frontend/profile/password_reset.html", PasswordResetForm)
     # POST
-    if request.method == 'POST':
-        form = PasswordResetForm(request.user, request.POST)
-        if form.is_valid():
-            user = form.save()
-            update_session_auth_hash(request, user)
-            return redirect('login')
-    else:
-        form = PasswordResetForm(request.user)
-
-    # GET
-    form = PasswordResetForm()
-    context = {
-        "form": form,
-    }
-    return render(request, "frontend/profile/password_reset.html", {
-        'form': form
-    })
+    # if request.method == 'POST':
+    #     form = PasswordResetForm(request.user, request.POST)
+    #     if form.is_valid():
+    #         user = form.save()
+    #         update_session_auth_hash(request, user)
+    #         return redirect('login')
+    # else:
+    #     form = PasswordResetForm(request.user)
+    #
+    # # GET
+    # form = PasswordResetForm()
+    # context = {
+    #     "form": form,
+    # }
+    # return render(request, "frontend/profile/password_reset.html", {
+    #     'form': form
+    # })

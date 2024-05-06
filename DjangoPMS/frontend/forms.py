@@ -62,10 +62,5 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ("first_name", "last_name", "email")
-        # widgets = {
-        #     'first_name': forms.TextInput(attrs={'placeholder': 'Your new firstname'}),
-        #     'last_name': forms.TextInput(attrs={'placeholder': 'Your new lastname'}),
-        #     'email': forms.EmailInput(attrs={'placeholder': 'Your new email'})
-        # }
 
 # class Password

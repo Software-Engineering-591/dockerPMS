@@ -17,7 +17,7 @@
         <div class="box1">
             <div class="flex flex-col w-full lg:flex-row">
                 <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
-                    <ul class="menu bg-base-300 w-fit rounded-box text-xl">
+                    <ul class="menu bg-base-300 w-fit rounded-box text-xl text-base-content">
                         <li>
                             <h2 class="menu-title text-3xl">{{ user.username }}'s profile</h2>
                             <a class="">
@@ -45,7 +45,7 @@
                     </ul>
                 </div>
                 <div class="divider lg:divider-horizontal divider-primary"></div>
-                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center text-base-content">
                     <form action="{% url 'profile' %}" method="POST">
                         {% csrf_token %}
                         {{ form.non_field_errors }}

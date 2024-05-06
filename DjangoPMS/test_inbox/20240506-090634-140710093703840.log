@@ -1,0 +1,25 @@
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Password reset on localhost:8000
+From: webmaster@localhost
+To: puri@gmail.com
+Date: Mon, 06 May 2024 09:06:34 -0000
+Message-ID: <171498639481.191.560867729614616506@86627c092fd0>
+
+
+You're receiving this email because you requested a password reset for your user account at localhost:8000.
+
+Please go to the following page and choose a new password:
+
+http://localhost:8000/reset/Ng/c6llay-398e9d9d1b2d63fead244c51f9737294/
+
+Your username, in case you’ve forgotten: puri1
+
+Thanks for using our site!
+
+The localhost:8000 team
+
+
+
+-------------------------------------------------------------------------------

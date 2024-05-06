@@ -145,8 +145,15 @@ LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
 LOGIN_URL = reverse_lazy('login')
 
 # Email
-# import django.contrib.auth.backends
+import django.core.mail.backends.filebased
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = BASE_DIR / 'test_inbox'
+# PASSWORD_RESET_TIMEOUT = 60*5
 
-EMAIL_BACKEND = 'django.contrib.auth.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = BASE_DIR / 'test_inbox'
-PASSWORD_RESET_TIMEOUT = 60
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ortinfargo@gmail.com'
+EMAIL_HOST_PASSWORD = 'w%w;eR\'P9FT\'C%!'
+PASSWORD_RESET_TIMEOUT = 60*5
