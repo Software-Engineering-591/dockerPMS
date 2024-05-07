@@ -8,15 +8,45 @@
 
 
 {% block body %}
-<body class="h-screen w-screen">
-    {# Container for Request information   #}
-<div class="flex justify-center card h-3/4 w-3/4">
-<div class="flex w-full">
-<div class="grid h-20 flex-grow card-body bg-base-300 rounded-box place-items-center">
-     {% for requests in request %}
+{% include "frontend/nav.html" %}
+<body class="flex-col h-screen w-screen">
+
+{# Container for Request information   #}
+<div class="flex items-center justify-center card h-3/4 w-full  overflow-y-hidden">
+<div class="flex justify-center w-3/4 h-3/4 items-center">
+<div class="card h-full w-full">
+    <div class="card-title h-auto w-full text-center"> Payment History </div>
+  <div class="grid h-auto w-full bg-base-300 rounded-box">
+
+      {% for payments in payments %}
 
     <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200">
 
+    <div class="collapse-title text-xl font-medium">
+        {{ payments.timestamp }}
+    </div>
+
+    <div class="collapse-content">
+        <p>
+        Payment ID: {{ payments.id }}
+        Payment total: {{ payments.amount}}
+        </p>
+    </div>
+    </div>
+
+    {% endfor %}
+
+  </div>
+  </div>
+  <div class="divider divider-horizontal">OR</div>
+    <div class="card h-full w-full border-4 border-accent rounded-3xl">
+     <div class="card-title h-auto w-full text-center">Request History </div>
+  <div class="grid w-full h-auto bg-base-300 rounded-box ">
+
+     {% for requests in request %}
+
+    <div class="collapse bg-base-200">
+    <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">
         {{ requests.timestamp }}
     </div>
@@ -31,38 +61,15 @@
     </div>
 
     </div>
- </div>
     {% endfor %}
 
-<div class="divider divider-horizontal"></div>
-<div class="grid h-20 flex-grow card-body bg-base-300 rounded-box place-items-center">
-
-     {% for payments in payments %}
-
-    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200">
-
-    <div class="collapse-title text-xl font-medium">
-        {{ payments.timestamp }}
-    </div>
-
-    <div class="collapse-content">
-        <p>
-        Payment ID: {{ payments.id }}
-        Payment total: {{ payments.amount}}
-        </p>
-    </div>
-
-    </div>
-    {% endfor %}
-
-</div>
-
-
+  </div>
 </div>
 </div>
-
-
+</div>
 
 </body>
+{% include "frontend/footer.html" %}
 {% endblock %}
+
 </html>

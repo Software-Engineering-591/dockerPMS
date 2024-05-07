@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
-from backend.models import Driver, Message, ParkingLot
+from backend.models import Driver, Message, ParkingLot, Request, Slot, Payment, Admin
 
 from .forms import QuoteForm, MessageForm
 
@@ -160,7 +160,7 @@ class LotView(DetailView):
 
 @login_required()
 def messaging(request, sender=None):
-    if hasattr(request.user, 'admin'):
+    if (request.user.is_staff or request.user.is_superuser):
         return (
             admin_message_ctx(request, sender)
             if sender
