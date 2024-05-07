@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
-from backend.models import Driver, Message, ParkingLot, Slot, BaseUser, Admin, Request, Payment
+from backend.models import Driver, Message, ParkingLot
 
 from .forms import QuoteForm, MessageForm
 
@@ -20,8 +20,7 @@ from .forms import QuoteForm, MessageForm
 
 @require_GET
 def home(request):
-    available_space = get_available_space_api
-    return render(request, 'frontend/home.html', {'form': QuoteForm(), 'available_space': available_space})
+    return render(request, 'frontend/home.html', {'form': QuoteForm()})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -184,3 +183,6 @@ def get_reserved_space_api():
     return ParkingLot.get_reserved_space
 def get_available_space_api():
     return ParkingLot.get_available_space()
+
+class AdminView(TemplateView):
+    template_name = 'frontend/admin.html'
