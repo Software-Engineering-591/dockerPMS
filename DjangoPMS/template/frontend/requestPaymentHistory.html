@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+{% extends 'frontend/base.html' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+
+{% block body %}
+<body class="h-screen w-screen">
+    {# Container for Request information   #}
+<div class="flex justify-center card h-3/4 w-3/4">
+<div class="flex w-full">
+<div class="grid h-20 flex-grow card-body bg-base-300 rounded-box place-items-center">
+     {% for requests in request %}
+
+    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200">
+
+    <div class="collapse-title text-xl font-medium">
+        {{ requests.timestamp }}
+    </div>
+
+    <div class="collapse-content">
+        <p>
+        Request ID: {{ requests.id }} <br>
+        Request Slot: {{ requests.slot }} <br>
+        Request Arrival: {{ requests.arrival }} <br>
+        Request Departure: {{ requests.departure }}
+        </p>
+    </div>
+
+    </div>
+ </div>
+    {% endfor %}
+
+<div class="divider divider-horizontal"></div>
+<div class="grid h-20 flex-grow card-body bg-base-300 rounded-box place-items-center">
+
+     {% for payments in payments %}
+
+    <div tabindex="0" class="collapse collapse-arrow border border-base-300 bg-base-200">
+
+    <div class="collapse-title text-xl font-medium">
+        {{ payments.timestamp }}
+    </div>
+
+    <div class="collapse-content">
+        <p>
+        Payment ID: {{ payments.id }}
+        Payment total: {{ payments.amount}}
+        </p>
+    </div>
+
+    </div>
+    {% endfor %}
+
+</div>
+
+
+</div>
+</div>
+
+
+
+</body>
+{% endblock %}
+</html>

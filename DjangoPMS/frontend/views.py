@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
-from backend.models import Driver, Message, ParkingLot, Slot, BaseUser, Admin
+from backend.models import Driver, Message, ParkingLot, Slot, BaseUser, Admin, Request, Payment
 
 from .forms import QuoteForm, MessageForm
 
@@ -170,6 +170,13 @@ def messaging(request, sender=None):
 
     else:
         return driver_messaging(request)
+
+@login_required
+def request_and_payment(request):
+    driver = Driver.objects.get(user=request.user)
+    requests = Request.objects.all().filter(driver_id=driver.id)
+    payments = Payment.objects.all().filter(driver=driver.id).order_by('timestamp')
+    return render(request, 'frontend/requestPaymentHistory.html', {'request' : requests, 'payments' : payments})
 def get_total_space_api():
     return ParkingLot.get_total_space
 @require_GET

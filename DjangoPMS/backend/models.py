@@ -50,7 +50,7 @@ class Slot(models.Model):
 
     # Links driver class
     driver = models.ForeignKey(
-        Driver, on_delete=models.SET_NULL, null=True, default=None
+        Driver, on_delete=models.SET_NULL, null=True, default=None, blank=True
     )
 
 
@@ -73,6 +73,7 @@ class Request(models.Model):
     slot = models.ForeignKey(Slot, on_delete=models.CASCADE)
     arrival = models.DateTimeField()
     departure = models.DateTimeField()
+    timestamp = models.DateTimeField(default=timezone.now)
 
     class CurrentStatus(models.TextChoices):
         PENDING = 'P'
