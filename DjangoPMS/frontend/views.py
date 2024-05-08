@@ -17,10 +17,16 @@ from .forms import QuoteForm, MessageForm
 
 # Create your views here.
 
-
+# may be advisable to use hardcoded value 200 for total_space, unless 200 slots are going to be created
 @require_GET
 def home(request):
-    return render(request, 'frontend/home.html', {'form': QuoteForm()})
+    total_space = get_total_space_api()
+    reserved_space = get_reserved_space_api()
+    available_space_percentage = (((total_space - reserved_space) / total_space)*100)
+    available_spaces = total_space - reserved_space
+    return render(request, 'frontend/home.html', {'form': QuoteForm(), 'total_space': total_space,
+                                                  'available_space_percentage' : available_space_percentage,
+                                                  'available_spaces':available_spaces})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -173,14 +179,16 @@ def messaging(request, sender=None):
 @login_required
 def request_and_payment(request):
     driver = Driver.objects.get(user=request.user)
-    requests = Request.objects.all().filter(driver_id=driver.id)
-    payments = Payment.objects.all().filter(driver=driver.id).order_by('timestamp')
-    return render(request, 'frontend/requestPaymentHistory.html', {'request' : requests, 'payments' : payments})
+    requests = Request.objects.all().filter(driver_id=driver.id).order_by('-timestamp')
+    payments = Payment.objects.all().filter(driver=driver.id).order_by('-timestamp')
+    return render(request, 'frontend/rp_history.html', {'request' : requests, 'payments' : payments})
+
 def get_total_space_api():
-    return ParkingLot.get_total_space
-@require_GET
+    return ParkingLot.get_total_space()
+
 def get_reserved_space_api():
-    return ParkingLot.get_reserved_space
+    return ParkingLot.get_reserved_space()
+
 def get_available_space_api():
     return ParkingLot.get_available_space()
 
