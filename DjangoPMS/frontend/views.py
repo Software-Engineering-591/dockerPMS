@@ -20,8 +20,8 @@ from .forms import QuoteForm, MessageForm
 # may be advisable to use hardcoded value 200 for total_space, unless 200 slots are going to be created
 @require_GET
 def home(request):
-    total_space = get_total_space_api()
-    reserved_space = get_reserved_space_api()
+    total_space = get_total_space_total()
+    reserved_space = get_reserved_space_total()
     available_space_percentage = (((total_space - reserved_space) / total_space)*100)
     available_spaces = total_space - reserved_space
     return render(request, 'frontend/home.html', {'form': QuoteForm(), 'total_space': total_space,
@@ -159,10 +159,17 @@ class ReserveView(TemplateView):
         return self.get(request, *args, **kwargs)
 
 
-class LotView(DetailView):
-    model = ParkingLot
-    template_name = 'frontend/lot.html'
+# class LotView(DetailView):
+#     model = ParkingLot
 
+def lot_view(request, pk):
+    lot = ParkingLot.objects.get(pk=pk)
+    total = lot.get_total_space()
+    available = lot.get_available_space()
+    reserved = lot.get_reserved_space()
+    available_progress = (((total - reserved) / total)*100)
+    return render(request,'frontend/lot.html', {'total': total, 'available': available,
+                                                'reserved': reserved, 'available_progress' : available_progress})
 
 @login_required()
 def messaging(request, sender=None):
@@ -183,14 +190,17 @@ def request_and_payment(request):
     payments = Payment.objects.all().filter(driver=driver.id).order_by('-timestamp')
     return render(request, 'frontend/rp_history.html', {'request' : requests, 'payments' : payments})
 
-def get_total_space_api():
-    return ParkingLot.get_total_space()
 
-def get_reserved_space_api():
-    return ParkingLot.get_reserved_space()
 
-def get_available_space_api():
-    return ParkingLot.get_available_space()
+@staticmethod
+def get_total_space_total():
+    return Slot.objects.count()
+@staticmethod
+def get_reserved_space_total():
+    return Slot.objects.filter(status='R').count()
+@staticmethod
+def get_available_space_total():
+    return Slot.objects.filter(status='A').count()
 
 class AdminView(TemplateView):
     template_name = 'frontend/admin.html'
