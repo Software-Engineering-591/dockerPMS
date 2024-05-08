@@ -168,8 +168,9 @@ def lot_view(request, pk):
     available = lot.get_available_space()
     reserved = lot.get_reserved_space()
     available_progress = (((total - reserved) / total)*100)
+    reserved_progress= (((total - available) / total)*100)
     return render(request,'frontend/lot.html', {'total': total, 'available': available,
-                                                'reserved': reserved, 'available_progress' : available_progress})
+                                                'reserved': reserved, 'available_progress' : available_progress, 'reserved_progress' : reserved_progress})
 
 @login_required()
 def messaging(request, sender=None):
@@ -192,13 +193,11 @@ def request_and_payment(request):
 
 
 
-@staticmethod
 def get_total_space_total():
     return Slot.objects.count()
-@staticmethod
 def get_reserved_space_total():
     return Slot.objects.filter(status='R').count()
-@staticmethod
+
 def get_available_space_total():
     return Slot.objects.filter(status='A').count()
 
