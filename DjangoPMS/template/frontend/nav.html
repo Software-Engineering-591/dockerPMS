@@ -150,6 +150,7 @@
           <span class="badge badge-sm badge-warning">NEW</span>
         </a>
       </li>
+        {% if not request.user.is_superuser %}
       <li>
           <a href={% url "request_and_payment_history" %}>
           <svg
@@ -170,6 +171,7 @@
           <span class="badge badge-xs badge-info"></span>
         </a>
       </li>
+        {% endif %}
       <li>
       <li>
           <a href={% url "msg" %}>

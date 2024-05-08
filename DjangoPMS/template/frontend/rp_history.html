@@ -57,6 +57,9 @@
 
         <div class="collapse-title text-xl font-medium">
             {{ requests.timestamp }}
+            {% if requests.status == 'P' %}
+                <p class="opacity-50"> PENDING </p>
+            {% endif %}
         </div>
 
         <div class="collapse-content">
