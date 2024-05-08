@@ -22,8 +22,12 @@ from .forms import QuoteForm, MessageForm
 def home(request):
     total_space = get_total_space_total()
     reserved_space = get_reserved_space_total()
-    available_space_percentage = (((total_space - reserved_space) / total_space)*100)
-    available_spaces = total_space - reserved_space
+    if total_space > 0:
+        available_space_percentage = (((total_space - reserved_space) / total_space)*100)
+        available_spaces = total_space - reserved_space
+    else:
+        available_space_percentage = 0
+        available_spaces = 0
     return render(request, 'frontend/home.html', {'form': QuoteForm(), 'total_space': total_space,
                                                   'available_space_percentage' : available_space_percentage,
                                                   'available_spaces':available_spaces})
@@ -167,8 +171,12 @@ def lot_view(request, pk):
     total = lot.get_total_space()
     available = lot.get_available_space()
     reserved = lot.get_reserved_space()
-    available_progress = (((total - reserved) / total)*100)
-    reserved_progress= (((total - available) / total)*100)
+    if total > 0:
+        available_progress = (((total - reserved) / total)*100)
+        reserved_progress = (((total - available) / total) * 100)
+    else:
+        available_progress = 0
+        reserved_progress = 0
     return render(request,'frontend/lot.html', {'total': total, 'available': available,
                                                 'reserved': reserved, 'available_progress' : available_progress, 'reserved_progress' : reserved_progress})
 
