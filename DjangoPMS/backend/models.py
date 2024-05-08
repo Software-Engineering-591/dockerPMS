@@ -57,7 +57,7 @@ class ParkingLot(models.Model):
         return str(self.name)
 
     def get_total_space(self):
-        return Slot.objects.all().filter(lot=self.id).count()
+        return Slot.objects.filter(lot=self.id).count()
 
     def get_reserved_space(self):
         return Slot.objects.filter(status='R', lot=self.id).count()
