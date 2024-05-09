@@ -1,0 +1,306 @@
+{% extends 'frontend/base.html' %}
+{% load tz_detect %}
+{% load static %}
+{% block head %}
+    <title>Home | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
+{% endblock %}
+
+{% block body %}
+    {% include 'frontend/nav_admin.html' %}
+    <main class="p-20 my-30 mx-150">
+        <section>
+            <div class="flex flex-col w-full lg:flex-row">
+                <div class="grid w-96 h-96 card bg-base-300 rounded-box place-items-center">
+                    <div class="radial-progress bg-secondary text-primary-content border-4 border-secondary"
+                         style="--value:75;--size:15rem;"
+                         role="progressbar">150 spaces<span>available</span>
+                    </div>
+                </div>
+                <div class="divider lg:divider-horizontal"></div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
+                    <ul class="menu bg-base-300 w-fit text-center">
+                        <li>
+                            <p class="float-center text-5xl font-bold">UEA car park</p>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                200 Total Spaces {# total spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                50 occupied {# occupied spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                150 available {# available spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                0 event reserved {# event reserved #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                0 blocked / not be in used {# blocked #}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- here is for the dashboard -->
+        <section class="mt-20">
+            <div role="tablist" class="tabs tabs-boxed tabs-lg bg-base-100 tabs-secondary">
+                <!--Parking tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Parking"/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                        <a><button class="btn btn-outline btn-primary ml-10">Add parking</button></a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>Parking Space</th>
+                                <th></th>
+                                <th>Management Tools</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> #01 </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <button class="btn btn-success w-32">Reserve</button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-warning w-32">Block</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Remove</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- row 2 -->
+                           <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> #02 </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <button class="btn btn-success w-32">Reserve</button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-info w-32">Release</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Remove</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- row 3 -->
+                             <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> #03 </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <button class="btn btn-success w-32">Reserve</button>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-warning w-32">Block</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Remove</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Driver tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Driver" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                        <a><button class="btn btn-outline btn-secondary ml-10">Banned account</button></a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> user1</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> example@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-success w-32">Message</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Ban</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- row 2 -->
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> user2</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> example2@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-success w-32">Message</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Ban</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!-- row 3 -->
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> user3</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> example3@email.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-success w-32">Message</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <button class="btn btn-error w-32">Ban</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        {% include 'frontend/footer_admin.html' %}
+    </footer>
+{% endblock %}

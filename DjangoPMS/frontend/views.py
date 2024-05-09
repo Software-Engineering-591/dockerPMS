@@ -50,7 +50,11 @@ def login(request):
     if form.is_valid():
         user = form.get_user()
         auth.login(request, user)
-        return redirect('index')
+        if user.is_superuser:
+            return redirect('admin_dashboard') # redirect to the admin dashboard if admin logged in
+        else:
+            return redirect('index') # for the normal user (driver)
+
     return render(request, 'frontend/login.html', {'form': form})
 
 
@@ -217,5 +221,9 @@ def change_password(request: HttpRequest):
     return render(request, "frontend/profile/change_password.html", {
         'form': form
     })
+
+@login_required()
+def admin_dashboard(request):
+    return render(request, "frontend/admin/admin_dashboard.html")
 
 
