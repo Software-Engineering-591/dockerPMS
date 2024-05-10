@@ -173,15 +173,22 @@ class LotView(DetailView):
 
 @login_required()
 def messaging(request, sender=None):
-    if hasattr(request.user, 'admin'):
+    # if hasattr(request.user, 'admin'):
+    if request.user.username != 'admin':
+        # return (
+        #     admin_message_ctx(request, sender)
+        #     if sender
+        #     else admin_messages(request)
+        # )
+        return driver_messaging(request)
+
+    else:
+        # return driver_messaging(request)
         return (
             admin_message_ctx(request, sender)
             if sender
             else admin_messages(request)
         )
-
-    else:
-        return driver_messaging(request)
 
 
 @require_http_methods(["GET", "POST"])
@@ -227,3 +234,11 @@ def admin_dashboard(request):
     return render(request, "frontend/admin/admin_dashboard.html")
 
 
+@login_required()
+def request_admin(request):
+    return render(request, "frontend/request/request_admin.html")
+
+
+@login_required()
+def request_driver(request):
+    return render(request, "frontend/request/request_driver.html")

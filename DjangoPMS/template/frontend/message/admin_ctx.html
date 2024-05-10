@@ -4,7 +4,7 @@
 <script src="{% static 'frontend/message_load.js' %}" defer></script>   
 {% endblock %}
 {% block body %}
-{% include 'frontend/nav.html' %}
+{% include 'frontend/nav_admin.html' %}
 <main class="h-auto place-items-center grid">
   <div
     class="flex place-content-center w-2/3 h-3/4 p-4 border-4 border-accent rounded-3xl"
@@ -33,7 +33,7 @@
     <div class="divider divider-horizontal divider-secondary"></div>
     {# Message box for clicked user#}
   <div
-    class="card h-full w-full bg-base-200 text-neutral-content"
+    class="card h-full w-full bg-base-200 text-base-content"
   >
       <div class="card-body h-full items-center text-center">
         <h2 class="card-title">{{ Sender }}</h2>

@@ -1,0 +1,84 @@
+{% extends 'frontend/base.html' %}
+{% load tz_detect %}
+{% load static %}
+{% block head %}
+    <title>Request | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
+{% endblock %}
+
+{% block body %}
+    {% include 'frontend/nav.html' %}
+    <main>
+        <div>
+            <h1 class="text-center text-4xl font-semibold my-6">
+                {{ user.username }}'s requests
+            </h1>
+        </div>
+        <div class="flex w-full my-10">
+            <div class="grid h-fit flex-grow card bg-base-300 rounded-box">
+                <p class="text-3xl text-center m-5">
+                    Pending
+                </p>
+                    <table class="table overflow-x-auto">
+                        <!-- head -->
+                        <thead class="text-lg">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>#01</th>
+                            <td>10 May 2024</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="divider divider-horizontal divider-primary"></div>
+                <div class="grid h-fit flex-grow card bg-base-300 rounded-box">
+                     <p class="text-3xl text-center m-5">
+                    Approved
+                </p>
+                    <table class="table overflow-x-auto">
+                        <!-- head -->
+                        <thead class="text-lg">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th>#03</th>
+                            <td>02 May 2024</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="divider divider-horizontal divider-primary"></div>
+                <div class="grid h-fit flex-grow card bg-base-300 rounded-box">
+                       <p class="text-3xl text-center m-5">
+                    Rejected
+                </p>
+                    <table class="table overflow-x-auto">
+                        <!-- head -->
+                        <thead class="text-lg">
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+    </main>
+    <footer>
+        {% include 'frontend/footer_admin.html' %}
+    </footer>
+{% endblock %}

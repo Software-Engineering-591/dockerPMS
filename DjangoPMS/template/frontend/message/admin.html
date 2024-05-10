@@ -1,34 +1,59 @@
 {% extends 'frontend/base.html' %}
 {% block body %}
-{% include 'frontend/nav_admin.html' %}
-<main class="grid w-screen h-screen place-items-center">
-  <div class="flex place-content-center w-2/3 h-3/4 p-4 border-4 border-accent rounded-3xl">
-    <div
-      class="card flex content-end h-full w-1/4 overflow-x-hidden overflow-y-auto border-none"
-    >
-      <div
-        class="card-title flex justify-center m-4 gap-2 border-neutral bg-base-100 underline"
-      >
-        Inbox
-      </div>
-      {% for Sender in Senders %}
-      {% if Sender.sender != request.user %}
-      <a href="{% url 'msg_ctx' Sender.sender.id %}">
-        <div
-          class="card-body h-auto w-full hover:bg-base-200 bg-base-100 border-2 border-neutral"
-        >
-          {{ Sender.sender }}
+    {% include 'frontend/nav_admin.html' %}
+    <main class="grid w-screen h-screen place-items-center">
+        <div class="flex place-content-center w-2/3 h-3/4 p-4 border-4 border-accent rounded-3xl">
+            <div
+                    class="card flex content-end h-full w-1/4 overflow-x-hidden overflow-y-auto border-none"
+            >
+                <div
+                        class="card-title flex justify-center m-4 gap-2 border-neutral bg-base-100 underline"
+                >
+                    Inbox
+                </div>
+                {% for Sender in Senders %}
+                    {% if Sender.sender != request.user %}
+                        <a href="{% url 'msg_ctx' Sender.sender.id %}">
+                            <div
+                                    class="card-body h-auto w-full hover:bg-base-200 bg-base-100 border-2 border-neutral"
+                            >
+                                {{ Sender.sender }}
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div class="divider divider-horizontal divider-secondary"></div>
+            <div
+                    class="card flex content-end h-full w-3/4 skeleton overflow-y-auto rounded-none">
+                <div class="hero h-full bg-base-100">
+                    <div class="hero-content text-center">
+                        <div class="max-w-md">
+                            <ul>
+                                <li>
+                                    <p class="text-xl font-bold text-center">Select a user to read</p>
+                                </li>
+                                <li class="ml-10">
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
+                                         class="w-24 h-24">
+                                        <path d="M4 9.00005L10.2 13.65C11.2667 14.45 12.7333 14.45 13.8 13.65L20 9"
+                                              stroke="currentColor"
+                                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                                        <path d="M3 9.17681C3 8.45047 3.39378 7.78123 4.02871 7.42849L11.0287 3.5396C11.6328 3.20402 12.3672 3.20402 12.9713 3.5396L19.9713 7.42849C20.6062 7.78123 21 8.45047 21 9.17681V17C21 18.1046 20.1046 19 19 19H5C3.89543 19 3 18.1046 3 17V9.17681Z"
+                                              stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+                                    </svg>
+                                </li>
+                                <li>
+                                    <p class="text-xl font-bold">Nothing is selected</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
-      </a>
-      {% endif %}
-      {% endfor %}
-    </div>
-    <div class="divider divider-horizontal divider-secondary"></div>
-    <div
-      class="card flex content-end h-full w-3/4 skeleton overflow-y-auto rounded-none"
-    ></div>
-  </div>
-</main>
-{% include 'frontend/footer.html' %}
+    </main>
+    {% include 'frontend/footer.html' %}
 {% endblock %}
 

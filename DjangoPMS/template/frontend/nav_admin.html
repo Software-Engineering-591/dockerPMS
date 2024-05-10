@@ -1,6 +1,6 @@
 <nav class="navbar bg-base-200 rounded-full w-4/5 m-auto inset-x-0 mt-3">
     <div class="navbar-start">
-        <a href="{% url 'index' %}"
+        <a href="{% url 'admin_dashboard' %}"
            tabindex="0"
            role="button"
            class="btn btn-ghost btn-circle z-42131239123123"
@@ -116,7 +116,7 @@
                         <div class="divider divider-secondary text-primary">Content</div>
                     </li>
                     <li>
-                        <a>
+                        <a href="{% url 'request_admin' %}">
                             <svg
                                     viewBox="0 0 24 24"
                                     fill="none"
