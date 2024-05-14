@@ -1,7 +1,8 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'frontend/message_load.js' %}" defer></script>   
+<script src="{% static 'frontend/message_load.js' %}" defer></script>
+<title> Messages </title>
 {% endblock %}
 {% block body %}
 {% include 'frontend/nav.html' %}
@@ -47,7 +48,7 @@
               Me
               <time class="text-xs opacity-50">{{Message.timestamp }}</time>
             </div>
-            <div class="chat-bubble break-all">{{ Message.message_text }}</div>
+            <div class="chat-bubble break-all">{{ Message.message_text }} </div>
           </div>
           {% else %}
           <div class="chat chat-start">
@@ -55,7 +56,7 @@
               {{ Message.sender }}
               <time class="text-xs opacity-50">{{Message.timestamp }}</time>
             </div>
-            <div class="chat-bubble">{{ Message.message_text }}</div>
+            <div class="chat-bubble break-all">{{ Message.message_text }}</div>
           </div>
           {% endif %}
           {% endif %}

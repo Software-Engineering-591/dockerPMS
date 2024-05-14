@@ -8,31 +8,31 @@
     <div class="divider divider-horizontal"></div>
     <div class="flex flex-col flex-grow justify-center space-y-16">
       <div class="flex gap-4">
-        <div class="badge badge-primary">Free</div>
+        <div class="badge badge-primary">Total   </div>
         <progress
           class="progress progress-error w-1/2 h-auto"
-          value="30"
+          value="100"
           max="100"
         ></progress>
-        <div class="badge badge-primary">40/40</div>
+        <div class="badge badge-primary">{{ total }}</div>
       </div>
       <div class="flex gap-4">
-        <div class="badge badge-primary">Free</div>
+        <div class="badge badge-primary">Reserved</div>
         <progress
           class="progress progress-error w-1/2 h-auto"
-          value="30"
+          value="{{ reserved_progress }}"
           max="100"
         ></progress>
-        <div class="badge badge-primary">40/40</div>
+        <div class="badge badge-primary">{{ reserved }}</div>
       </div>
       <div class="flex gap-4">
-        <div class="badge badge-primary">Free</div>
+        <div class="badge badge-primary">Available</div>
         <progress
           class="progress progress-error w-1/2 h-auto"
-          value="30"
+          value="{{ available_progress }}"
           max="100"
         ></progress>
-        <div class="badge badge-primary">40/40</div>
+        <div class="badge badge-primary">{{ available }}</div>
       </div>
     </div>
   </div>

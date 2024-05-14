@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% extends 'frontend/base.html' %}
+<html lang="en">
+{% block head %}
+<head>
+    <meta charset="UTF-8">
+    <title>History</title>
+</head>
+{% endblock %}
+
+{% block body %}
+{% include "frontend/nav.html" %}
+<body class="flex-col h-screen w-screen">
+
+{# Container for Request information   #}
+<div class="flex items-center justify-center card h-3/4 w-full  overflow-y-hidden ">
+<div class="flex justify-center w-3/4 h-3/4 items-center border-4 border-accent rounded-3xl p-4">
+    <div class="card h-full w-full overflow-y-auto">
+    <div class="card-title h-auto w-full text-center p-2"> Payment History </div>
+    <div class="divider divider-vertical divider-secondary"></div>
+
+        <div class="grid h-auto w-full rounded-box">
+
+        {% for payments in payments %}
+
+        <div tabindex="0" class="collapse collapse-arrow bg-base-200">
+
+            <div class="collapse-title text-xl font-medium">
+                {{ payments.timestamp }}
+            </div>
+
+            <div class="collapse-content">
+                <p>
+                Payment ID: {{ payments.id }} <br>
+                Payment total: {{ payments.amount}} credits
+                </p>
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+        </div>
+  </div>
+
+      <div class="divider divider-horizontal divider-secondary"></div>
+
+  <div class="card h-full w-full overflow-y-auto">
+  <div class="card-title h-auto w-full text-center p-2">Request History </div>
+  <div class="divider divider-vertical divider-secondary"></div>
+
+    <div class="grid w-full h-auto rounded-box ">
+
+    {% for requests in request %}
+
+    <div tabindex="0" class="collapse collapse-arrow bg-base-200">
+
+        <div class="collapse-title text-xl font-medium">
+            {{ requests.timestamp }}
+            {% if requests.status == 'P' %}
+                <p class="opacity-50"> PENDING </p>
+            {% endif %}
+        </div>
+
+        <div class="collapse-content">
+            <p>
+            Request ID: {{ requests.id }} <br>
+            Request Slot: {{ requests.slot }} <br>
+            Request Arrival: {{ requests.arrival }} <br>
+            Request Departure: {{ requests.departure }}
+            </p>
+        </div>
+
+    </div>
+    {% endfor %}
+
+  </div>
+</div>
+</div>
+</div>
+
+</body>
+{% include "frontend/footer.html" %}
+{% endblock %}
+
+</html>
