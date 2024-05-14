@@ -1,0 +1,58 @@
+
+<dialog id="topup_modal" class="modal">
+  <div class="modal-box relative ">
+    <button onclick="document.getElementById('topup_modal').close()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
+    <h3 class="font-bold text-lg">Top Up Your Account</h3>
+
+    <div class="mt-4 mb-6">
+      <div class="flex justify-between">
+        <span class="font-semibold text-sm text-gray-600">Price (Credits):</span>
+        <span class="text-sm">1000 </span>
+      </div>
+      <!-- Add more costs if needed -->
+      <hr class="my-4">
+      <div class="flex justify-between">
+        <span class="font-semibold text-lg">Total to pay</span>
+        <span class="font-bold text-xl">£10.00</span>
+      </div>
+    </div>
+
+    <form method="post" action="{% url 'topup' %}">
+      {% csrf_token %}
+      <!-- Input fields and labels -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-semibold text-gray-700 mb-2">Confirmation will be sent to</label>
+        <input type="email" id="email" name="email" class="input input-bordered w-full" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="card_number" class="block text-sm font-semibold text-gray-700 mb-2">Card number</label>
+        <input type="text" id="card_number" name="card_number" class="input input-bordered w-full" required>
+      </div>
+
+      <div class="mb-4">
+        <label for="name_on_card" class="block text-sm font-semibold text-gray-700 mb-2">Name on card</label>
+        <input type="text" id="name_on_card" name="name_on_card" class="input input-bordered w-full" required>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="expiry" class="block text-sm font-semibold text-gray-700 mb-2">Expiry date</label>
+          <input type="text" id="expiry" name="expiry" class="input input-bordered w-full" required placeholder="MM/YY">
+        </div>
+        <div>
+          <label for="cvc" class="block text-sm font-semibold text-gray-700 mb-2">Security code</label>
+          <input type="text" id="cvc" name="cvc" class="input input-bordered w-full" required>
+        </div>
+      </div>
+
+      <!-- More form fields as necessary... -->
+
+      <button type="submit" class="btn btn-primary w-full mt-4">Pay now</button>
+    </form>
+
+    <div class="text-center mt-4">
+      <a href="#" class="link link-secondary">Change payment method</a>
+    </div>
+  </div>
+</dialog>

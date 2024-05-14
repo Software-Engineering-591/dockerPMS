@@ -7,16 +7,19 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
 from django.views.generic import DetailView, TemplateView
 from django.contrib.auth.decorators import login_required
+from backend.models import Driver, Message, ParkingLot, Slot, Payment
+from django.shortcuts import render, redirect
 from backend.models import Driver, Message, ParkingLot, Request, Slot, Payment, Admin
 from django.http import HttpRequest, HttpResponseRedirect
 from django.urls import reverse
 
-from .forms import QuoteForm, MessageForm, UserProfileForm, RegisterForm
+from .forms import QuoteForm, MessageForm, TopUpForm, UserProfileForm, RegisterForm
 
 
 # Create your views here.
@@ -233,6 +236,75 @@ class AdminView(TemplateView):
     template_name = 'frontend/admin.html'
 
 
+@login_required
+def quote(request):
+    # Check if the user is authenticated
+    if not request.user.is_authenticated:
+        return redirect('login')  # Redirect to login if the user is not authenticated
+
+    if request.method == 'POST':
+        form = QuoteForm(request.POST)
+        if form.is_valid():
+            # Extract validated data
+            date_from = form.cleaned_data['date_from']
+            time_from = form.cleaned_data['time_from']
+            date_to = form.cleaned_data['date_to']
+            time_to = form.cleaned_data['time_to']
+
+            # Combine dates and times into datetime objects
+            datetime_from = datetime.datetime.combine(date_from, time_from)
+            datetime_to = datetime.datetime.combine(date_to, time_to)
+
+            # Calculate total duration in hours
+            duration = (datetime_to - datetime_from).total_seconds() / 3600
+
+            # Fetch an available parking slot
+            available_slot = Slot.objects.filter(status=Slot.Status.AVAILABLE).first()
+
+            if available_slot:
+                # Assuming a cost calculation based on duration and a rate
+                parking_charge = calculate_parking_charge(duration)
+
+                # Prepare the context with all needed information
+                context = {
+                    'assigned_slot': available_slot.number,
+                    'user': request.user,
+                    'duration': duration,
+                    'parking_charge': parking_charge,
+                    'current_credit': request.user.driver.credit,
+                    'form': form
+                }
+                return render(request, 'quote.html', context)
+            else:
+                form.add_error(None, 'No available parking slots.')
+        else:
+            # Form is not valid, re-render the page with existing form data
+            return render(request, 'frontend/quote.html', {'form': form})
+    else:
+        form = QuoteForm()  # An unbound form for GET request
+
+    return render(request, 'frontend/quote.html', {'form': form})
+
+def calculate_parking_charge(duration):
+    rate_per_hour = 250  # Set the rate per hour as needed
+    return rate_per_hour * duration
+
+def topup(request):
+    if request.method == 'POST':
+        form = TopUpForm(request.POST)
+        if form.is_valid():
+            # Process the payment here (integrate with your payment gateway)
+            # For now, we'll assume the payment is processed successfully
+            return redirect('success_url')  # Redirect to a success page
+        else:
+            # Form is not valid, return to the top-up page with errors
+            return render(request, 'frontend/topup.html', {'form': form})
+    else:
+        form = TopUpForm()  # An unbound form for GET request
+        return render(request, 'frontend/topup.html', {'form': form})
+
+
+      
 @require_http_methods(["GET", "POST"])
 @login_required()
 def profile(request: HttpRequest):
