@@ -7,9 +7,12 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('contact/', views.contact, name='contact'),
     path('message/', views.messaging, name='msg'),
+    path('quote/', views.quote, name='quote'),
+    path('topup/', views.topup, name='topup'),
     path('message/<int:sender>', views.messaging, name='msg_ctx'),
     path('reserve/', views.ReserveView.as_view(), name='reserve'),
     path('lot/<int:pk>', views.lot_view, name='lot'),
     path('history/', views.request_and_payment, name='request_and_payment_history'),
     path('admin/', views.AdminView.as_view(), name='admin'),
+
 ]
