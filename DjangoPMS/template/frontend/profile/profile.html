@@ -1,0 +1,77 @@
+{% extends 'frontend/base.html' %}
+{% load static %}
+{% block head %}
+    <title>Profile | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
+{% endblock %}
+
+{% block body %}
+
+    {% include 'frontend/nav.html' %}
+    <main>
+        <div>
+            <h1 class="text-center text-4xl font-semibold my-6">
+                Hello {{ user.username }}
+            </h1>
+        </div>
+        <div class="box1">
+            <div class="flex flex-col w-full lg:flex-row">
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
+                    <ul class="menu bg-base-300 w-fit rounded-box text-xl text-base-content">
+                        <li>
+                            <h2 class="menu-title text-3xl">{{ user.username }}'s profile</h2>
+                            <a class="">
+                                <span><b>Username : </b>{{ user.username }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span><b>First name : </b>{{ user.first_name }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span><b>Last name : </b> {{ user.last_name }}</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a>
+                                <span><b>Email address : </b> {{ user.email }}</span>
+                            </a>
+                        </li>
+                        <li><a class="underline text-sm mt-5" href="{% url 'change_password' %}">Set new password</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div class="divider lg:divider-horizontal divider-primary"></div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center text-base-content">
+                    <form action="{% url 'profile' %}" method="POST">
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <h2 class="menu-title text-3xl">Update profile</h2>
+                        <b>New first name</b>
+                        <label class="input input-bordered flex items-center gap-2 m-2">
+                            {{ form.first_name }}
+                            {{ form.first_name.errors }}
+                        </label>
+                        <b>New last name</b>
+                        <label class="input input-bordered flex items-center gap-2 m-2">
+                            {{ form.last_name }}
+                            {{ form.last_name.errors }}
+                        </label>
+                        <b>New email</b>
+                        <label class="input input-bordered flex items-center gap-2 m-2">
+                            {{ form.email }}
+                            {{ form.email.errors }}
+                        </label>
+                        <button class="btn btn-primary items-center container w-48">Save changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+        {% include 'frontend/footer.html' %}
+    </footer>
+{% endblock %}

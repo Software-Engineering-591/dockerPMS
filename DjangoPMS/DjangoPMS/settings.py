@@ -151,3 +151,16 @@ LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
 
 
 LOGIN_URL = reverse_lazy('login')
+
+# SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ortinfargo@gmail.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_SUBJECT_PREFIX = '[UEAParkingSystem]'
+DEFAULT_FROM_EMAIL = 'UEA Parking Management System Team 209'
+EMAIL_SUBJECT = EMAIL_SUBJECT_PREFIX + 'Please reset your password'
+# 5-min link
+PASSWORD_RESET_TIMEOUT = 60*5

@@ -21,6 +21,11 @@ class MessageForm(forms.ModelForm):
         }
 
 
+class RegisterForm(UserCreationForm):
+    class Meta(UserCreationForm.Meta):
+        fields = UserCreationForm.Meta.fields + ("email",)
+
+
 class QuoteForm(forms.Form):
     date_from = forms.DateField(
         widget=forms.widgets.DateInput(attrs={'type': 'date'})
@@ -53,6 +58,13 @@ class QuoteForm(forms.Form):
                 )
 
 
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("first_name", "last_name", "email")
+
+        
 class TopUpForm(forms.Form):
     email = forms.EmailField(
         label='Confirmation will be sent to',
@@ -105,3 +117,4 @@ class UserProfileForm(forms.ModelForm):
 class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         fields = UserCreationForm.Meta.fields + ("email",)
+

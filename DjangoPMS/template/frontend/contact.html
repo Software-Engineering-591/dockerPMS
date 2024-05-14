@@ -8,7 +8,11 @@
 {% endblock %}
 
 {% block body %}
-{% include "frontend/nav.html" %}
+    {% if user.is_authenticated == user.is_superuser %}
+        {% include "frontend/nav_admin.html" %}
+        {% else %}
+        {% include "frontend/nav.html" %}
+    {% endif %}
 <main class="flex">
   <div class="grow">
   <div class="mockup-phone">
