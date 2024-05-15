@@ -346,16 +346,20 @@ def change_password(request: HttpRequest):
 @login_required()
 def admin_dashboard(request):
     users = Driver.objects.all()
+    parking_spaces = Slot.objects.all()
     occupied_space = get_reserved_space_total()
     available_space = get_available_space_total()
     total_space = get_total_space_total()
-    if total_space > 0:
-        available_space_percentage = (((total_space - occupied_space) / total_space) * 100)
+    unavailable_spaces = total_space - (occupied_space + available_space)
+    if available_space > 0:
+        available_space_percentage = (((total_space - available_space) / total_space) * 100)
     else:
         available_space_percentage = 0
+
     return render(request, "frontend/admin/admin_dashboard.html", {"Users": users, "total_space": total_space,
                                                                    "occupied_space": occupied_space, "available_space": available_space
-                                                                   , "available_percentage" : available_space_percentage})
+                                                                   , "available_percentage" : available_space_percentage, "slots" : parking_spaces
+                                                                   , "unavailable" : unavailable_spaces})
 
 
 @login_required()
