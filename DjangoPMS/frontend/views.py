@@ -10,7 +10,7 @@ from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
-from django.views.generic import TemplateView
+from django.views.generic import FormView, TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
 from backend.models import Request, Admin
@@ -22,6 +22,7 @@ from .forms import (
     TopUpForm,
     UserProfileForm,
     RegisterForm,
+    ParkingLotForm,
 )
 
 # Create your views here.
@@ -87,7 +88,7 @@ def driver_messaging(request):
     messages = driver.messages
     if request.method == 'POST':
         form = MessageForm(request.POST)
-        admin = User.objects.get(is_superuser=True)
+        admin = Admin.objects.get(user=request.user)
         if form.is_valid():
             message = form.save(commit=False)
             message.receiver = admin
@@ -95,8 +96,6 @@ def driver_messaging(request):
             return redirect('/message/')
     else:
         form = MessageForm()
-
-    context = {'Messages': messages, 'form': form}
 
     return render(
         request,
@@ -219,7 +218,7 @@ def lot_view(request, pk):
 
 @login_required()
 def messaging(request, sender=None):
-    if request.user.is_staff or request.user.is_superuser:
+    if hasattr(request.user, 'admin'):
         return (
             admin_message_ctx(request, sender)
             if sender
@@ -266,12 +265,6 @@ class AdminView(TemplateView):
 
 @login_required
 def quote(request):
-    # Check if the user is authenticated
-    if not request.user.is_authenticated:
-        return redirect(
-            'login'
-        )  # Redirect to login if the user is not authenticated
-
     if request.method == 'POST':
         form = QuoteForm(request.POST)
         if form.is_valid():
@@ -384,3 +377,8 @@ def admin_dashboard(request):
 @login_required()
 def admin_request(request):
     return render(request, 'frontend/admin/admin_request.html')
+
+
+class TestView(FormView):
+    form_class = ParkingLotForm
+    template_name = 'frontend/foo.html'

@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractUser
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Q
@@ -12,11 +12,19 @@ class BaseUser(models.Model):
 
     class Meta:
         abstract = True
+
     @property
     def messages(self):
-        return Message.objects.filter(Q(sender=self.user) | Q(receiver=self.user))
+        return Message.objects.filter(
+            Q(sender=self.user) | Q(receiver=self.user)
+        )
+
     def send_message(self, message):
-        Message.objects.create(sender=self.user, message_text=message.message_text, receiver=message.receiver)
+        Message.objects.create(
+            sender=self.user,
+            message_text=message.message_text,
+            receiver=message.receiver,
+        )
 
 
 class Admin(BaseUser):
@@ -31,10 +39,12 @@ class Driver(BaseUser):
 
 
 class Payment(models.Model):
-    amount = models.DecimalField(max_digits=6, decimal_places=2)
+    # amount refers to amount of credit received
+    amount = models.IntegerField()
     timestamp = models.DateTimeField(auto_now=True)
     # Link to the driver and the parking slot
     driver = models.ForeignKey(Driver, on_delete=models.CASCADE)
+
 
 class Message(models.Model):
     message_text = models.TextField(max_length=1000)
@@ -48,6 +58,7 @@ class Message(models.Model):
 
     def __str__(self):
         return self.message_text
+
 
 class ParkingLot(models.Model):
     poly = gis_models.PolygonField(geography=True)
@@ -65,6 +76,7 @@ class ParkingLot(models.Model):
     def get_available_space(self):
         return Slot.objects.filter(status='A', lot=self.id).count()
 
+
 class Slot(models.Model):
     class Status(models.TextChoices):
         RESERVED = 'R'
@@ -80,7 +92,10 @@ class Slot(models.Model):
     driver = models.ForeignKey(
         Driver, on_delete=models.SET_NULL, null=True, default=None, blank=True
     )
-    lot = models.ForeignKey(ParkingLot, on_delete=models.CASCADE, null=True, default=None)
+    lot = models.ForeignKey(
+        ParkingLot, on_delete=models.CASCADE, null=True, default=None
+    )
+
 
 class Request(models.Model):
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
@@ -97,4 +112,3 @@ class Request(models.Model):
     status = models.CharField(
         max_length=1, choices=CurrentStatus, default=CurrentStatus.PENDING
     )
-

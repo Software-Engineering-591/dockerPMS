@@ -1,0 +1,27 @@
+{% load leaflet_tags %}
+<html>
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+   {% leaflet_js plugins="forms" %}
+   {% leaflet_css plugins="forms" %}
+  </head>
+  <body>
+<button class="btn" onclick="create_lot_modal.showModal()">open modal</button>
+<dialog id="create_lot_modal" class="modal">
+    <form method="POST">
+            {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit"/>
+    </form>
+</dialog>
+<button class="btn" onclick="update_lot_modal.showModal()">open modal</button>
+<dialog id="update_lot_modal" class="modal">
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="Submit"/>
+    </form>
+</dialog>
+  </body>
+</html>
