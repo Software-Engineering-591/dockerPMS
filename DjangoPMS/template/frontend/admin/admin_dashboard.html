@@ -1,0 +1,190 @@
+{% extends 'frontend/base.html' %}
+{% load tz_detect %}
+{% load static %}
+{% block head %}
+    <title>Admin Home | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
+{% endblock %}
+
+{% block body %}
+    {% include 'frontend/nav_admin.html' %}
+    <main class="p-20 my-30 mx-150">
+        <section>
+            <div class="flex flex-col w-full lg:flex-row">
+                <div class="grid w-96 h-96 card bg-base-300 rounded-box place-items-center">
+                    <div class="radial-progress bg-secondary text-primary-content border-4 border-secondary"
+                         style="--value:{{available_percentage }};--size:15rem;"
+                         role="progressbar">{{ available_space }} spaces<span>available</span>
+                    </div>
+                </div>
+                <div class="divider lg:divider-horizontal"></div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
+                    <ul class="menu bg-base-300 w-fit text-center">
+                        <li>
+                            <p class="float-center text-5xl font-bold">UEA car park</p>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ total_space }} Total Spaces {# total spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ occupied_space }} occupied {# occupied spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ available_space }} available {# available spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ unavailable }} blocked / not be in used {# blocked #}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- here is for the dashboard -->
+        <section class="mt-20">
+            <div role="tablist" class="tabs tabs-boxed tabs-lg bg-base-100 tabs-secondary">
+                <!--Parking tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Parking"/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                        <a><button class="btn btn-outline btn-primary ml-10">Add parking</button></a>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>Parking Space</th>
+                                <th></th>
+                                <th> Parking Lot </th>
+                                 <th>Manage</th>
+                                <th> </th>
+                                <th></th>
+                                <th> </th>
+
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for lot in slots %}
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> #{{ lot.id }} </div>
+                                        </div>
+                                    </div>
+                                    <th>
+                            </th>
+                                </td>
+                                  <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ lot.lot }} </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="badge badge-success ">Reserve</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a>
+                                        <div class="badge badge-warning">Block</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a>
+                                        <div class="badge badge-error">Remove</div>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Driver tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Driver" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for driver in Users %}
+                            <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ driver.user.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold">{{ driver.user.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+
+                                   <a href="{%  url 'msg_ctx' driver.user.id %}">  <div class="badge badge-md badge-success w-32">Message</div>
+                                    </a>
+                                </td>
+                                <td>
+
+                                        <div class="badge badge-error badge-md">Ban</div>
+
+                                </td>
+                            {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        {% include 'frontend/footer_admin.html' %}
+    </footer>
+{% endblock %}

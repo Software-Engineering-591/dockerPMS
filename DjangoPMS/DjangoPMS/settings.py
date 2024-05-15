@@ -9,9 +9,13 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+
 import os
 from pathlib import Path
 from glob import glob
+
+from django.urls import reverse_lazy
+
 
 # Grab GeoDjango libraries
 GDAL_LIBRARY_PATH = glob('/usr/lib/libgdal.so.*')[0]
@@ -45,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'backend.apps.BackendConfig',
     'tz_detect',
+    'leaflet',
 ]
 
 MIDDLEWARE = [
@@ -98,18 +103,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-#     },
-#     {
-#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-#     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    #     },
+    #     {
+    #         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    #     },
 ]
 
 
@@ -141,3 +146,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Needed for when setting the website public
 CSRF_TRUSTED_ORIGINS = ['https://d08a-81-99-227-205.ngrok-free.app']
+
+LEAFLET_CONFIG = {'DEFAULT_CENTER': (52.62301, 1.24069), 'DEFAULT_ZOOM': 16}
+
+
+LOGIN_URL = reverse_lazy('login')
+
+# SMTP Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ortinfargo@gmail.com'
+EMAIL_HOST_PASSWORD = ''
+EMAIL_SUBJECT_PREFIX = '[UEAParkingSystem]'
+DEFAULT_FROM_EMAIL = 'UEA Parking Management System Team 209'
+EMAIL_SUBJECT = EMAIL_SUBJECT_PREFIX + 'Please reset your password'
+# 5-min link
+PASSWORD_RESET_TIMEOUT = 60*5
