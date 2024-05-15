@@ -51,5 +51,5 @@ urlpatterns = [
         ),
         name='password_reset_complete',
     ),
-    path('admin_request/', views.admin_request, name='admin_request'),
+    path('admin_requests/', views.admin_request, name='request'),
 ]
