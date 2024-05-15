@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="RuffConfigService">
-    <option name="projectRuffExecutablePath" value="C:\Users\Nitro\PycharmProjects\dockerPMS\venv\Scripts\ruff.exe" />
     <option name="ruffConfigPath" value="C:\Users\Nitro\PycharmProjects\dockerPMS\DjangoPMS\ruff.toml" />
     <option name="runRuffOnReformatCode" value="false" />
     <option name="runRuffOnSave" value="true" />

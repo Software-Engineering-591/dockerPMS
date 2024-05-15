@@ -33,6 +33,7 @@ class Admin(BaseUser):
 
 class Driver(BaseUser):
     credit = models.IntegerField(default=0)
+    banned = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

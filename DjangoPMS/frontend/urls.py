@@ -20,7 +20,7 @@ urlpatterns = [
         name='request_and_payment_history',
     ),
     path('admin/', views.AdminView.as_view(), name='admin'),
-    path('testing/', views.TestView.as_view()),
+    path('testing/', views.idk),
     # Chaya Abomination
     path('profile/', views.profile, name='profile'),
     path('change_password/', views.change_password, name='change_password'),

@@ -13,7 +13,7 @@
             <div class="flex flex-col w-full lg:flex-row">
                 <div class="grid w-96 h-96 card bg-base-300 rounded-box place-items-center">
                     <div class="radial-progress bg-secondary text-primary-content border-4 border-secondary"
-                         style="--value:{{available_percentage }};--size:15rem;"
+                         style="--value:{{ available_percentage }};--size:15rem;"
                          role="progressbar">{{ available_space }} spaces<span>available</span>
                     </div>
                 </div>
@@ -68,11 +68,11 @@
                                 <th></th>
                                 <th>Parking Space</th>
                                 <th></th>
-                                <th> Parking Lot </th>
-                                 <th>Manage</th>
-                                <th> </th>
+                                <th> Parking Lot</th>
+                                <th>Manage</th>
                                 <th></th>
-                                <th> </th>
+                                <th></th>
+                                <th></th>
 
                                 <th></th>
                             </tr>
@@ -80,46 +80,46 @@
                             <tbody>
                             <!-- row 1 -->
                             {% for lot in slots %}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" class="checkbox"/>
-                                    </label>
-                                </th>
-                                <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="font-bold"> #{{ lot.id }} </div>
-                                        </div>
-                                    </div>
+                                <tr>
                                     <th>
-                            </th>
-                                </td>
-                                  <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="font-bold"> {{ lot.lot }} </div>
+                                        <label>
+                                            <input type="checkbox" class="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> #{{ lot.id }} </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="badge badge-success ">Reserve</div>
+                                    <th>
+                                    </th>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ lot.lot }} </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a>
-                                        <div class="badge badge-warning">Block</div>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a>
-                                        <div class="badge badge-error">Remove</div>
-                                    </a>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="badge badge-success ">Reserve</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            <div class="badge badge-warning">Block</div>
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            <div class="badge badge-error">Remove</div>
+                                        </a>
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
@@ -147,7 +147,7 @@
                             <tbody>
                             <!-- row 1 -->
                             {% for driver in Users %}
-                            <tr>
+                                <tr>
                                 <th>
                                     <label>
                                         <input type="checkbox" class="checkbox"/>
@@ -169,14 +169,24 @@
                                 </td>
                                 <td>
 
-                                   <a href="{%  url 'msg_ctx' driver.user.id %}">  <div class="badge badge-md badge-success w-32">Message</div>
+                                    <a href="{% url 'msg_ctx' driver.user.id %}">
+                                        <div class="badge badge-md badge-success w-32">Message</div>
                                     </a>
                                 </td>
                                 <td>
-
-                                        <div class="badge badge-error badge-md">Ban</div>
-
+                                    {% if driver.banned %}
+                                        <form action={% url 'api:unban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-info badge-md">Unban</button>
+                                        </form>
+                                    {% else %}
+                                        <form action={% url 'api:ban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error badge-md">Ban</button>
+                                        </form>
+                                    {% endif %}
                                 </td>
+
                             {% endfor %}
                             </tr>
                             </tbody>

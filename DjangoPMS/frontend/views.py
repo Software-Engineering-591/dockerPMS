@@ -6,6 +6,7 @@ from django.contrib import auth
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
@@ -396,3 +397,9 @@ def admin_request(request):
 class TestView(FormView):
     form_class = ParkingLotForm
     template_name = 'frontend/foo.html'
+
+def idk(request):
+    return render(request, "frontend/foo.html", {
+        "form": ParkingLotForm(),
+        "form2": ParkingLotForm()
+    })

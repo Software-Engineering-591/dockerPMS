@@ -94,6 +94,7 @@ class TopUpForm(forms.Form):
             attrs={
                 'class': 'input input-bordered w-full',
                 'placeholder': 'MM/YY',
+                'type': "date"
             }
         ),
         input_formats=['%m/%y'],  # Accepting MM/YY format
