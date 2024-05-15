@@ -63,21 +63,14 @@ def home(request):
 
 @require_http_methods(['GET', 'POST'])
 def signup(request):
-    # POST
-    if request.method == 'POST':
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            driver = Driver.objects.create(user=user)
-            driver.save()
-            auth.login(request, user)
-            return HttpResponseRedirect(reverse('index'))
-    else:
-        form = RegisterForm()
-
-    # GET
-    context = {'form': form}
-    return render(request, 'frontend/signup.html', context)
+    form = RegisterForm(request.POST)
+    if form.is_valid():
+        user = form.save()
+        driver = Driver.objects.create(user=user)
+        driver.save()
+        auth.login(request, user)
+        return redirect('index')
+    return render(request, 'frontend/signup.html', {'form': form})
 
 
 @require_http_methods(['GET', 'POST'])
@@ -86,14 +79,7 @@ def login(request):
     if form.is_valid():
         user = form.get_user()
         auth.login(request, user)
-        if user.is_superuser:
-            return redirect(
-                'admin_dashboard'
-            )  # redirect to the admin dashboard if admin logged in
-        else:
-            return redirect(
-                'index'
-            )  # for the normal user (driver)return redirect('index')
+        return redirect('index')
     return render(request, 'frontend/login.html', {'form': form})
 
 
