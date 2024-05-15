@@ -42,10 +42,8 @@ def home(request):
     total_space = get_total_space_total()
     reserved_space = get_reserved_space_total()
     if total_space > 0:
-        available_space_percentage = (
-            (total_space - reserved_space) / total_space
-        ) * 100
         available_spaces = total_space - reserved_space
+        available_space_percentage = available_spaces / total_space * 100
     else:
         available_space_percentage = 0
         available_spaces = 0
