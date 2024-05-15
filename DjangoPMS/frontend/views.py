@@ -4,40 +4,61 @@ from dataclasses import dataclass
 
 from django.contrib import auth
 from django.contrib.auth import update_session_auth_hash
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
-from django.db.models import Q
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
-from django.views.generic import DetailView, TemplateView
+from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
-from django.shortcuts import render, redirect
-from backend.models import Driver, Message, ParkingLot, Request, Slot, Payment, Admin
-from django.http import HttpRequest, HttpResponseRedirect
+from backend.models import Request, Admin
 from django.urls import reverse
 
-from .forms import QuoteForm, MessageForm, TopUpForm, UserProfileForm, RegisterForm
-
+from .forms import (
+    QuoteForm,
+    MessageForm,
+    TopUpForm,
+    UserProfileForm,
+    RegisterForm,
+)
 
 # Create your views here.
 
+
+@require_GET
+def index(request):
+    if hasattr(request.user, 'admin'):
+        return admin_dashboard(request)
+    return home(request)
+
+
 # may be advisable to use hardcoded value 200 for total_space, unless 200 slots are going to be created
+
+
 @require_GET
 def home(request):
     total_space = get_total_space_total()
     reserved_space = get_reserved_space_total()
     if total_space > 0:
-        available_space_percentage = (((total_space - reserved_space) / total_space) * 100)
+        available_space_percentage = (
+            (total_space - reserved_space) / total_space
+        ) * 100
         available_spaces = total_space - reserved_space
     else:
         available_space_percentage = 0
         available_spaces = 0
-    return render(request, 'frontend/home.html', {'form': QuoteForm(), 'total_space': total_space,
-                                                  'available_space_percentage': available_space_percentage,
-                                                  'available_spaces': available_spaces})
+    return render(
+        request,
+        'frontend/home.html',
+        {
+            'form': QuoteForm(),
+            'total_space': total_space,
+            'available_space_percentage': available_space_percentage,
+            'available_spaces': available_spaces,
+        },
+    )
 
 
 @require_http_methods(['GET', 'POST'])
@@ -66,9 +87,13 @@ def login(request):
         user = form.get_user()
         auth.login(request, user)
         if user.is_superuser:
-            return redirect('admin_dashboard')  # redirect to the admin dashboard if admin logged in
+            return redirect(
+                'admin_dashboard'
+            )  # redirect to the admin dashboard if admin logged in
         else:
-            return redirect('index')  # for the normal user (driver)return redirect('index')
+            return redirect(
+                'index'
+            )  # for the normal user (driver)return redirect('index')
     return render(request, 'frontend/login.html', {'form': form})
 
 
@@ -183,25 +208,34 @@ class ReserveView(TemplateView):
 # class LotView(DetailView):
 #     model = ParkingLot
 
+
 def lot_view(request, pk):
     lot = ParkingLot.objects.get(pk=pk)
     total = lot.get_total_space()
     available = lot.get_available_space()
     reserved = lot.get_reserved_space()
     if total > 0:
-        available_progress = (((total - reserved) / total) * 100)
-        reserved_progress = (((total - available) / total) * 100)
+        available_progress = ((total - reserved) / total) * 100
+        reserved_progress = ((total - available) / total) * 100
     else:
         available_progress = 0
         reserved_progress = 0
-    return render(request, 'frontend/lot.html', {'total': total, 'available': available,
-                                                 'reserved': reserved, 'available_progress': available_progress,
-                                                 'reserved_progress': reserved_progress})
+    return render(
+        request,
+        'frontend/lot.html',
+        {
+            'total': total,
+            'available': available,
+            'reserved': reserved,
+            'available_progress': available_progress,
+            'reserved_progress': reserved_progress,
+        },
+    )
 
 
 @login_required()
 def messaging(request, sender=None):
-    if (request.user.is_staff or request.user.is_superuser):
+    if request.user.is_staff or request.user.is_superuser:
         return (
             admin_message_ctx(request, sender)
             if sender
@@ -215,9 +249,19 @@ def messaging(request, sender=None):
 @login_required
 def request_and_payment(request):
     driver = Driver.objects.get(user=request.user)
-    requests = Request.objects.all().filter(driver_id=driver.id).order_by('-timestamp')
-    payments = Payment.objects.all().filter(driver=driver.id).order_by('-timestamp')
-    return render(request, 'frontend/rp_history.html', {'request': requests, 'payments': payments})
+    requests = (
+        Request.objects.all()
+        .filter(driver_id=driver.id)
+        .order_by('-timestamp')
+    )
+    payments = (
+        Payment.objects.all().filter(driver=driver.id).order_by('-timestamp')
+    )
+    return render(
+        request,
+        'frontend/rp_history.html',
+        {'request': requests, 'payments': payments},
+    )
 
 
 def get_total_space_total():
@@ -240,7 +284,9 @@ class AdminView(TemplateView):
 def quote(request):
     # Check if the user is authenticated
     if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login if the user is not authenticated
+        return redirect(
+            'login'
+        )  # Redirect to login if the user is not authenticated
 
     if request.method == 'POST':
         form = QuoteForm(request.POST)
@@ -259,7 +305,9 @@ def quote(request):
             duration = (datetime_to - datetime_from).total_seconds() / 3600
 
             # Fetch an available parking slot
-            available_slot = Slot.objects.filter(status=Slot.Status.AVAILABLE).first()
+            available_slot = Slot.objects.filter(
+                status=Slot.Status.AVAILABLE
+            ).first()
 
             if available_slot:
                 # Assuming a cost calculation based on duration and a rate
@@ -272,7 +320,7 @@ def quote(request):
                     'duration': duration,
                     'parking_charge': parking_charge,
                     'current_credit': request.user.driver.credit,
-                    'form': form
+                    'form': form,
                 }
                 return render(request, 'quote.html', context)
             else:
@@ -285,9 +333,11 @@ def quote(request):
 
     return render(request, 'frontend/quote.html', {'form': form})
 
+
 def calculate_parking_charge(duration):
     rate_per_hour = 250  # Set the rate per hour as needed
     return rate_per_hour * duration
+
 
 def topup(request):
     if request.method == 'POST':
@@ -304,8 +354,7 @@ def topup(request):
         return render(request, 'frontend/topup.html', {'form': form})
 
 
-      
-@require_http_methods(["GET", "POST"])
+@require_http_methods(['GET', 'POST'])
 @login_required()
 def profile(request: HttpRequest):
     user = request.user
@@ -316,16 +365,16 @@ def profile(request: HttpRequest):
 
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect(reverse("profile"))
+            return HttpResponseRedirect(reverse('profile'))
     else:
         form = UserProfileForm()
 
     # GET
     form = UserProfileForm(instance=user)
     context = {
-        "form": form,
+        'form': form,
     }
-    return render(request, "frontend/profile/profile.html", context)
+    return render(request, 'frontend/profile/profile.html', context)
 
 
 @login_required()
@@ -338,16 +387,16 @@ def change_password(request: HttpRequest):
             return redirect('profile')
     else:
         form = PasswordChangeForm(request.user)
-    return render(request, "frontend/profile/change_password.html", {
-        'form': form
-    })
+    return render(
+        request, 'frontend/profile/change_password.html', {'form': form}
+    )
 
 
 @login_required()
 def admin_dashboard(request):
-    return render(request, "frontend/admin/admin_dashboard.html")
+    return render(request, 'frontend/admin/admin_dashboard.html')
 
 
 @login_required()
 def admin_request(request):
-    return render(request, "frontend/admin/admin_request.html")
+    return render(request, 'frontend/admin/admin_request.html')
