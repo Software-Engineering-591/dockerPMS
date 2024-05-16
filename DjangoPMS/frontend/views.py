@@ -91,10 +91,10 @@ def driver_messaging(request):
     driver = Driver.objects.get(user=request.user)
     if request.method == 'POST':
         form = MessageForm(request.POST)
-        admin = Admin.objects.get(user=request.user)
+        admin = Admin.objects.all().first()
         if form.is_valid():
             message = form.save(commit=False)
-            message.receiver = admin
+            message.receiver = admin.user
             driver.send_message(message)
             messages.info(request, "Sent Successful Message!")
             return redirect('/message/')
@@ -104,7 +104,7 @@ def driver_messaging(request):
     return render(
         request,
         'frontend/message/driver.html',
-        {'form': form, 'Messages': messages},
+        {'form': form, 'Messages': driver.messages},
     )
 
 
