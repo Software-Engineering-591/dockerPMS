@@ -42,14 +42,13 @@ class QuoteForm(forms.Form):
         widget=forms.widgets.TimeInput(attrs={'type': 'time'})
     )
 
-    def clear_quote_form(self):
-        cleaned_data = super().clean()
-        date_from = cleaned_data.get('dateFrom')
-        time_from = cleaned_data.get('timeFrom')
-        date_to = cleaned_data.get('dateTo')
-        time_to = cleaned_data.get('timeTo')
-
+    def check(self):
+        date_from = self.cleaned_data.get('date_from')
+        time_from = self.cleaned_data.get('time_from')
+        date_to = self.cleaned_data.get('date_to')
+        time_to = self.cleaned_data.get('time_to')
         if date_from and date_to:
+
             if date_to < date_from:
                 raise ValidationError(
                     'A departure date must be after the arrival date'
@@ -57,6 +56,10 @@ class QuoteForm(forms.Form):
             elif date_to == date_from and time_to <= time_from:
                 raise ValidationError(
                     'A departure time must be after the arrival time on the same date'
+                )
+            elif (date_to - date_from) > datetime.timedelta(days=10):
+                raise ValidationError(
+                    'A departure cannot be more than 10 days in length'
                 )
 
 
