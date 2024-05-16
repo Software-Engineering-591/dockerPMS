@@ -85,8 +85,8 @@ class TopUpForm(forms.Form):
     )
     expiry = forms.DateField(
         required=True,
-        widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY'}),
-        input_formats=['%m/%y']  # Accepting MM/YY format
+        widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY', 'type' : 'month'}),
+        input_formats=['%Y-%m']
     )
     cvc = forms.IntegerField(
         max_value= 999,
@@ -98,12 +98,6 @@ class TopUpForm(forms.Form):
         expiry = self.cleaned_data.get('expiry')
         if expiry and expiry < datetime.date.today():
             raise ValidationError("The expiry date has passed.")
-        return expiry
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        # You can add more validation to check if email is associated with a user etc.
-        return email
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

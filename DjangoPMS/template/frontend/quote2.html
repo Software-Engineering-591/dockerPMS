@@ -6,6 +6,17 @@
     <meta charset="UTF-8">
     <title>History</title>
 </head>
+    <script>
+        var available_credits = {{ current_credit }};
+        var cost = {{ parking_charge }};
+        function makeQuote(){
+            if (available_credits < cost) {
+                document.getElementById("makequote").disabled = true;
+            } else {
+                window.location.href = "{% url 'make_quote' %}"
+            }
+        }
+    </script>
 {% endblock %}
 
 {% block body %}
@@ -13,12 +24,20 @@
 <body class="flex-col h-screen w-screen">
 
 {# Container for Request information   #}
+
 <div class="flex items-center justify-center card h-full w-full  overflow-y-hidden ">
 <div class="flex justify-center w-3/4 h-3/4 items-center border-4 border-accent rounded-3xl p-4">
     <div class="card h-full w-full overflow-y-auto">
     <div class="card-title h-auto w-full text-center p-2"> Contact Details </div>
     <div class="divider divider-vertical divider-secondary"></div>
 
+        {% if messages %}
+<ul class="messages">
+    {% for message in message %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
         <div class="grid h-auto w-full rounded-box">
             <div class="h-full w-full">
                     <div id="contact-details-section" class="h-full w-full ">
@@ -29,6 +48,7 @@
                     <br>
 
                     <h3>Assigned Lot: {{ assigned_slot }}</h3>
+                        <h3>Credit balance : {{ current_credit }}</h3>
                     <br>
                     </div>
             </div>
@@ -47,9 +67,10 @@
          <div card="h-3/4 w-3/4">
 
             <div class="payment-content-section">
-                <p><b>Total Charge:</b> £{{ parking_charge }}</p>
+                <p><b>Credits due:  {{ parking_charge }}</p>
             </div>
              <button class="btn card-body h-auto w- hover: bg-orange-700 border 2 border-neutral " onclick="document.getElementById('topup_modal').showModal()">Top Up</button>
+            <button class="btn card-body h-auto w- hover: bg-orange-700 border 2 border-neutral " onclick="makeQuote()">Continue</button>
 
         </div>
 

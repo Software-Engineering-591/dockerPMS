@@ -3,7 +3,7 @@ import json
 from dataclasses import dataclass
 from datetime import timedelta, datetime
 
-from django.contrib import auth
+from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordChangeForm
 from django.contrib.auth.models import User
@@ -162,18 +162,20 @@ class ReserveView(TemplateView):
     template_name = 'frontend/reserve/init.html'
 
     def get_context_data(self, **kwargs):
+        form = QuoteForm()
+
         lot_geodata = [
             LeafletLot(
                 point=(lot.poly.centroid.y, lot.poly.centroid.x),
                 poly=tuple(zip(lot.poly[0].y, lot.poly[0].x)),
                 popup_html=render_to_string(
-                    'frontend/reserve/popup.html', {'parkinglot': lot}
+                    'frontend/reserve/popup.html', {'parkinglot': lot, 'form' : form}
                 ),
             )
             for lot in ParkingLot.objects.all()
         ]
         return {
-            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder),
+            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder), 'form' : form
         }
 
     def post(self, request, *args, **kwargs):
@@ -190,12 +192,16 @@ def lot_view(request, pk):
     reserved = plot.get_reserved_space()
     slot = Slot.objects.filter(lot=plot, status=Slot.Status.AVAILABLE).first()
     driver = get_object_or_404(Driver, user=request.user.id)
+    old_request = Request.objects.filter(driver_id=driver, status=Request.CurrentStatus.CREATED)
     if total > 0:
         available_progress = (((total - reserved) / total) * 100)
         reserved_progress = (((total - available) / total) * 100)
     else:
         available_progress = 0
         reserved_progress = 0
+    if old_request is not None:
+        old_request.delete()
+
 
     if request.method == 'POST':
         form = QuoteForm(request.POST)
@@ -267,49 +273,55 @@ def quote(request):
     user = get_object_or_404(User, username=request.user.username)
     driver = get_object_or_404(Driver, user=request.user.id)
 
-    requested = Request.objects.filter(driver_id=driver).first()
+    requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
 
-    a = requested.arrival - requested.departure
-    b = a.total_seconds()
-    parking_charge = calculate_parking_charge(b)
+    duration = requested.departure - requested.arrival
+    seconds = duration.total_seconds()
+    parking_charge = calculate_parking_charge(seconds / 3600)
 
     context = {
-        'assigned_slot': requested.id,
+        'assigned_slot': requested.slot.lot.name,
         'user': user,
         'parking_charge': parking_charge,
-        'current_credit': request.user.driver.credit,
+        'current_credit': driver.credit,
         'form': form
     }
-
-    return render(request, 'frontend/quote2.html', context)
-def calculate_parking_charge(duration):
-    rate_per_hour = 100
-    duration_hours = duration / 3600
-
-    return rate_per_hour * duration_hours
-
-def topup(request):
     if request.method == 'POST':
+
         form = TopUpForm(request.POST)
         driver = get_object_or_404(Driver, user=request.user.id)
-
         if form.is_valid():
             payment = Payment.objects.create(
                 driver=driver,
                 amount=form.cleaned_data['amount']
             )
-
+            driver.credit += payment.amount
+            driver.save()
             payment.save()
-            return redirect('/quote2.html/')  # Redirect to a success page
-        else:
-            # Form is not valid, return to the top-up page with errors
-            return render(request, 'frontend/topup.html', {'form': form})
+        redirect('/quote2')
     else:
-        form = TopUpForm()  # An unbound form for GET request
-        return render(request, 'frontend/topup.html', {'form': form})
+        form = TopUpForm()
+    return render(request, 'frontend/quote2.html', context)
+def calculate_parking_charge(duration):
+    rate_per_hour = 100
 
 
-      
+    return rate_per_hour * duration
+
+def make_quote(request):
+    driver = get_object_or_404(Driver, user=request.user.id)
+    requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
+    requested.status = requested.CurrentStatus.PENDING
+
+    duration = requested.departure - requested.arrival
+    seconds = duration.total_seconds()
+    parking_charge = calculate_parking_charge(seconds / 3600)
+    driver.credit -= parking_charge
+    driver.save()
+    requested.save()
+    return redirect('index')
+
+
 @require_http_methods(["GET", "POST"])
 @login_required()
 def profile(request: HttpRequest):
