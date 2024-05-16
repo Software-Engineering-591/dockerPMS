@@ -8,7 +8,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - DJANGO_DEBUG=false
+      - DJANGO_DEBUG=true
       - ALLOWED_HOSTS=localhost,127.0.0.1,.ngrok-free.app
       - DJANGO_SECRET_KEY=django-insecure-n7)p+1qf)1uj(6c^a0ovck&6r34wcn+5+-11lh^3e!7g#9yh0s
       - DJANGO_SUPERUSER_USERNAME=admin
