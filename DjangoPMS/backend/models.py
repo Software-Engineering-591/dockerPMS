@@ -110,12 +110,13 @@ class Request(models.Model):
     timestamp = models.DateTimeField(default=timezone.now)
 
     class CurrentStatus(models.TextChoices):
+        CREATED = 'C'
         PENDING = 'P'
         APPROVED = 'A'
         REJECTED = 'R'
 
     status = models.CharField(
-        max_length=1, choices=CurrentStatus, default=CurrentStatus.PENDING
+        max_length=1, choices=CurrentStatus, default=CurrentStatus.CREATED
     )
     def __str__(self):
         return f"{self.driver_id} - ({self.slot}) - {self.status}"

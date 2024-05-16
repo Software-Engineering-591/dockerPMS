@@ -1,4 +1,4 @@
-<form action={% url 'reserve' %} method="POST" class="m-5 text-center">
+<form action="{% url 'lot' lot.id %}" method='POST' class="m-5 text-center">
     {% csrf_token %}
     <div>
         <p class="text-2xl mt-5"><b>Arrival</b></p>
@@ -46,7 +46,7 @@
         {% endif %}
     </div>
     <div>
-        <button class="btn btn-primary mt-5 items-center text-xl" type="submit">
+         <button class="btn btn-primary mt-5 items-center text-xl" type="submit">
             Send
         </button>
     </div>

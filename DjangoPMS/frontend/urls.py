@@ -10,7 +10,8 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('message/', views.messaging, name='msg'),
     path('quote/', views.quote, name='quote'),
-    path('topup/', views.topup, name='topup'),
+    path('makequote/', views.make_quote, name='make_quote'),
+
     path('message/<int:sender>', views.messaging, name='msg_ctx'),
     path('reserve/', views.ReserveView.as_view(), name='reserve'),
     path('lot/<int:pk>', views.lot_view, name='lot'),
