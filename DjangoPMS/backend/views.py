@@ -1,9 +1,11 @@
+from random import randint
+
 from django.contrib import auth
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .models import Driver, Slot, Request
+from .models import Driver, Slot, Request, ParkingLot
 
 
 # Create your views here.
@@ -35,14 +37,13 @@ def unban(request, pk):
 
 @require_POST
 @login_required
-def reserve(request, slot_pk, driver_pk):
+def remove(request, slot_pk):
     if hasattr(request.user, 'admin'):
         slot = get_object_or_404(Slot, pk=slot_pk)
-        slot.status = slot.Status.RESERVED
-        slot.driver = get_object_or_404(Driver, pk=driver_pk)
-        slot.save()
+        slot.delete()
         return redirect("index")
     return HttpResponseForbidden(request, "You are not allowed")
+
 
 @require_POST
 @login_required
@@ -72,7 +73,10 @@ def accept(request, request_pk):
     if hasattr(request.user, 'admin'):
         requested = get_object_or_404(Request, pk=request_pk)
         requested.status = Request.CurrentStatus.APPROVED
-        # Extra Logic
+        slot = requested.slot
+        slot.driver = requested.driver_id
+        slot.status = Slot.Status.RESERVED
+        slot.save()
         requested.save()
         return redirect("index")
     return HttpResponseForbidden(request, "You are not allowed")
