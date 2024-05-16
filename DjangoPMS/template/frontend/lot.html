@@ -1,4 +1,5 @@
 {% extends 'frontend/base.html' %} {% block body %}
+    {% include 'frontend/nav.html' %}
 <div class="flex flex-col w-full border-opacity-50">
   <div class="flex card bg-base-300 rounded-box flex-row">
     <img
@@ -37,9 +38,14 @@
     </div>
   </div>
   <div class="divider"></div>
-  <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-    <button class="btn btn-wide">Reserve a Slot!</button>
+  <div class="grid h-auto card bg-base-300 rounded-box place-items-center">
+      <form method="POST">
+          {%   csrf_token %}
+          <div class="border-2 border-rounded">Date from: {{ form }} </div>
+          <button> submit </button>
+      </form>
   </div>
-  <div class="text-xl">{% lorem %}</div>
-</div>
+    <div class="w-full h-full ">
+    </div>
+    </div>
 {% include 'frontend/footer.html' %} {% endblock %}
