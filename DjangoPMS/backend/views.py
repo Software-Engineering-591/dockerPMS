@@ -4,6 +4,7 @@ from django.contrib import auth
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.http import HttpResponseForbidden
 from .models import Driver, Slot, Request, ParkingLot
 
@@ -13,6 +14,7 @@ from .models import Driver, Slot, Request, ParkingLot
 
 @require_POST
 def logout(request):
+    messages.success(request, "You have been logged out!")
     auth.logout(request)
     return redirect('index')
 

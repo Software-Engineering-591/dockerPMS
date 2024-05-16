@@ -21,51 +21,6 @@
                 />
             </svg>
         </a>
-        <div class="dropdown dropdown-bottom w-16 relative right-0 p-2">
-            <div
-                    tabindex="0"
-                    role="button"
-                    class="btn btn-ghost btn-circle z-42131239123123"
-            >
-                <svg
-                        fill="currentColor"
-                        class="w-5 h-5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        xmlns:xlink="http://www.w3.org/1999/xlink"
-                        viewBox="0 0 24.75 24.75"
-                        xml:space="preserve"
-                >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                    <g
-                            id="SVGRepo_tracerCarrier"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                    ></g>
-                    <g id="SVGRepo_iconCarrier">
-              <g>
-                <path
-                        d="M0,3.875c0-1.104,0.896-2,2-2h20.75c1.104,0,2,0.896,2,2s-0.896,2-2,2H2C0.896,5.875,0,4.979,0,3.875z M22.75,10.375H2 c-1.104,0-2,0.896-2,2c0,1.104,0.896,2,2,2h20.75c1.104,0,2-0.896,2-2C24.75,11.271,23.855,10.375,22.75,10.375z M22.75,18.875H2 c-1.104,0-2,0.896-2,2s0.896,2,2,2h20.75c1.104,0,2-0.896,2-2S23.855,18.875,22.75,18.875z"
-                ></path>
-              </g>
-            </g>
-          </svg>
-            </div>
-            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32">
-                <li><a href={% url 'contact' %}>Contact</a></li>
-                <li><a href={% url 'reserve' %}>Reserve</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="navbar-center">
-        {% if user.driver %}
-            <a class="btn btn-outline btn-primary text-xl">UEA Parking PMS</a>
-        {% else %}
-            <a class="btn btn-outline btn-secondary text-xl">UEA Parking PMS - Admin</a>
-        {% endif %}
-    </div>
-    <div class="navbar-end">
-
-
         <label role="button" class="swap swap-rotate btn btn-ghost btn-circle z-42131239123123">
             <input type="checkbox" class="theme-controller" value="synthwave" x-model="darkMode"/>
 
@@ -79,6 +34,15 @@
                 <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z"/>
             </svg>
         </label>
+    </div>
+    <div class="navbar-center">
+        {% if user.driver %}
+            <a class="btn btn-outline btn-primary text-xl">UEA Parking PMS</a>
+        {% else %}
+            <a class="btn btn-outline btn-secondary text-xl">UEA Parking PMS - Admin</a>
+        {% endif %}
+    </div>
+    <div class="navbar-end">
 
         <button class="btn btn-ghost btn-circle dropdown dropdown-end dropdown-bottom">
             <div class="indicator">
