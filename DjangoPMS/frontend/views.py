@@ -215,10 +215,15 @@ def lot_view(request, pk):
     if old_request is not None:
         old_request.delete()
 
+
+    if slot is None:
+        messages.error(request, 'No slots available')
+        return redirect('/reserve')
+
     if request.method == 'POST':
         form = QuoteForm(request.POST)
-        print(form)
         if form.is_valid():
+            form.check()
             print("hello")
             request = Request.objects.create(
                 driver_id=driver,
@@ -235,6 +240,7 @@ def lot_view(request, pk):
         return render(request, 'frontend/lot.html', {'total': total, 'available': available,
                                                      'reserved': reserved, 'available_progress': available_progress,
                                                      'reserved_progress': reserved_progress, 'lot': pk, 'form': form})
+
 
 
 @login_required()
