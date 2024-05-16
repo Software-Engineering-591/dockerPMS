@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.contrib.gis.db import models as gis_models
 from django.db.models import Q
 
+
 # Create your models here.
 
 
@@ -97,6 +98,9 @@ class Slot(models.Model):
         ParkingLot, on_delete=models.CASCADE, null=True, default=None
     )
 
+    def __str__(self):
+        return f"{self.lot} - {self.number}"
+
 
 class Request(models.Model):
     driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)
@@ -113,3 +117,5 @@ class Request(models.Model):
     status = models.CharField(
         max_length=1, choices=CurrentStatus, default=CurrentStatus.PENDING
     )
+    def __str__(self):
+        return f"{self.driver_id} - ({self.slot}) - {self.status}"

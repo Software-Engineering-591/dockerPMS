@@ -7,7 +7,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
@@ -16,6 +16,7 @@ from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
 from backend.models import Request, Admin
 from django.urls import reverse
+from django.contrib import messages
 
 from .forms import (
     QuoteForm,
@@ -25,6 +26,7 @@ from .forms import (
     RegisterForm,
     ParkingLotForm,
 )
+
 
 # Create your views here.
 
@@ -372,22 +374,29 @@ def change_password(request: HttpRequest):
 
 @login_required()
 def admin_dashboard(request):
-    users = Driver.objects.all()
-    parking_spaces = Slot.objects.all()
+    drivers = Driver.objects.all()
+    parking_spaces = Slot.objects.all().order_by('id')
     occupied_space = get_reserved_space_total()
     available_space = get_available_space_total()
     total_space = get_total_space_total()
     unavailable_spaces = total_space - (occupied_space + available_space)
+    requests = Request.objects.filter(status=Request.CurrentStatus.PENDING).order_by('timestamp')
     if available_space > 0:
         available_space_percentage = (((total_space - available_space) / total_space) * 100)
     else:
         available_space_percentage = 0
 
-    return render(request, "frontend/admin/admin_dashboard.html", {"Users": users, "total_space": total_space,
-                                                                   "occupied_space": occupied_space, "available_space": available_space
-                                                                   , "available_percentage" : available_space_percentage, "slots" : parking_spaces
-                                                                   , "unavailable" : unavailable_spaces})
-  
+    return render(request,
+                  "frontend/admin/admin_dashboard.html", {
+                      "drivers": drivers, "total_space": total_space,
+                      "occupied_space": occupied_space,
+                      "available_space": available_space,
+                      "available_percentage": available_space_percentage,
+                      "slots": parking_spaces,
+                      "unavailable": unavailable_spaces,
+                      "requests": requests
+                  })
+
 
 @login_required()
 def admin_request(request):
@@ -398,8 +407,14 @@ class TestView(FormView):
     form_class = ParkingLotForm
     template_name = 'frontend/foo.html'
 
+
 def idk(request):
     return render(request, "frontend/foo.html", {
         "form": ParkingLotForm(),
         "form2": ParkingLotForm()
     })
+
+
+def idkp2(request):
+    messages.add_message(request, messages.INFO, 'Hello world.')
+    return HttpResponse("What")

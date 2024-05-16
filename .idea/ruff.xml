@@ -2,7 +2,6 @@
 <project version="4">
   <component name="RuffConfigService">
     <option name="ruffConfigPath" value="C:\Users\Nitro\PycharmProjects\dockerPMS\DjangoPMS\ruff.toml" />
-    <option name="runRuffOnReformatCode" value="false" />
     <option name="runRuffOnSave" value="true" />
     <option name="useRuffFormat" value="true" />
     <option name="useRuffLsp" value="true" />

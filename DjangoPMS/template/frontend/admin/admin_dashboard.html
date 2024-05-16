@@ -52,7 +52,7 @@
         <section class="mt-20">
             <div role="tablist" class="tabs tabs-boxed tabs-lg bg-base-100 tabs-secondary">
                 <!--Parking tab-->
-                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Parking"/>
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Slot"/>
                 <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
                     <div>
                         <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
@@ -68,9 +68,11 @@
                                 <th></th>
                                 <th>Parking Space</th>
                                 <th></th>
-                                <th> Parking Lot</th>
-                                <th>Manage</th>
+                                <th>Parking Lot</th>
+                                <th>Status</th>
+                                <th>Driver ID</th>
                                 <th></th>
+                                <th>Manage</th>
                                 <th></th>
                                 <th></th>
 
@@ -79,7 +81,7 @@
                             </thead>
                             <tbody>
                             <!-- row 1 -->
-                            {% for lot in slots %}
+                            {% for slot in slots %}
                                 <tr>
                                     <th>
                                         <label>
@@ -89,7 +91,7 @@
                                     <td>
                                         <div class="flex items-center gap-3">
                                             <div>
-                                                <div class="font-bold"> #{{ lot.id }} </div>
+                                                <div class="font-bold"> #{{ slot.id }} </div>
                                             </div>
                                         </div>
                                     <th>
@@ -98,7 +100,21 @@
                                     <td>
                                         <div class="flex items-center gap-3">
                                             <div>
-                                                <div class="font-bold"> {{ lot.lot }} </div>
+                                                <div class="font-bold"> {{ slot.lot }} </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.status }} </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="wtf flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.driver }}</div>
                                             </div>
                                         </div>
                                     </td>
@@ -110,9 +126,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <a>
-                                            <div class="badge badge-warning">Block</div>
-                                        </a>
+                                        <form action={% url 'api:block' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-warning">Block</button>
+                                        </form>
                                     </td>
                                     <td>
                                         <a>
@@ -138,6 +155,7 @@
                             <thead class="text-lg">
                             <tr>
                                 <th></th>
+                                <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th></th>
@@ -146,13 +164,20 @@
                             </thead>
                             <tbody>
                             <!-- row 1 -->
-                            {% for driver in Users %}
+                            {% for driver in drivers %}
                                 <tr>
                                 <th>
                                     <label>
-                                        <input type="checkbox" class="checkbox"/>
+                                        <input type="checkbox" class="checkbox checkbox-primary"/>
                                     </label>
                                 </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ driver.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div>
@@ -168,7 +193,6 @@
                                     </div>
                                 </td>
                                 <td>
-
                                     <a href="{% url 'msg_ctx' driver.user.id %}">
                                         <div class="badge badge-md badge-success w-32">Message</div>
                                     </a>
@@ -189,6 +213,68 @@
 
                             {% endfor %}
                             </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Request tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Request" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Assigned Space</th>
+                                <th>Driver username</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for request in requests %}
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.slot }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.driver_id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:accept' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-success w-32">Approve</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:reject' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error w-32">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>

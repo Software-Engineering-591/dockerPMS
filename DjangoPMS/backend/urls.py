@@ -6,4 +6,8 @@ urlpatterns = [
     path("logout/", views.logout, name="logout"),
     path("ban/<int:pk>", views.ban, name="ban"),
     path("unban/<int:pk>", views.unban, name="unban"),
+    path("block/<int:slot_pk>", views.block, name="block"),
+
+    path("accept/<int:request_pk>", views.accept, name="accept"),
+    path("reject/<int:request_pk>", views.reject, name="reject"),
 ]

@@ -3,7 +3,9 @@ from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
-from .models import Driver
+from .models import Driver, Slot, Request
+
+
 # Create your views here.
 
 
@@ -28,5 +30,59 @@ def unban(request, pk):
         driver = get_object_or_404(Driver, pk=pk)
         driver.banned = False
         driver.save()
+        return redirect("index")
+    return HttpResponseForbidden(request, "You are not allowed")
+
+@require_POST
+@login_required
+def reserve(request, slot_pk, driver_pk):
+    if hasattr(request.user, 'admin'):
+        slot = get_object_or_404(Slot, pk=slot_pk)
+        slot.status = slot.Status.RESERVED
+        slot.driver = get_object_or_404(Driver, pk=driver_pk)
+        slot.save()
+        return redirect("index")
+    return HttpResponseForbidden(request, "You are not allowed")
+
+@require_POST
+@login_required
+def block(request, slot_pk):
+    if hasattr(request.user, 'admin'):
+        slot = get_object_or_404(Slot, pk=slot_pk)
+        slot.status = slot.Status.DISABLED
+        slot.driver = None
+        slot.save()
+        return redirect("index")
+    return HttpResponseForbidden(request, "You are not allowed")
+
+@require_POST
+@login_required
+def free(request, slot_pk):
+    if hasattr(request.user, 'admin'):
+        slot = get_object_or_404(Slot, pk=slot_pk)
+        slot.status = slot.Status.AVAILABLE
+        slot.driver = None
+        slot.save()
+        return redirect("index")
+    return HttpResponseForbidden(request, "You are not allowed")
+
+@require_POST
+@login_required
+def accept(request, request_pk):
+    if hasattr(request.user, 'admin'):
+        requested = get_object_or_404(Request, pk=request_pk)
+        requested.status = Request.CurrentStatus.APPROVED
+        # Extra Logic
+        requested.save()
+        return redirect("index")
+    return HttpResponseForbidden(request, "You are not allowed")
+
+@require_POST
+@login_required
+def reject(request, request_pk):
+    if hasattr(request.user, 'admin'):
+        requested = get_object_or_404(Request, pk=request_pk)
+        requested.status = Request.CurrentStatus.REJECTED
+        requested.save()
         return redirect("index")
     return HttpResponseForbidden(request, "You are not allowed")
