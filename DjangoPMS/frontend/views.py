@@ -178,13 +178,19 @@ class ReserveView(TemplateView):
                 point=(lot.poly.centroid.y, lot.poly.centroid.x),
                 poly=tuple(zip(lot.poly[0].y, lot.poly[0].x)),
                 popup_html=render_to_string(
-                    'frontend/reserve/popup.html', {'parkinglot': lot, 'form' : form}
+                    'frontend/reserve/popup.html',
+                    {
+                        'parkinglot': lot,
+                        'form': form,
+                        'available_space': lot.get_available_space(),
+                        'percentage': lot.get_available_space() / lot.get_total_space() * 100,
+                    }
                 ),
             )
             for lot in ParkingLot.objects.all()
         ]
         return {
-            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder), 'form' : form
+            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder), 'form': form
         }
 
     def post(self, request, *args, **kwargs):
@@ -209,7 +215,6 @@ def lot_view(request, pk):
     if old_request is not None:
         old_request.delete()
 
-
     if request.method == 'POST':
         form = QuoteForm(request.POST)
         print(form)
@@ -218,7 +223,7 @@ def lot_view(request, pk):
             request = Request.objects.create(
                 driver_id=driver,
                 slot=slot,
-                arrival= datetime.combine(form.cleaned_data['date_from'], form.cleaned_data['time_from']),
+                arrival=datetime.combine(form.cleaned_data['date_from'], form.cleaned_data['time_from']),
                 departure=datetime.combine(form.cleaned_data['date_to'], form.cleaned_data['time_to'])
 
             )
@@ -228,8 +233,8 @@ def lot_view(request, pk):
         form = QuoteForm()
 
         return render(request, 'frontend/lot.html', {'total': total, 'available': available,
-                                                 'reserved': reserved, 'available_progress': available_progress,
-                                                 'reserved_progress': reserved_progress, 'lot' : pk, 'form': form})
+                                                     'reserved': reserved, 'available_progress': available_progress,
+                                                     'reserved_progress': reserved_progress, 'lot': pk, 'form': form})
 
 
 @login_required()
@@ -281,7 +286,6 @@ class AdminView(TemplateView):
 
 @login_required
 def quote(request):
-
     form = TopUpForm()
     user = get_object_or_404(User, username=request.user.username)
     driver = get_object_or_404(Driver, user=request.user.id)
@@ -318,7 +322,6 @@ def quote(request):
 
 
 def topup(request):
-
     requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
 
     duration = requested.departure - requested.arrival
@@ -349,10 +352,12 @@ def topup(request):
     else:
         form = TopUpForm()
     return render(request, 'frontend/quote.html', context)
-  
+
+
 def calculate_parking_charge(duration):
     rate_per_hour = 100
     return rate_per_hour * math.ceil(duration.total_seconds() / 3600)
+
 
 def make_quote(request):
     driver = get_object_or_404(Driver, user=request.user.id)
@@ -412,6 +417,7 @@ def admin_dashboard(request):
     occupied_space = get_reserved_space_total()
     available_space = get_available_space_total()
     total_space = get_total_space_total()
+    lots = ParkingLot.objects.all()
     unavailable_spaces = total_space - (occupied_space + available_space)
     requests = Request.objects.filter(status=Request.CurrentStatus.PENDING).order_by('timestamp')
     if available_space > 0:
@@ -427,7 +433,8 @@ def admin_dashboard(request):
                       "available_percentage": available_space_percentage,
                       "slots": parking_spaces,
                       "unavailable": unavailable_spaces,
-                      "requests": requests
+                      "requests": requests,
+                      "lots": lots
                   })
 
 
