@@ -70,6 +70,7 @@ def signup(request):
         driver = Driver.objects.create(user=user)
         driver.save()
         auth.login(request, user)
+        messages.success(request, "You have signed up!")
         return redirect('index')
     return render(request, 'frontend/signup.html', {'form': form})
 
@@ -80,6 +81,7 @@ def login(request):
     if form.is_valid():
         user = form.get_user()
         auth.login(request, user)
+        messages.success(request, "You have logged in successfully!")
         return redirect('index')
     return render(request, 'frontend/login.html', {'form': form})
 
@@ -87,7 +89,6 @@ def login(request):
 @require_http_methods(['GET', 'POST'])
 def driver_messaging(request):
     driver = Driver.objects.get(user=request.user)
-    messages = driver.messages
     if request.method == 'POST':
         form = MessageForm(request.POST)
         admin = Admin.objects.get(user=request.user)
@@ -95,6 +96,7 @@ def driver_messaging(request):
             message = form.save(commit=False)
             message.receiver = admin
             driver.send_message(message)
+            messages.info(request, "Sent Successful Message!")
             return redirect('/message/')
     else:
         form = MessageForm()
@@ -320,6 +322,7 @@ def quote(request):
             )
             driver.credit += payment.amount
             driver.save()
+            messages.success(request, "Payment was successful!")
             payment.save()
         return redirect('/quote')
     else:
@@ -369,10 +372,10 @@ def make_quote(request):
     driver = get_object_or_404(Driver, user=request.user.id)
     requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
     requested.status = requested.CurrentStatus.PENDING
-
     duration = requested.departure - requested.arrival
     parking_charge = calculate_parking_charge(duration)
     driver.credit -= parking_charge
+    messages.success(request, "Request has been made!")
     driver.save()
     requested.save()
     return redirect('index')
