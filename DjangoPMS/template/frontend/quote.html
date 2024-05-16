@@ -4,106 +4,20 @@
 {% block head %}
 <title>Quote | UEA PMS</title>
 <link rel="stylesheet" href="{% static 'frontend/home.css' %}">
-<style>
-    #content-area {
 
-        margin-top: 50px;  /* No extra space on top */
-        padding-top: 10px;  /* Just a small padding to avoid touching the navbar */
-        padding-bottom: 50px;  /* Small padding at the bottom */
-    }
-    #content-area .container {
-
-        display: flex;
-        justify-content: center;
-        align-items: flex-start; /* Aligns boxes at the top */
-        width: 100%;  /* Full width of the content area */
-    }
-    #content-area .assigned-lot {
-        /*color: lightgray;  /* Assuming white text */
-        font-size: 20px;  /* Specific font size */
-        font-weight: bold;  /* Bold text */
-        text-transform: uppercase;  /* Uppercase text */
-        letter-spacing: 5px;  /* Space between letters */
-        /*background-color: orange;*/
-        text-align: justify;
-        line-height: 3;
-        text-indent: 10px;
-        padding: 15px;
-        border-radius: 4px;
-        margin-top: 20px;
-        width: 100%;  /* Matches width of the outer box */
-
-    }
-    #content-area .divider {
-        background-color: grey;
-        height: auto;  /* Adjust height based on content */
-        width: 4px;
-        margin: 30px;
-
-
-    }
-    #content-area .btn {
-
-        margin-top: 35px;
-        padding: 15px 40px; /* Adjusted padding */
-        cursor: pointer;
-
-        font-size: 50px;
-        font-weight: bold;
-
-        text-transform: uppercase;
-        letter-spacing: 5px;
-        margin-bottom: 50px;
-        display: flex;         /* Using flexbox to center content */
-        justify-content: center; /* Centers horizontally */
-        align-items: center;     /* Centers vertically */
-        height: 100px;          /* Specifying height might help depending on design */;
-
-
-    }
-    #contact-details-section{
-        /*color: lightgray;  /* Assuming white text */
-        font-size: 20px;  /* Specific font size */
-        font-weight: bold;  /* Bold text */
-
-        text-transform: uppercase;  /* Uppercase text */
-        letter-spacing: 5px;  /* Space between letters */
-        margin-bottom: 50px;
-        text-indent: 30px;
-        line-height: 3.5;
-    }
-    #heading{
-
-        font-size: 60px;  /* Specific font size */
-        font-weight: 1000;  /* Bold text */
-        text-decoration: underline;
-        text-underline-offset: 18px; /* Moves the underline 3px away from the text */
-
-        text-transform: uppercase;  /* Uppercase text */
-        letter-spacing: 5px;  /* Space between letters */
-        margin-bottom: 50px;
-    }
-    .payment-content-section{
-        font-size: 20px;  /* Specific font size */
-        font-weight: bold;  /* Bold text */
-
-        text-transform: uppercase;  /* Uppercase text */
-        letter-spacing: 5px;  /* Space between letters */
-        margin-bottom: 50px;
-        text-indent: 30px;
-        line-height: 3.5;
-
-    }
-    #continue-button{
-        margin-left:1300px;
-    }
-</style>
 {% endblock %}
 
 {% block body %}
 {% include 'frontend/nav.html' %}
 
 <main id="content-area" class="min-h-screen flex flex-col justify-center items-center">
+  <div class="flex items-center justify-center card h-3/4 w-full  overflow-y-hidden ">
+    <div class="flex justify-center w-3/4 h-3/4 items-center border-4 border-accent rounded-3xl p-4">
+    <div class="card h-full w-full overflow-y-auto">
+    <div class="card-title h-auto w-full text-center p-2"> Contact Details </div>
+    <div class="divider divider-vertical divider-secondary"></div>
+
+
     <div class="container">
         <!-- Left card: Profile and Assigned lot -->
         <div class="card-body h-auto w- hover: bg-base-200 border 2 border-neutral ">
@@ -116,24 +30,39 @@
                     </div>
 
                     <div id="contact-details-section" class="card-body h-auto w- hover: bg-base-300 border 2 border-neutral ">
-                    <h3>Assigned Lot: {{ assigned_slot }}</h3>
+                    <h3>Assigned Lot:  {{ assigned_slot }}</h3>
+
                     <p>Driver Name: {{ user.first_name }} {{ user.last_name }}</p>
                 </div>
         </div>
+    </div>
+    </div>
+
+        <div class="divider divider-vertical"></div>
+
 
         <!-- Divider -->
-        <div class="divider"></div>
-
+        <div class="card h-full w-full overflow-y-auto">
+         <div class="card-title h-auto w-full text-center p-2">Request History </div>
+          <div class="divider divider-vertical divider-secondary"></div>
         <!-- Right card: Total charge and Top-up button -->
+              <div class="container">
+
         <div class="card-body h-auto w- hover: bg-base-200 border 2 border-neutral ">
-            <h2 id="heading">Payment </h2>
+            <h2 id="heading">Contact Details </h2>
             <div class="payment-content-section">
                 <p><b>Total Charge:</b> £{{ parking_charge }}</p>
-                </div>
+            </div>
             <button class="btn card-body h-auto w- hover: bg-orange-700 border 2 border-neutral " onclick="document.getElementById('topup_modal').showModal()">Top Up</button>
+
+        </div>
         </div>
 
-    </div>
+
+
+</div>
+  </div>
+
     <button onclick="frontend/lot.html" id="continue-button" class="continue-btn btn bg-base-200 border-2 border-neutral">CONTINUE</button>
 </main>
 

@@ -38,8 +38,12 @@
   </div>
   <div class="divider"></div>
   <div class="grid h-20 card bg-base-300 rounded-box place-items-center">
-    <button class="btn btn-wide">Reserve a Slot!</button>
+      <a href="{% url 'quote2' %}" > <button class="btn btn-wide">Reserve a Slot!</button> </a>
   </div>
-  <div class="text-xl">{% lorem %}</div>
+      <form method="POST">
+          {%   csrf_token %}
+          {{ form }}
+          <button> submit </button>
+      </form>
 </div>
 {% include 'frontend/footer.html' %} {% endblock %}

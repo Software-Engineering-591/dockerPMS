@@ -66,36 +66,32 @@ class UserProfileForm(forms.ModelForm):
 
         
 class TopUpForm(forms.Form):
-    email = forms.EmailField(
-        label='Confirmation will be sent to',
-        required=True,
-        widget=forms.EmailInput(attrs={'class': 'input input-bordered w-full'})
+
+    amount = forms.IntegerField(
+        max_value = 10000,
+        required = True,
+        widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
     )
-    card_number = forms.CharField(
-        label='Card number',
-        max_length=16,  # Typical length for credit card numbers
-        min_length=13,  # Minimum length to cover most card types
+    card_number = forms.IntegerField(
+        max_value=9999999999999999,  # Typical length for credit card numbers
+        min_value=0000000000000,  # Minimum length to cover most card types
         required=True,
-        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
+        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
-    name_on_card = forms.CharField(
-        label='Name on card',
+    card_name = forms.CharField(
         max_length=100,
         required=True,
         widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
     )
     expiry = forms.DateField(
-        label='Expiry date',
         required=True,
         widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY'}),
         input_formats=['%m/%y']  # Accepting MM/YY format
     )
-    cvc = forms.CharField(
-        label='Security code',
-        max_length=4,  # CVC codes are usually 3 or 4 digits
-        min_length=3,
+    cvc = forms.IntegerField(
+        max_value= 999,
         required=True,
-        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
+        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
 
     def clean_expiry(self):
