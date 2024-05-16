@@ -66,48 +66,33 @@ class UserProfileForm(forms.ModelForm):
 
         
 class TopUpForm(forms.Form):
-    email = forms.EmailField(
-        label='Confirmation will be sent to',
-        required=True,
-        widget=forms.EmailInput(attrs={'class': 'input input-bordered w-full'})
+
+    amount = forms.IntegerField(
+        max_value = 10000,
+        widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
     )
-    card_number = forms.CharField(
-        label='Card number',
-        max_length=16,  # Typical length for credit card numbers
-        min_length=13,  # Minimum length to cover most card types
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
+    card_number = forms.IntegerField(
+        max_value=9999999999999999,  # Typical length for credit card numbers
+        min_value=0,  # Minimum length to cover most card types
+        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
-    name_on_card = forms.CharField(
-        label='Name on card',
+    card_name = forms.CharField(
         max_length=100,
-        required=True,
         widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
     )
     expiry = forms.DateField(
-        label='Expiry date',
-        required=True,
-        widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY'}),
-        input_formats=['%m/%y']  # Accepting MM/YY format
+        widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY', 'type' : 'month'}),
+        input_formats=['%Y-%m']
     )
-    cvc = forms.CharField(
-        label='Security code',
-        max_length=4,  # CVC codes are usually 3 or 4 digits
-        min_length=3,
-        required=True,
-        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
+    cvc = forms.IntegerField(
+        max_value= 999,
+        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
 
     def clean_expiry(self):
         expiry = self.cleaned_data.get('expiry')
         if expiry and expiry < datetime.date.today():
             raise ValidationError("The expiry date has passed.")
-        return expiry
-
-    def clean_email(self):
-        email = self.cleaned_data.get('email')
-        # You can add more validation to check if email is associated with a user etc.
-        return email
 
 class UserProfileForm(forms.ModelForm):
     class Meta:
