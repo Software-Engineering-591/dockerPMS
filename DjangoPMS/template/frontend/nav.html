@@ -36,10 +36,10 @@
         </label>
     </div>
     <div class="navbar-center">
-        {% if user.driver %}
-            <a class="btn btn-outline btn-primary text-xl">UEA Parking PMS</a>
-        {% else %}
+        {% if user.admin %}
             <a class="btn btn-outline btn-secondary text-xl">UEA Parking PMS - Admin</a>
+        {% else %}
+            <a class="btn btn-outline btn-primary text-xl">UEA Parking PMS</a>
         {% endif %}
     </div>
     <div class="navbar-end">
