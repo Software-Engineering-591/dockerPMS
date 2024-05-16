@@ -1,5 +1,6 @@
 import dataclasses
 import json
+import math
 from dataclasses import dataclass
 from datetime import timedelta, datetime
 
@@ -277,7 +278,7 @@ def quote(request):
 
     duration = requested.departure - requested.arrival
     seconds = duration.total_seconds()
-    parking_charge = calculate_parking_charge(seconds / 3600)
+    parking_charge = calculate_parking_charge(duration)
 
     context = {
         'assigned_slot': requested.slot.lot.name,
@@ -298,7 +299,7 @@ def quote(request):
             driver.credit += payment.amount
             driver.save()
             payment.save()
-        redirect('/quote2')
+        return redirect('/quote2')
     else:
         form = TopUpForm()
     return render(request, 'frontend/quote2.html', context)
@@ -306,7 +307,7 @@ def calculate_parking_charge(duration):
     rate_per_hour = 100
 
 
-    return rate_per_hour * duration
+    return rate_per_hour * math.ceil(duration.total_seconds() / 3600)
 
 def make_quote(request):
     driver = get_object_or_404(Driver, user=request.user.id)

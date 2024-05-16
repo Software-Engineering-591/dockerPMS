@@ -69,28 +69,23 @@ class TopUpForm(forms.Form):
 
     amount = forms.IntegerField(
         max_value = 10000,
-        required = True,
         widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
     )
     card_number = forms.IntegerField(
         max_value=9999999999999999,  # Typical length for credit card numbers
-        min_value=0000000000000,  # Minimum length to cover most card types
-        required=True,
+        min_value=0,  # Minimum length to cover most card types
         widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
     card_name = forms.CharField(
         max_length=100,
-        required=True,
         widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
     )
     expiry = forms.DateField(
-        required=True,
         widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY', 'type' : 'month'}),
         input_formats=['%Y-%m']
     )
     cvc = forms.IntegerField(
         max_value= 999,
-        required=True,
         widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
     )
 
