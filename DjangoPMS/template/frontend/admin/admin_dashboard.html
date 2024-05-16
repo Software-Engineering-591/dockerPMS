@@ -56,9 +56,9 @@
                 <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
                     <div>
                         <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
-                        <a>
-                            <button class="btn btn-outline btn-primary ml-10">Add parking</button>
-                        </a>
+                        <button class="btn btn-outline btn-primary ml-10" onclick="add_slot_modal.showModal()">Add
+                            Slots
+                        </button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="table table-zebra">
@@ -119,11 +119,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="flex items-center gap-3">
-                                            <div>
-                                                <div class="badge badge-success ">Reserve</div>
-                                            </div>
-                                        </div>
+                                        <form action={% url 'api:free' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-success">Free</button>
+                                        </form>
                                     </td>
                                     <td>
                                         <form action={% url 'api:block' slot.id %} method="POST">
@@ -132,9 +131,10 @@
                                         </form>
                                     </td>
                                     <td>
-                                        <a>
-                                            <div class="badge badge-error">Remove</div>
-                                        </a>
+                                        <form action={% url 'api:remove' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-info">remove</button>
+                                        </form>
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -285,4 +285,26 @@
     <footer>
         {% include 'frontend/footer.html' %}
     </footer>
+    <dialog id="add_slot_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Add Slots</h3>
+            <form>
+                <input type="number" class="input input-bordered w-full max-w-xs"/>
+                <select class="select w-full max-w-xs">
+                    <option disabled selected>Choose Parking Lot</option>
+                    {% for lot in lots %}
+                        <option>{{ lot }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn">Create</button>
+            </form>
+            <div class="modal-action">
+                <form method="dialog">
+
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
 {% endblock %}
