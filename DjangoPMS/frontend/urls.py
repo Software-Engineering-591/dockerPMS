@@ -9,7 +9,7 @@ urlpatterns = [
     path('login/', views.login, name='login'),
     path('contact/', views.contact, name='contact'),
     path('message/', views.messaging, name='msg'),
-    path('quote2/', views.quote, name='quote2'),
+    path('quote/', views.quote, name='quote'),
     path('makequote/', views.make_quote, name='make_quote'),
 
     path('message/<int:sender>', views.messaging, name='msg_ctx'),

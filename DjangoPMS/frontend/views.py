@@ -217,7 +217,7 @@ def lot_view(request, pk):
 
             )
             request.save()
-            return redirect('/quote2/')
+            return redirect('/quote/')
     else:
         form = QuoteForm()
 
@@ -277,7 +277,7 @@ def quote(request):
     requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
 
     duration = requested.departure - requested.arrival
-    seconds = duration.total_seconds()
+
     parking_charge = calculate_parking_charge(duration)
 
     context = {
@@ -299,10 +299,10 @@ def quote(request):
             driver.credit += payment.amount
             driver.save()
             payment.save()
-        return redirect('/quote2')
+        return redirect('/quote')
     else:
         form = TopUpForm()
-    return render(request, 'frontend/quote2.html', context)
+    return render(request, 'frontend/quote.html', context)
 def calculate_parking_charge(duration):
     rate_per_hour = 100
 
@@ -315,8 +315,7 @@ def make_quote(request):
     requested.status = requested.CurrentStatus.PENDING
 
     duration = requested.departure - requested.arrival
-    seconds = duration.total_seconds()
-    parking_charge = calculate_parking_charge(seconds / 3600)
+    parking_charge = calculate_parking_charge(duration)
     driver.credit -= parking_charge
     driver.save()
     requested.save()

@@ -7,7 +7,7 @@
 
     <button onclick="document.getElementById('topup_modal').close()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
     <h3 class="font-bold text-lg">Top Up Your Account</h3>
-      <form method="post" action="{% url 'quote2' %}" id="TopUpForm">
+      <form method="post" action="{% url 'quote' %}" id="TopUpForm">
     {% csrf_token %}
     <div class="mt-4 mb-6">
       <div class="flex justify-between">
