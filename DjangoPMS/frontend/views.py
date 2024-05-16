@@ -121,7 +121,7 @@ def admin_messages(request):
 @require_http_methods(['GET', 'POST'])
 def admin_message_ctx(request, sender):
     admin = Admin.objects.get(user=request.user)
-    messages = admin.messages.filter(Q(sender=sender) | Q(sender=request.user))
+    messages = admin.messages.filter(Q(receiver=sender) | Q(sender=sender))
     senders = Message.objects.order_by('sender').distinct('sender')
     driver = get_object_or_404(User, pk=sender)
 
