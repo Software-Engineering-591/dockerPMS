@@ -72,10 +72,10 @@ class TopUpForm(forms.Form):
         widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
     )
     card_number = forms.IntegerField(
-        max_value=9999999999999999,  # Typical length for credit card numbers
-        min_value=0,  # Minimum length to cover most card types
+        max_value=9999999999999999,
+        min_value=0,
         widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
-
+    )
     card_name = forms.CharField(
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})

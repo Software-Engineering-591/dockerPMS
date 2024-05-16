@@ -40,9 +40,6 @@ def index(request):
     return home(request)
 
 
-# may be advisable to use hardcoded value 200 for total_space, unless 200 slots are going to be created
-
-
 @require_GET
 def home(request):
     total_space = get_total_space_total()
@@ -193,12 +190,9 @@ class ReserveView(TemplateView):
     def post(self, request, *args, **kwargs):
         return self.get(request, *args, **kwargs)
 
-# class LotView(DetailView):
-#     model = ParkingLot
-
 
 def lot_view(request, pk):
-  plot = get_object_or_404(ParkingLot, pk=pk)
+    plot = get_object_or_404(ParkingLot, pk=pk)
 
     total = plot.get_total_space()
     available = plot.get_available_space()
@@ -287,10 +281,6 @@ class AdminView(TemplateView):
 
 @login_required
 def quote(request):
-    # Check if the user is authenticated
-    if not request.user.is_authenticated:
-        return redirect('login')  # Redirect to login if the user is not authenticated
-
 
     form = TopUpForm()
     user = get_object_or_404(User, username=request.user.username)
@@ -325,10 +315,6 @@ def quote(request):
     else:
         form = TopUpForm()
     return render(request, 'frontend/quote.html', context)
-
-def calculate_parking_charge(duration):
-    rate_per_hour = 250  # Set the rate per hour as needed
-    return rate_per_hour * duration
 
 
 def topup(request):
@@ -429,7 +415,7 @@ def admin_dashboard(request):
     unavailable_spaces = total_space - (occupied_space + available_space)
     requests = Request.objects.filter(status=Request.CurrentStatus.PENDING).order_by('timestamp')
     if available_space > 0:
-        available_space_percentage = (((total_space - available_space) / total_space) * 100)
+        available_space_percentage = (((available_space) / total_space) * 100)
     else:
         available_space_percentage = 0
 
