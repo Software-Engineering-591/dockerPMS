@@ -198,7 +198,7 @@ class ReserveView(TemplateView):
 
 
 def lot_view(request, pk):
-  plot = get_object_or_404(ParkingLot, pk=pk)
+    plot = get_object_or_404(ParkingLot, pk=pk)
 
     total = plot.get_total_space()
     available = plot.get_available_space()
@@ -429,7 +429,7 @@ def admin_dashboard(request):
     unavailable_spaces = total_space - (occupied_space + available_space)
     requests = Request.objects.filter(status=Request.CurrentStatus.PENDING).order_by('timestamp')
     if available_space > 0:
-        available_space_percentage = (((total_space - available_space) / total_space) * 100)
+        available_space_percentage = (((available_space) / total_space) * 100)
     else:
         available_space_percentage = 0
 
