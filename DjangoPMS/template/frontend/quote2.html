@@ -31,12 +31,6 @@
     <div class="card-title h-auto w-full text-center p-2"> Contact Details </div>
     <div class="divider divider-vertical divider-secondary"></div>
 
-        {% if messages %}
-<ul class="messages">
-    {% for message in message %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
 {% endif %}
         <div class="grid h-auto w-full rounded-box">
             <div class="h-full w-full">
