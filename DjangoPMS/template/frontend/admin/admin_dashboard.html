@@ -7,13 +7,13 @@
 {% endblock %}
 
 {% block body %}
-    {% include 'frontend/nav_admin.html' %}
+    {% include 'frontend/nav.html' %}
     <main class="p-20 my-30 mx-150">
         <section>
             <div class="flex flex-col w-full lg:flex-row">
                 <div class="grid w-96 h-96 card bg-base-300 rounded-box place-items-center">
                     <div class="radial-progress bg-secondary text-primary-content border-4 border-secondary"
-                         style="--value:{{available_percentage }};--size:15rem;"
+                         style="--value:{{ available_percentage }};--size:15rem;"
                          role="progressbar">{{ available_space }} spaces<span>available</span>
                     </div>
                 </div>
@@ -52,11 +52,13 @@
         <section class="mt-20">
             <div role="tablist" class="tabs tabs-boxed tabs-lg bg-base-100 tabs-secondary">
                 <!--Parking tab-->
-                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Parking"/>
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Slot"/>
                 <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
                     <div>
                         <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
-                        <a><button class="btn btn-outline btn-primary ml-10">Add parking</button></a>
+                        <a>
+                            <button class="btn btn-outline btn-primary ml-10">Add parking</button>
+                        </a>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="table table-zebra">
@@ -66,58 +68,75 @@
                                 <th></th>
                                 <th>Parking Space</th>
                                 <th></th>
-                                <th> Parking Lot </th>
-                                 <th>Manage</th>
-                                <th> </th>
+                                <th>Parking Lot</th>
+                                <th>Status</th>
+                                <th>Driver ID</th>
                                 <th></th>
-                                <th> </th>
+                                <th>Manage</th>
+                                <th></th>
+                                <th></th>
 
                                 <th></th>
                             </tr>
                             </thead>
                             <tbody>
                             <!-- row 1 -->
-                            {% for lot in slots %}
-                            <tr>
-                                <th>
-                                    <label>
-                                        <input type="checkbox" class="checkbox"/>
-                                    </label>
-                                </th>
-                                <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="font-bold"> #{{ lot.id }} </div>
-                                        </div>
-                                    </div>
+                            {% for slot in slots %}
+                                <tr>
                                     <th>
-                            </th>
-                                </td>
-                                  <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="font-bold"> {{ lot.lot }} </div>
+                                        <label>
+                                            <input type="checkbox" class="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> #{{ slot.id }} </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="flex items-center gap-3">
-                                        <div>
-                                            <div class="badge badge-success ">Reserve</div>
+                                    <th>
+                                    </th>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.lot }} </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <a>
-                                        <div class="badge badge-warning">Block</div>
-                                    </a>
-                                </td>
-                                <td>
-                                    <a>
-                                        <div class="badge badge-error">Remove</div>
-                                    </a>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.status }} </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="wtf flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.driver }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="badge badge-success ">Reserve</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:block' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-warning">Block</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            <div class="badge badge-error">Remove</div>
+                                        </a>
+                                    </td>
+                                </tr>
                             {% endfor %}
                             </tbody>
                         </table>
@@ -136,6 +155,7 @@
                             <thead class="text-lg">
                             <tr>
                                 <th></th>
+                                <th>ID</th>
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th></th>
@@ -144,13 +164,20 @@
                             </thead>
                             <tbody>
                             <!-- row 1 -->
-                            {% for driver in Users %}
-                            <tr>
+                            {% for driver in drivers %}
+                                <tr>
                                 <th>
                                     <label>
-                                        <input type="checkbox" class="checkbox"/>
+                                        <input type="checkbox" class="checkbox checkbox-primary"/>
                                     </label>
                                 </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ driver.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td>
                                     <div class="flex items-center gap-3">
                                         <div>
@@ -166,17 +193,88 @@
                                     </div>
                                 </td>
                                 <td>
-
-                                   <a href="{%  url 'msg_ctx' driver.user.id %}">  <div class="badge badge-md badge-success w-32">Message</div>
+                                    <a href="{% url 'msg_ctx' driver.user.id %}">
+                                        <div class="badge badge-md badge-success w-32">Message</div>
                                     </a>
                                 </td>
                                 <td>
-
-                                        <div class="badge badge-error badge-md">Ban</div>
-
+                                    {% if driver.banned %}
+                                        <form action={% url 'api:unban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-info badge-md">Unban</button>
+                                        </form>
+                                    {% else %}
+                                        <form action={% url 'api:ban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error badge-md">Ban</button>
+                                        </form>
+                                    {% endif %}
                                 </td>
+
                             {% endfor %}
                             </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Request tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Request" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Assigned Space</th>
+                                <th>Driver username</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for request in requests %}
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.slot }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.driver_id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:accept' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-success w-32">Approve</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:reject' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error w-32">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
                     </div>
@@ -185,6 +283,6 @@
         </section>
     </main>
     <footer>
-        {% include 'frontend/footer_admin.html' %}
+        {% include 'frontend/footer.html' %}
     </footer>
 {% endblock %}

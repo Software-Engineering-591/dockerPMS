@@ -1,20 +1,24 @@
-<footer class="footer footer-center p-10 bg-primary text-primary-content">
-  <div class="gap-8">
+{% if user.admin %}
+    <footer class="footer footer-center p-10 bg-secondary text-primary-content">
+{% else %}
+    <footer class="footer footer-center p-10 bg-primary text-primary-content">
+{% endif %}
+<div class="gap-8">
     <aside>
-       <svg  width="50"
-                    height="50"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill-rule="evenodd"
-                    clip-rule="evenodd"
-                    class="inline-block fill-current">
-                    <path d="M12 3C12 7.97056 16.0294 12 21 12C16.0294 12 12 16.0294 12 21C12 16.0294 7.97056 12 3 12C7.97056 12 12 7.97056 12 3Z"
-                          stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
-            </svg>
-      <p class="font-bold">
-        UEA PMS Group 209 Ltd. <br />Providing feasible solutions since 2024
-      </p>
-      <p>Copyright © 2024 - All right reserved</p>
+        <svg width="50"
+             height="50"
+             viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg"
+             fill-rule="evenodd"
+             clip-rule="evenodd"
+             class="inline-block fill-current">
+            <path d="M12 3C12 7.97056 16.0294 12 21 12C16.0294 12 12 16.0294 12 21C12 16.0294 7.97056 12 3 12C7.97056 12 12 7.97056 12 3Z"
+                  stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+        <p class="font-bold">
+            UEA PMS Group 209 Ltd. <br/>Providing feasible solutions since 2024
+        </p>
+        <p>Copyright © 2024 - All right reserved</p>
     </aside>
     <nav>
       <div class="grid grid-flow-col gap-4">
@@ -76,5 +80,5 @@
           </a>
       </div>
     </nav>
-  </div>
+</div>
 </footer>

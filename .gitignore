@@ -1,0 +1,2 @@
+DjangoPMS/backend/migrations/*
+!DjangoPMS/backend/migrations/__init__.py

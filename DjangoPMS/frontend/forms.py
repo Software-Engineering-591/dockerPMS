@@ -3,8 +3,10 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
-from backend.models import Message, User
-from django.http import request
+
+from backend.models import Message, User, ParkingLot
+from leaflet.forms.widgets import LeafletWidget
+
 
 class MessageForm(forms.ModelForm):
     class Meta:
@@ -23,7 +25,7 @@ class MessageForm(forms.ModelForm):
 
 class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ("email",)
+        fields = UserCreationForm.Meta.fields + ('email',)
 
 
 class QuoteForm(forms.Form):
@@ -58,15 +60,13 @@ class QuoteForm(forms.Form):
                 )
 
 
-
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email")
+        fields = ('first_name', 'last_name', 'email')
 
-        
+
 class TopUpForm(forms.Form):
-
     amount = forms.IntegerField(
         max_value = 10000,
         widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
@@ -75,7 +75,7 @@ class TopUpForm(forms.Form):
         max_value=9999999999999999,  # Typical length for credit card numbers
         min_value=0,  # Minimum length to cover most card types
         widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
-    )
+
     card_name = forms.CharField(
         max_length=100,
         widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
@@ -94,12 +94,20 @@ class TopUpForm(forms.Form):
         if expiry and expiry < datetime.date.today():
             raise ValidationError("The expiry date has passed.")
 
+
 class UserProfileForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ("first_name", "last_name", "email")
+        fields = ('first_name', 'last_name', 'email')
+
 
 class RegisterForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ("email",)
+        fields = UserCreationForm.Meta.fields + ('email',)
 
+
+class ParkingLotForm(forms.ModelForm):
+    class Meta:
+        model = ParkingLot
+        fields = ('name', 'poly')
+        widgets = {'poly': LeafletWidget()}
