@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 import datetime
 
-from backend.models import Message, User, ParkingLot
+from backend.models import Message, ParkingLot
 from leaflet.forms.widgets import LeafletWidget
 
 
@@ -21,11 +21,6 @@ class MessageForm(forms.ModelForm):
                 }
             ),
         }
-
-
-class RegisterForm(UserCreationForm):
-    class Meta(UserCreationForm.Meta):
-        fields = UserCreationForm.Meta.fields + ('email',)
 
 
 class QuoteForm(forms.Form):
@@ -60,12 +55,6 @@ class QuoteForm(forms.Form):
                 raise ValidationError(
                     'A departure cannot be more than 10 days in length'
                 )
-
-
-class UserProfileForm(forms.ModelForm):
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'email')
 
 
 class TopUpForm(forms.Form):
