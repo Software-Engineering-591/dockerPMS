@@ -2,23 +2,22 @@ import dataclasses
 import json
 import math
 from dataclasses import dataclass
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
-from django.views.generic import FormView, TemplateView
+from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
 from backend.models import Request, Admin
 from django.urls import reverse
-from django.contrib import messages
 
 from .forms import (
     QuoteForm,
@@ -26,7 +25,6 @@ from .forms import (
     TopUpForm,
     UserProfileForm,
     RegisterForm,
-    ParkingLotForm,
 )
 
 
@@ -70,7 +68,7 @@ def signup(request):
         driver = Driver.objects.create(user=user)
         driver.save()
         auth.login(request, user)
-        messages.success(request, "You have signed up!")
+        messages.success(request, 'You have signed up!')
         return redirect('index')
     return render(request, 'frontend/signup.html', {'form': form})
 
@@ -81,7 +79,7 @@ def login(request):
     if form.is_valid():
         user = form.get_user()
         auth.login(request, user)
-        messages.success(request, "You have logged in successfully!")
+        messages.success(request, 'You have logged in successfully!')
         return redirect('index')
     return render(request, 'frontend/login.html', {'form': form})
 
@@ -96,7 +94,7 @@ def driver_messaging(request):
             message = form.save(commit=False)
             message.receiver = admin.user
             driver.send_message(message)
-            messages.info(request, "Sent Successful Message!")
+            messages.info(request, 'Sent Successful Message!')
             return redirect('/message/')
     else:
         form = MessageForm()
@@ -185,14 +183,17 @@ class ReserveView(TemplateView):
                         'parkinglot': lot,
                         'form': form,
                         'available_space': lot.get_available_space(),
-                        'percentage': lot.get_available_space() / lot.get_total_space() * 100,
-                    }
+                        'percentage': lot.get_available_space()
+                        / lot.get_total_space()
+                        * 100,
+                    },
                 ),
             )
             for lot in ParkingLot.objects.all()
         ]
         return {
-            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder), 'form': form
+            'geo_data': json.dumps(lot_geodata, cls=EnhancedJSONEncoder),
+            'form': form,
         }
 
     def post(self, request, *args, **kwargs):
@@ -207,16 +208,17 @@ def lot_view(request, pk):
     reserved = plot.get_reserved_space()
     slot = Slot.objects.filter(lot=plot, status=Slot.Status.AVAILABLE).first()
     driver = get_object_or_404(Driver, user=request.user.id)
-    old_request = Request.objects.filter(driver_id=driver, status=Request.CurrentStatus.CREATED)
+    old_request = Request.objects.filter(
+        driver_id=driver, status=Request.CurrentStatus.CREATED
+    )
     if total > 0:
-        available_progress = (((total - reserved) / total) * 100)
-        reserved_progress = (((total - available) / total) * 100)
+        available_progress = ((total - reserved) / total) * 100
+        reserved_progress = ((total - available) / total) * 100
     else:
         available_progress = 0
         reserved_progress = 0
     if old_request is not None:
         old_request.delete()
-
 
     if slot is None:
         messages.error(request, 'No slots available')
@@ -226,23 +228,36 @@ def lot_view(request, pk):
         form = QuoteForm(request.POST)
         if form.is_valid():
             form.check()
-            print("hello")
+            print('hello')
             request = Request.objects.create(
                 driver_id=driver,
                 slot=slot,
-                arrival=datetime.combine(form.cleaned_data['date_from'], form.cleaned_data['time_from']),
-                departure=datetime.combine(form.cleaned_data['date_to'], form.cleaned_data['time_to'])
-
+                arrival=datetime.combine(
+                    form.cleaned_data['date_from'],
+                    form.cleaned_data['time_from'],
+                ),
+                departure=datetime.combine(
+                    form.cleaned_data['date_to'], form.cleaned_data['time_to']
+                ),
             )
             request.save()
             return redirect('/quote/')
     else:
         form = QuoteForm()
 
-        return render(request, 'frontend/lot.html', {'total': total, 'available': available,
-                                                     'reserved': reserved, 'available_progress': available_progress,
-                                                     'reserved_progress': reserved_progress, 'lot': pk, 'form': form})
-
+        return render(
+            request,
+            'frontend/lot.html',
+            {
+                'total': total,
+                'available': available,
+                'reserved': reserved,
+                'available_progress': available_progress,
+                'reserved_progress': reserved_progress,
+                'lot': pk,
+                'form': form,
+            },
+        )
 
 
 @login_required()
@@ -288,17 +303,17 @@ def get_available_space_total():
     return Slot.objects.filter(status='A').count()
 
 
-class AdminView(TemplateView):
-    template_name = 'frontend/admin.html'
-
-
 @login_required
 def quote(request):
     form = TopUpForm()
     user = get_object_or_404(User, username=request.user.username)
     driver = get_object_or_404(Driver, user=request.user.id)
 
-    requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
+    requested = (
+        Request.objects.all()
+        .filter(driver_id=driver, status=Request.CurrentStatus.CREATED)
+        .first()
+    )
 
     duration = requested.departure - requested.arrival
 
@@ -309,53 +324,18 @@ def quote(request):
         'user': user,
         'parking_charge': parking_charge,
         'current_credit': driver.credit,
-        'form': form
+        'form': form,
     }
     if request.method == 'POST':
-
         form = TopUpForm(request.POST)
         driver = get_object_or_404(Driver, user=request.user.id)
         if form.is_valid():
             payment = Payment.objects.create(
-                driver=driver,
-                amount=form.cleaned_data['amount']
+                driver=driver, amount=form.cleaned_data['amount']
             )
             driver.credit += payment.amount
             driver.save()
-            messages.success(request, "Payment was successful!")
-            payment.save()
-        return redirect('/quote')
-    else:
-        form = TopUpForm()
-    return render(request, 'frontend/quote.html', context)
-
-
-def topup(request):
-    requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
-
-    duration = requested.departure - requested.arrival
-
-    parking_charge = calculate_parking_charge(duration)
-
-    context = {
-        'assigned_slot': requested.slot.lot.name,
-        'user': user,
-        'parking_charge': parking_charge,
-        'current_credit': driver.credit,
-        'form': form
-    }
-
-    if request.method == 'POST':
-
-        form = TopUpForm(request.POST)
-        driver = get_object_or_404(Driver, user=request.user.id)
-        if form.is_valid():
-            payment = Payment.objects.create(
-                driver=driver,
-                amount=form.cleaned_data['amount']
-            )
-            driver.credit += payment.amount
-            driver.save()
+            messages.success(request, 'Payment was successful!')
             payment.save()
         return redirect('/quote')
     else:
@@ -370,18 +350,22 @@ def calculate_parking_charge(duration):
 
 def make_quote(request):
     driver = get_object_or_404(Driver, user=request.user.id)
-    requested = Request.objects.all().filter(driver_id=driver, status=Request.CurrentStatus.CREATED).first()
+    requested = (
+        Request.objects.all()
+        .filter(driver_id=driver, status=Request.CurrentStatus.CREATED)
+        .first()
+    )
     requested.status = requested.CurrentStatus.PENDING
     duration = requested.departure - requested.arrival
     parking_charge = calculate_parking_charge(duration)
     driver.credit -= parking_charge
-    messages.success(request, "Request has been made!")
+    messages.success(request, 'Request has been made!')
     driver.save()
     requested.save()
     return redirect('index')
 
 
-@require_http_methods(["GET", "POST"])
+@require_http_methods(['GET', 'POST'])
 @login_required()
 def profile(request: HttpRequest):
     user = request.user
@@ -428,42 +412,26 @@ def admin_dashboard(request):
     total_space = get_total_space_total()
     lots = ParkingLot.objects.all()
     unavailable_spaces = total_space - (occupied_space + available_space)
-    requests = Request.objects.filter(status=Request.CurrentStatus.PENDING).order_by('timestamp')
+    requests = Request.objects.filter(
+        status=Request.CurrentStatus.PENDING
+    ).order_by('timestamp')
     if available_space > 0:
-        available_space_percentage = (((available_space) / total_space) * 100)
+        available_space_percentage = ((available_space) / total_space) * 100
     else:
         available_space_percentage = 0
 
-    return render(request,
-                  "frontend/admin/admin_dashboard.html", {
-                      "drivers": drivers, "total_space": total_space,
-                      "occupied_space": occupied_space,
-                      "available_space": available_space,
-                      "available_percentage": available_space_percentage,
-                      "slots": parking_spaces,
-                      "unavailable": unavailable_spaces,
-                      "requests": requests,
-                      "lots": lots
-                  })
-
-
-@login_required()
-def admin_request(request):
-    return render(request, 'frontend/admin/admin_request.html')
-
-
-class TestView(FormView):
-    form_class = ParkingLotForm
-    template_name = 'frontend/foo.html'
-
-
-def idk(request):
-    return render(request, "frontend/foo.html", {
-        "form": ParkingLotForm(),
-        "form2": ParkingLotForm()
-    })
-
-
-def idkp2(request):
-    messages.add_message(request, messages.INFO, 'Hello world.')
-    return HttpResponse("What")
+    return render(
+        request,
+        'frontend/admin.html',
+        {
+            'drivers': drivers,
+            'total_space': total_space,
+            'occupied_space': occupied_space,
+            'available_space': available_space,
+            'available_percentage': available_space_percentage,
+            'slots': parking_spaces,
+            'unavailable': unavailable_spaces,
+            'requests': requests,
+            'lots': lots,
+        },
+    )

@@ -99,7 +99,7 @@ class Slot(models.Model):
     )
 
     def __str__(self):
-        return f"{self.lot} - {self.number}"
+        return f'{self.lot} - {self.number}'
 
 
 class Request(models.Model):
@@ -118,5 +118,6 @@ class Request(models.Model):
     status = models.CharField(
         max_length=1, choices=CurrentStatus, default=CurrentStatus.CREATED
     )
+
     def __str__(self):
-        return f"{self.driver_id} - ({self.slot}) - {self.status}"
+        return f'{self.driver_id} - ({self.slot}) - {self.status}'

@@ -11,18 +11,14 @@ urlpatterns = [
     path('message/', views.messaging, name='msg'),
     path('quote/', views.quote, name='quote'),
     path('makequote/', views.make_quote, name='make_quote'),
-
     path('message/<int:sender>', views.messaging, name='msg_ctx'),
     path('reserve/', views.ReserveView.as_view(), name='reserve'),
     path('lot/<int:pk>', views.lot_view, name='lot'),
-    path('womp/', views.idkp2),
     path(
         'history/',
         views.request_and_payment,
         name='request_and_payment_history',
     ),
-    path('admin/', views.AdminView.as_view(), name='admin'),
-    path('testing/', views.idk),
     # Chaya Abomination
     path('profile/', views.profile, name='profile'),
     path('change_password/', views.change_password, name='change_password'),
@@ -54,5 +50,4 @@ urlpatterns = [
         ),
         name='password_reset_complete',
     ),
-    path('admin_requests/', views.admin_request, name='request'),
 ]

@@ -103,18 +103,18 @@ DATABASES = {
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-        {
-            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-        },
-        {
-            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-        },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 
@@ -163,4 +163,4 @@ EMAIL_SUBJECT_PREFIX = '[UEAParkingSystem]'
 DEFAULT_FROM_EMAIL = 'UEA Parking Management System Team 209'
 EMAIL_SUBJECT = EMAIL_SUBJECT_PREFIX + 'Please reset your password'
 # 5-min link
-PASSWORD_RESET_TIMEOUT = 60*5
+PASSWORD_RESET_TIMEOUT = 60 * 5

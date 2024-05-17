@@ -1,81 +1,81 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'frontend/message_load.js' %}" defer></script>
-<title> Messages </title>
+    <script src="{% static 'frontend/message_load.js' %}" defer></script>
+    <title> Messages </title>
 {% endblock %}
 {% block body %}
-{% include 'frontend/nav.html' %}
-<main class="h-auto place-items-center grid">
-  <div
-    class="flex place-content-center w-2/3 h-3/4 p-4 border-4 border-accent rounded-3xl"
-  >
-    <div
-      class="card flex content-end h-full w-1/4 overflow-x-hidden overflow-y-auto border-none"
-    >
-      <div
-        class="card-title flex justify-center m-4 gap-2 border-neutral bg-base-100 underline"
-      >
-        Inbox
-      </div>
-      {% for Sender in Senders %}
-      {% if Sender.sender != request.user %}
-      <a href="{% url 'msg_ctx' Sender.sender.id %}">
+    {% include 'frontend/nav.html' %}
+    <main class="h-auto place-items-center grid">
         <div
-          class="card-body h-auto w-full hover:bg-base-200 bg-base-100 border-2 border-neutral"
+                class="flex place-content-center w-2/3 h-3/4 p-4 border-4 border-accent rounded-3xl"
         >
-          {{ Sender.sender }}
-        </div>
-      </a>
-      {% endif %}
-      {% endfor %}
-    </div>
+            <div
+                    class="card flex content-end h-full w-1/4 overflow-x-hidden overflow-y-auto border-none"
+            >
+                <div
+                        class="card-title flex justify-center m-4 gap-2 border-neutral bg-base-100 underline"
+                >
+                    Inbox
+                </div>
+                {% for Sender in Senders %}
+                    {% if Sender.sender != request.user %}
+                        <a href="{% url 'msg_ctx' Sender.sender.id %}">
+                            <div
+                                    class="card-body h-auto w-full hover:bg-base-200 bg-base-100 border-2 border-neutral"
+                            >
+                                {{ Sender.sender }}
+                            </div>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-    <div class="divider divider-horizontal divider-secondary"></div>
-    {# Message box for clicked user#}
-  <div
-    class="card h-full w-full bg-base-200 text-neutral-content"
-  >
-      <div class="card-body h-full items-center text-center">
-        <h2 class="card-title">{{ Sender }}</h2>
-        <div class="divider divider-primary">History</div>
-        <div id="msgBox" class="h-[40vh] w-full overflow-y-scroll">
-          {% for Message in Messages %}
-          {% if Message.sender == request.user or Message.receiver == request.user%}
-          {% if Message.sender.is_superuser %}
-          <div class="chat chat-end">
-            <div class="chat-header">
-              Me
-              <time class="text-xs opacity-50">{{Message.timestamp }}</time>
+            <div class="divider divider-horizontal divider-secondary"></div>
+            {# Message box for clicked user#}
+            <div
+                    class="card h-full w-full bg-base-200 text-neutral-content"
+            >
+                <div class="card-body h-full items-center text-center">
+                    <h2 class="card-title">{{ Sender }}</h2>
+                    <div class="divider divider-primary">History</div>
+                    <div id="msgBox" class="h-[40vh] w-full overflow-y-scroll">
+                        {% for Message in Messages %}
+                            {% if Message.sender == request.user or Message.receiver == request.user %}
+                                {% if Message.sender.is_superuser %}
+                                    <div class="chat chat-end">
+                                        <div class="chat-header">
+                                            Me
+                                            <time class="text-xs opacity-50">{{ Message.timestamp }}</time>
+                                        </div>
+                                        <div class="chat-bubble break-all">{{ Message.message_text }} </div>
+                                    </div>
+                                {% else %}
+                                    <div class="chat chat-start">
+                                        <div class="chat-header">
+                                            {{ Message.sender }}
+                                            <time class="text-xs opacity-50">{{ Message.timestamp }}</time>
+                                        </div>
+                                        <div class="chat-bubble break-all">{{ Message.message_text }}</div>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {# FORM TO SEND MESSAGES BACK#}
+                    <form
+                            action=""
+                            method="post"
+                            class="card-actions grid place-items-center glass p-2 rounded-3xl h-1/5"
+                            id="msgForm"
+                    >
+                        {% csrf_token %}
+                        {{ form.message_text }}
+                        <button id="submit" class="btn text-right btn-primary">submit</button>
+                    </form>
+                </div>
             </div>
-            <div class="chat-bubble break-all">{{ Message.message_text }} </div>
-          </div>
-          {% else %}
-          <div class="chat chat-start">
-            <div class="chat-header">
-              {{ Message.sender }}
-              <time class="text-xs opacity-50">{{Message.timestamp }}</time>
-            </div>
-            <div class="chat-bubble break-all">{{ Message.message_text }}</div>
-          </div>
-          {% endif %}
-          {% endif %}
-          {% endfor %}
         </div>
-        {# FORM TO SEND MESSAGES BACK#}
-        <form
-          action=""
-          method="post"
-          class="card-actions grid place-items-center glass p-2 rounded-3xl h-1/5"
-          id="msgForm"
-        >
-          {% csrf_token %}
-          {{ form.message_text }}
-          <button id="submit" class="btn text-right btn-primary">submit</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</main>
-{% include 'frontend/footer.html' %}
+    </main>
+    {% include 'frontend/footer.html' %}
 {% endblock %}

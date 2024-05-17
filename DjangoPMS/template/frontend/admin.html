@@ -1,39 +1,310 @@
 {% extends 'frontend/base.html' %}
+{% load tz_detect %}
 {% load static %}
-
 {% block head %}
-    <title>Admin</title>
-    <link rel="stylesheet" href="{% static 'frontend/admin.css' %}"/>
+    <title>Admin Home | UEA PMS</title>
+    <link rel="stylesheet" href={% static 'frontend/home.css' %}>
 {% endblock %}
 
 {% block body %}
-    {% include "frontend/nav.html" %}
-    <main>
-       <div class="radial-progress bg-primary text-primary-content border-4 border-primary" style="--value:50;" role="progressbar">
-           50 spaces taken
-
-       </div>
-
-        <div class="adminDropdown">
-            <div tabindex="0" role="button" class="btn m-1">Parking</div>
-            <div tabindex="0"
-                 class="adminDropdown-content z-[1] card card-compact p-2 shadow bg-primary text-primary-content">
-                <div class="card-body">
-                    <h3 class="card-title">Card title!</h3>
-                    <p>you can use any element as a dropdown.</p>
+    {% include 'frontend/nav.html' %}
+    <main class="p-20 my-30 mx-150">
+        <section>
+            <div class="flex flex-col w-full lg:flex-row">
+                <div class="grid w-96 h-96 card bg-base-300 rounded-box place-items-center">
+                    <div class="radial-progress bg-secondary text-primary-content border-4 border-secondary"
+                         style="--value:{{ available_percentage }};--size:15rem;"
+                         role="progressbar">{{ available_space }} spaces<span>available</span>
+                    </div>
+                </div>
+                <div class="divider lg:divider-horizontal"></div>
+                <div class="grid flex-grow h-96 card bg-base-300 rounded-box place-items-center">
+                    <ul class="menu bg-base-300 w-fit text-center">
+                        <li>
+                            <p class="float-center text-5xl font-bold">UEA car park</p>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ total_space }} Total Spaces {# total spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ occupied_space }} occupied {# occupied spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ available_space }} available {# available spaces #}
+                            </a>
+                        </li>
+                        <li>
+                            <a class="text-xl">
+                                {{ unavailable }} blocked / not be in used {# blocked #}
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
+        </section>
 
-            <div tabindex="0" role="button" class="btn m-1">Driver</div>
-            <div tabindex="0"
-                 class="adminDropdown-content z-[1] card card-compact p-2 shadow bg-primary text-primary-content">
-                <div class="card-body">
-                    <h3 class="card-title">Card title!</h3>
-                    <p>you can use any element as a dropdown.</p>
+        <!-- here is for the dashboard -->
+        <section class="mt-20">
+            <div role="tablist" class="tabs tabs-boxed tabs-lg bg-base-100 tabs-secondary">
+                <!--Parking tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Slot"/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6 w-full">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                        <button class="btn btn-outline btn-primary ml-10" onclick="add_slot_modal.showModal()">Add
+                            Slots
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>Parking Space</th>
+                                <th></th>
+                                <th>Parking Lot</th>
+                                <th>Status</th>
+                                <th>Driver ID</th>
+                                <th></th>
+                                <th>Manage</th>
+                                <th></th>
+                                <th></th>
+
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for slot in slots %}
+                                <tr>
+                                    <th>
+                                        <label>
+                                            <input type="checkbox" class="checkbox"/>
+                                        </label>
+                                    </th>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> #{{ slot.id }} </div>
+                                            </div>
+                                        </div>
+                                    <th>
+                                    </th>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.lot }} </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.status }} </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="wtf flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold"> {{ slot.driver }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:free' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-success">Free</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:block' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-warning">Block</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:remove' slot.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-info">Remove</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <!--Driver tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Driver" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for driver in drivers %}
+                                <tr>
+                                <th>
+                                    <label>
+                                        <input type="checkbox" class="checkbox checkbox-primary"/>
+                                    </label>
+                                </th>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ driver.id }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold"> {{ driver.user.username }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="flex items-center gap-3">
+                                        <div>
+                                            <div class="font-bold">{{ driver.user.email }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="{% url 'msg_ctx' driver.user.id %}">
+                                        <div class="badge badge-md badge-success w-32">Message</div>
+                                    </a>
+                                </td>
+                                <td>
+                                    {% if driver.banned %}
+                                        <form action={% url 'api:unban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-info badge-md">Unban</button>
+                                        </form>
+                                    {% else %}
+                                        <form action={% url 'api:ban' driver.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error badge-md">Ban</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+
+                            {% endfor %}
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!--Request tab-->
+                <input type="radio" name="my_tabs_2" role="tab" class="tab text-3xl" aria-label="Request" checked/>
+                <div role="tabpanel" class="tab-content bg-base-300 border-primary rounded-box p-6">
+                    <div>
+                        <input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="table table-zebra">
+                            <!-- head -->
+                            <thead class="text-lg">
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Assigned Space</th>
+                                <th>Driver username</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!-- row 1 -->
+                            {% for request in requests %}
+                                <tr>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.slot }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="flex items-center gap-3">
+                                            <div>
+                                                <div class="font-bold">{{ request.driver_id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:accept' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-success w-32">Approve</button>
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <form action={% url 'api:reject' request.id %} method="POST">
+                                            {% csrf_token %}
+                                            <button class="badge badge-error w-32">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <footer>
+        {% include 'frontend/footer.html' %}
+    </footer>
+    <dialog id="add_slot_modal" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Add Slots</h3>
+            <form>
+                <input type="number" class="input input-bordered w-full max-w-xs"/>
+                <select class="select w-full max-w-xs">
+                    <option disabled selected>Choose Parking Lot</option>
+                    {% for lot in lots %}
+                        <option>{{ lot }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn">Create</button>
+            </form>
+            <div class="modal-action">
+                <form method="dialog">
+
+                    <!-- if there is a button in form, it will close the modal -->
+                    <button class="btn">Close</button>
+                </form>
             </div>
         </div>
-
-    </main>
-    {% include "frontend/footer.html" %}
+    </dialog>
 {% endblock %}

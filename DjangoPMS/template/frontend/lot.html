@@ -2,76 +2,74 @@
     {% include 'frontend/nav.html' %}
     <h1 class="text-xl text-center p-4"> {{ lot }} </h1>
 
-<div class="flex  flex-col w-auto border-opacity-50">
-  <div class="flex card overflow-auto m-auto w-3/4 bg-base-300 rounded-box flex-row p-6">
-    <img
-      class="artboard artboard-horizontal phone-2 rounded-xl border-8 border-primary"
-      src="https://s0.geograph.org.uk/geophotos/03/80/86/3808660_a63e6b9d.jpg"
-    />
-    <div class="divider divider-horizontal"></div>
-    <div class="flex  flex-col flex-grow justify-center space-y-16">
-      <div class="flex gap-4">
-        <div class="badge badge-primary">Total   </div>
-        <progress
-          class="progress progress-error w-1/2 h-auto"
-          value="100"
-          max="100"
-        ></progress>
-        <div class="badge badge-primary">{{ total }}</div>
-      </div>
-      <div class="flex gap-4">
-        <div class="badge badge-primary">Reserved</div>
-        <progress
-          class="progress progress-error w-1/2 h-auto"
-          value="{{ reserved_progress }}"
-          max="100"
-        ></progress>
-        <div class="badge badge-primary">{{ reserved }}</div>
-      </div>
-      <div class="flex gap-4">
-        <div class="badge badge-primary">Available</div>
-        <progress
-          class="progress progress-error w-1/2 h-auto"
-          value="{{ available_progress }}"
-          max="100"
-        ></progress>
-        <div class="badge badge-primary">{{ available }}</div>
-      </div>
+    <div class="flex  flex-col w-auto border-opacity-50">
+        <div class="flex card overflow-auto m-auto w-3/4 bg-base-300 rounded-box flex-row p-6">
+            <img
+                    class="artboard artboard-horizontal phone-2 rounded-xl border-8 border-primary"
+                    src="https://s0.geograph.org.uk/geophotos/03/80/86/3808660_a63e6b9d.jpg"
+            />
+            <div class="divider divider-horizontal"></div>
+            <div class="flex  flex-col flex-grow justify-center space-y-16">
+                <div class="flex gap-4">
+                    <div class="badge badge-primary">Total</div>
+                    <progress
+                            class="progress progress-error w-1/2 h-auto"
+                            value="100"
+                            max="100"
+                    ></progress>
+                    <div class="badge badge-primary">{{ total }}</div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="badge badge-primary">Reserved</div>
+                    <progress
+                            class="progress progress-error w-1/2 h-auto"
+                            value="{{ reserved_progress }}"
+                            max="100"
+                    ></progress>
+                    <div class="badge badge-primary">{{ reserved }}</div>
+                </div>
+                <div class="flex gap-4">
+                    <div class="badge badge-primary">Available</div>
+                    <progress
+                            class="progress progress-error w-1/2 h-auto"
+                            value="{{ available_progress }}"
+                            max="100"
+                    ></progress>
+                    <div class="badge badge-primary">{{ available }}</div>
+                </div>
 
-         <form method="POST">
-        <p class="font-medium m-1"> Make Booking: </p>
-          {%   csrf_token %}
-         <label class="input w-fit input-bordered flex items-center gap-2 m-1">
-             Date from: {{ form.date_from }}
+                <form method="POST">
+                    <p class="font-medium m-1"> Make Booking: </p>
+                    {% csrf_token %}
+                    <label class="input w-fit input-bordered flex items-center gap-2 m-1">
+                        Date from: {{ form.date_from }}
 
-        </label>
+                    </label>
 
-        <label class="input w-fit input-bordered flex items-center gap-2 m-1">
+                    <label class="input w-fit input-bordered flex items-center gap-2 m-1">
 
-             Time from:
-             {{ form.time_from }}
-        </label>
+                        Time from:
+                        {{ form.time_from }}
+                    </label>
 
-           <label class="input w-fit input-bordered flex items-center gap-2 m-1">
-             Date to: {{ form.date_to }}
+                    <label class="input w-fit input-bordered flex items-center gap-2 m-1">
+                        Date to: {{ form.date_to }}
 
-        </label>
+                    </label>
 
-         <label class="input w-fit input-bordered flex items-center gap-2 m-1">
-             Time to: {{ form.time_to }}
+                    <label class="input w-fit input-bordered flex items-center gap-2 m-1">
+                        Time to: {{ form.time_to }}
 
-        </label>
+                    </label>
 
-        <button class="btn m-1"> submit </button>
-         </form>
+                    <button class="btn m-1"> submit</button>
+                </form>
 
 
-  </div>
+            </div>
+        </div>
+        <div class="p-7">
+        </div>
     </div>
-<div class="p-7">
-    </div>
-  </div>
-  <div class="divider"></div>
-
-    </div>
-{% include 'frontend/footer.html' %} {% endblock %}
+    <div class="divider"></div>
+    {% include 'frontend/footer.html' %} {% endblock %}

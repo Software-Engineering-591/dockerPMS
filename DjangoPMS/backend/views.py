@@ -1,12 +1,10 @@
-from random import randint
-
 from django.contrib import auth
 from django.shortcuts import redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import HttpResponseForbidden
-from .models import Driver, Slot, Request, ParkingLot
+from .models import Driver, Slot, Request
 
 
 # Create your views here.
@@ -14,9 +12,10 @@ from .models import Driver, Slot, Request, ParkingLot
 
 @require_POST
 def logout(request):
-    messages.success(request, "You have been logged out!")
+    messages.success(request, 'You have been logged out!')
     auth.logout(request)
     return redirect('index')
+
 
 @require_POST
 def ban(request, pk):
@@ -24,9 +23,11 @@ def ban(request, pk):
         driver = get_object_or_404(Driver, pk=pk)
         driver.banned = True
         driver.save()
-        return redirect("index")
+        return redirect('index')
     else:
-        return HttpResponseForbidden(request, "You are not allowed")
+        return HttpResponseForbidden(request, 'You are not allowed')
+
+
 @require_POST
 @login_required
 def unban(request, pk):
@@ -34,8 +35,9 @@ def unban(request, pk):
         driver = get_object_or_404(Driver, pk=pk)
         driver.banned = False
         driver.save()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
+
 
 @require_POST
 @login_required
@@ -43,8 +45,8 @@ def remove(request, slot_pk):
     if hasattr(request.user, 'admin'):
         slot = get_object_or_404(Slot, pk=slot_pk)
         slot.delete()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
 
 
 @require_POST
@@ -55,8 +57,9 @@ def block(request, slot_pk):
         slot.status = slot.Status.DISABLED
         slot.driver = None
         slot.save()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
+
 
 @require_POST
 @login_required
@@ -66,8 +69,9 @@ def free(request, slot_pk):
         slot.status = slot.Status.AVAILABLE
         slot.driver = None
         slot.save()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
+
 
 @require_POST
 @login_required
@@ -80,8 +84,9 @@ def accept(request, request_pk):
         slot.status = Slot.Status.RESERVED
         slot.save()
         requested.save()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
+
 
 @require_POST
 @login_required
@@ -90,5 +95,5 @@ def reject(request, request_pk):
         requested = get_object_or_404(Request, pk=request_pk)
         requested.status = Request.CurrentStatus.REJECTED
         requested.save()
-        return redirect("index")
-    return HttpResponseForbidden(request, "You are not allowed")
+        return redirect('index')
+    return HttpResponseForbidden(request, 'You are not allowed')
