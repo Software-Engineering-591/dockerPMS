@@ -2,14 +2,15 @@
 {% extends 'frontend/base.html' %}
 <html lang="en">
 {% block head %}
-<head>
-    <meta charset="UTF-8">
-    <title>History</title>
-</head>
+    <head>
+        <meta charset="UTF-8">
+        <title>History</title>
+    </head>
     <script>
         var available_credits = {{ current_credit }};
         var cost = {{ parking_charge }};
-        function makeQuote(){
+
+        function makeQuote() {
             if (available_credits < cost) {
                 document.getElementById("makequote").disabled = true;
             } else {
@@ -20,95 +21,89 @@
 {% endblock %}
 
 {% block body %}
-{% include "frontend/nav.html" %}
-<body class="flex-col h-screen w-screen">
+    {% include "frontend/nav.html" %}
+    <body class="flex-col h-screen w-screen">
 
 
-<div class="flex items-center justify-center card h-4/5 w-full  overflow-y-hidden ">
-<div class="flex justify-center w-3/5 h-fit items-center border-4 border-accent rounded-3xl p-4">
-    <div class="flex justify-center card h-full w-full">
-    <div class="card-title h-auto w-full text-center p-2"> Contact Details </div>
-    <div class="divider divider-vertical divider-secondary"></div>
+    <div class="flex items-center justify-center card h-4/5 w-full  overflow-y-hidden ">
+        <div class="flex justify-center w-3/5 h-fit items-center border-4 border-accent rounded-3xl p-4">
+            <div class="flex justify-center card h-full w-full">
+                <div class="card-title h-auto w-full text-center p-2"> Contact Details</div>
+                <div class="divider divider-vertical divider-secondary"></div>
 
-        <div class="grid h-auto w-full rounded-box">
-            <div class="h-full w-full">
-                    <div id="contact-details-section" class="h-full w-full ">
+                <div class="grid h-auto w-full rounded-box">
+                    <div class="h-full w-full">
+                        <div id="contact-details-section" class="h-full w-full ">
 
-                    <div class="card w-full h-fit bg-base-100 shadow-xl">
-                      <div class="card-body w-fit h-auto">
-                        <h3 class="card-title">Username:</h3>
-                        <p>{{ user.username }}</p>
+                            <div class="card w-full h-fit bg-base-100 shadow-xl">
+                                <div class="card-body w-fit h-auto">
+                                    <h3 class="card-title">Username:</h3>
+                                    <p>{{ user.username }}</p>
 
 
-                    <h3 class="card-title">First Name:</h3>
-                    <p>{{ user.first_name }}</p>
-                     <h3 class="card-title">Last Name:</h3>
-                    <p>{{ user.last_name }}</p>
-                     <h3 class="card-title">Email:</h3>
-                    <p> {{ user.email }}</p>
-                    <br>
-                    <h3 class="card-title">Assigned Lot:</h3>
-                    <p> {{ assigned_slot }} </p>
-                    <h3 class="card-title">Current credit:</h3>
-                    <p> {{ current_credit }} credits </p>
-                    <br>
-                      </div>
+                                    <h3 class="card-title">First Name:</h3>
+                                    <p>{{ user.first_name }}</p>
+                                    <h3 class="card-title">Last Name:</h3>
+                                    <p>{{ user.last_name }}</p>
+                                    <h3 class="card-title">Email:</h3>
+                                    <p> {{ user.email }}</p>
+                                    <br>
+                                    <h3 class="card-title">Assigned Lot:</h3>
+                                    <p> {{ assigned_slot }} </p>
+                                    <h3 class="card-title">Current credit:</h3>
+                                    <p> {{ current_credit }} credits </p>
+                                    <br>
+                                </div>
+                            </div>
+
+                        </div>
                     </div>
+                </div>
+
 
             </div>
+
+            <div class="divider divider-horizontal divider-secondary"></div>
+
+            <div class="card h-full w-1/4 overflow-y-auto">
+                <div class="card-title h-auto w-full text-center p-2">Payment</div>
+                <div class="divider divider-vertical divider-secondary"></div>
+
+
+                <div class="flex flex-column card h-auto w-auto gap-32">
+
+                    <div class="payment-content-section">
+                        <p class="align-text-bottom"><b>Credits due: {{ parking_charge }}</b></p>
                     </div>
-        </div>
+                    <div class="stats bg-primary text-primary-content">
+
+                        <div class="stat">
+                            <div class="stat-title"><b>Account balance</b></div>
+                            <div class="stat-value">{{ current_credit }}</div>
+                            <div class="stat-actions">
+                                <button class=" btn btn-sm btn-success"
+                                        onclick="document.getElementById('topup_modal').showModal()">Add funds
+                                </button>
 
 
-  </div>
+                            </div>
 
-      <div class="divider divider-horizontal divider-secondary"></div>
+                        </div>
 
-  <div class="card h-full w-1/4 overflow-y-auto">
-  <div class="card-title h-auto w-full text-center p-2">Payment </div>
-  <div class="divider divider-vertical divider-secondary"></div>
-
-
-         <div class="flex flex-column card h-auto w-auto gap-32">
-
-            <div class="payment-content-section">
-                <p class="align-text-bottom"><b>Credits due:  {{ parking_charge }}</b></p>
+                    </div>
+                    <button class="flex justify-end btn card-body h-auto w-auto btn-primary " onclick="makeQuote()">
+                        Continue
+                    </button>
+                </div>
             </div>
-             <div class="stats bg-primary text-primary-content">
-
-           <div class="stat">
-              <div class="stat-title"><b>Account balance</b></div>
-             <div class="stat-value">{{current_credit }}</div>
-             <div class="stat-actions">
-             <button class=" btn btn-sm btn-success"  onclick="document.getElementById('topup_modal').showModal()">Add funds</button>
-
-
-             </div>
-
-           </div>
-
-            </div>
-              <button class="flex justify-end btn card-body h-auto w-auto btn-primary " onclick="makeQuote()">Continue</button>
-         </div>
-             </div>
-
-
-
 
 
         </div>
     </div>
 
-        </div>
-
-
-</div>
-</div>
-</div>
-
-</body>
-{% include 'frontend/footer.html' %}
-{% include "frontend/topup.html" %}
+    </body>
+    {% include 'frontend/footer.html' %}
+    {% include "frontend/topup.html" %}
 {% endblock %}
 
 </html>

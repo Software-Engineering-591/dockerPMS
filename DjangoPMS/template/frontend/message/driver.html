@@ -1,56 +1,56 @@
 {% extends 'frontend/base.html' %}
 {% load static %}
 {% block head %}
-<script src="{% static 'frontend/message_load.js' %}" defer></script>
-<title> Messages </title>
+    <script src="{% static 'frontend/message_load.js' %}" defer></script>
+    <title> Messages </title>
 {% endblock %}
 {% block body %}
-{% include "frontend/nav.html" %}
+    {% include "frontend/nav.html" %}
 
-<main class="h-auto place-items-center grid">
-  <div
-    class="card h-3/4 w-1/2 bg-base-200 text-neutral-content border-accent border-4"
-  >
-    <div class="card-body h-full items-center text-center">
-      <h2 class="card-title">Admin Messages</h2>
-      <div class="divider divider-primary">History</div>
-      <div id="msgBox" class="h-[40vh] w-full overflow-y-scroll">
-        {% for Message in Messages %}
-        {% if Message.sender == request.user or Message.receiver == request.user%}
-        {% if Message.sender.is_superuser %}
-        <div class="chat chat-start">
-          <div class="chat-header">
-            Administrator
-            <time class="text-xs opacity-50">{{Message.timestamp }}</time>
-          </div>
-          <div class="chat-bubble break-all">{{ Message.message_text }}</div>
+    <main class="h-auto place-items-center grid">
+        <div
+                class="card h-3/4 w-1/2 bg-base-200 text-neutral-content border-accent border-4"
+        >
+            <div class="card-body h-full items-center text-center">
+                <h2 class="card-title">Admin Messages</h2>
+                <div class="divider divider-primary">History</div>
+                <div id="msgBox" class="h-[40vh] w-full overflow-y-scroll">
+                    {% for Message in Messages %}
+                        {% if Message.sender == request.user or Message.receiver == request.user %}
+                            {% if Message.sender.is_superuser %}
+                                <div class="chat chat-start">
+                                    <div class="chat-header">
+                                        Administrator
+                                        <time class="text-xs opacity-50">{{ Message.timestamp }}</time>
+                                    </div>
+                                    <div class="chat-bubble break-all">{{ Message.message_text }}</div>
+                                </div>
+                            {% else %}
+                                <div class="chat chat-end">
+                                    <div class="chat-header">
+                                        Me
+                                        <time class="text-xs opacity-50">{{ Message.timestamp }}</time>
+                                    </div>
+                                    <div class="chat-bubble break-all">{{ Message.message_text }}</div>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <form
+                        action=""
+                        method="post"
+                        class="card-actions grid place-items-center glass p-2 rounded-3xl h-1/5"
+                        id="msgForm"
+                >
+                    {% csrf_token %}
+                    {{ form.message_text }}
+                    <button id="submit" class="btn text-right btn-primary">submit</button>
+                </form>
+            </div>
         </div>
-        {% else %}
-        <div class="chat chat-end">
-          <div class="chat-header">
-            Me
-            <time class="text-xs opacity-50">{{Message.timestamp }}</time>
-          </div>
-          <div class="chat-bubble break-all">{{ Message.message_text }}</div>
-        </div>
-        {% endif %}
-        {% endif %}
-        {% endfor %}
-      </div>
-      <form
-        action=""
-        method="post"
-        class="card-actions grid place-items-center glass p-2 rounded-3xl h-1/5"
-        id="msgForm"
-      >
-        {% csrf_token %}
-        {{ form.message_text }}
-        <button id="submit" class="btn text-right btn-primary">submit</button>
-      </form>
-    </div>
-  </div>
-</main>
+    </main>
 
-{% include "frontend/footer.html" %}
+    {% include "frontend/footer.html" %}
 {% endblock %}
 

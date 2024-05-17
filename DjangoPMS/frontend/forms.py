@@ -48,7 +48,6 @@ class QuoteForm(forms.Form):
         date_to = self.cleaned_data.get('date_to')
         time_to = self.cleaned_data.get('time_to')
         if date_from and date_to:
-
             if date_to < date_from:
                 raise ValidationError(
                     'A departure date must be after the arrival date'
@@ -71,31 +70,43 @@ class UserProfileForm(forms.ModelForm):
 
 class TopUpForm(forms.Form):
     amount = forms.IntegerField(
-        max_value = 10000,
-        widget = forms.NumberInput(attrs={'id' : 'credits', 'class': 'input input-bordered w-full'})
+        max_value=10000,
+        widget=forms.NumberInput(
+            attrs={'id': 'credits', 'class': 'input input-bordered w-full'}
+        ),
     )
     card_number = forms.IntegerField(
         max_value=9999999999999999,
         min_value=0,
-        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
+        widget=forms.NumberInput(
+            attrs={'class': 'input input-bordered w-full'}
+        ),
     )
     card_name = forms.CharField(
         max_length=100,
-        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'})
+        widget=forms.TextInput(attrs={'class': 'input input-bordered w-full'}),
     )
     expiry = forms.DateField(
-        widget=forms.DateInput(attrs={'class': 'input input-bordered w-full', 'placeholder': 'MM/YY', 'type' : 'month'}),
-        input_formats=['%Y-%m']
+        widget=forms.DateInput(
+            attrs={
+                'class': 'input input-bordered w-full',
+                'placeholder': 'MM/YY',
+                'type': 'month',
+            }
+        ),
+        input_formats=['%Y-%m'],
     )
     cvc = forms.IntegerField(
-        max_value= 999,
-        widget=forms.NumberInput(attrs={'class': 'input input-bordered w-full'})
+        max_value=999,
+        widget=forms.NumberInput(
+            attrs={'class': 'input input-bordered w-full'}
+        ),
     )
 
     def clean_expiry(self):
         expiry = self.cleaned_data.get('expiry')
         if expiry and expiry < datetime.date.today():
-            raise ValidationError("The expiry date has passed.")
+            raise ValidationError('The expiry date has passed.')
 
 
 class UserProfileForm(forms.ModelForm):

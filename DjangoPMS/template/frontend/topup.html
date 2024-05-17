@@ -1,50 +1,52 @@
-
 <dialog id="topup_modal" class="modal">
     {% load static %}
 
-  <div class="modal-box relative ">
-  <script src="{% static 'frontend/topup.js' %}" defer></script>
+    <div class="modal-box relative ">
+        <script src="{% static 'frontend/topup.js' %}" defer></script>
 
-    <button onclick="document.getElementById('topup_modal').close()" class="btn btn-sm btn-circle absolute right-2 top-2">✕</button>
-    <h3 class="font-bold text-lg">Top Up Your Account</h3>
-      <form method="post" action="{% url 'quote' %}" id="TopUpForm">
-    {% csrf_token %}
-    <div class="mt-4 mb-6">
-      <div class="flex justify-between">
+        <button onclick="document.getElementById('topup_modal').close()"
+                class="btn btn-sm btn-circle absolute right-2 top-2">✕
+        </button>
+        <h3 class="font-bold text-lg">Top Up Your Account</h3>
+        <form method="post" action="{% url 'quote' %}" id="TopUpForm">
+            {% csrf_token %}
+            <div class="mt-4 mb-6">
+                <div class="flex justify-between">
 
-          <label for="amount" class="font-semibold text-sm text-gray-600">Price (Credits):</label>
-             {{ form.amount }}
-      </div>
-      <!-- Add more costs if needed -->
-      <hr class="my-4">
-      <div class="flex justify-between">
-        <span class="font-semibold text-lg">Total to pay</span>
-          <span id="credit_tally" class="font-bold text-xl"> </span>
-      </div>
+                    <label for="amount" class="font-semibold text-sm text-gray-600">Price (Credits):</label>
+                    {{ form.amount }}
+                </div>
+                <!-- Add more costs if needed -->
+                <hr class="my-4">
+                <div class="flex justify-between">
+                    <span class="font-semibold text-lg">Total to pay</span>
+                    <span id="credit_tally" class="font-bold text-xl"> </span>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="card_number" class="block text-sm font-semibold text-gray-700 mb-2">Card
+                    number {{ form.card_number }}</label>
+
+            </div>
+
+            <div class="mb-4">
+                <label for="name_on_card" class="block text-sm font-semibold text-gray-700 mb-2">Name on card</label>
+                {{ form.card_name }}
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="expiry" class="block text-sm font-semibold text-gray-700 mb-2">Expiry date</label>
+                    {{ form.expiry }}
+                </div>
+                <div>
+                    <label for="cvc" class="block text-sm font-semibold text-gray-700 mb-2">Security code</label>
+                    {{ form.cvc }}
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-full mt-4">Pay now</button>
+        </form>
     </div>
-
-      <div class="mb-4">
-        <label for="card_number" class="block text-sm font-semibold text-gray-700 mb-2">Card number   {{ form.card_number }}</label>
-
-      </div>
-
-      <div class="mb-4">
-        <label for="name_on_card" class="block text-sm font-semibold text-gray-700 mb-2">Name on card</label>
-        {{ form.card_name }}
-      </div>
-
-      <div class="grid grid-cols-2 gap-4 mb-4">
-        <div>
-          <label for="expiry" class="block text-sm font-semibold text-gray-700 mb-2">Expiry date</label>
-            {{ form.expiry }}
-        </div>
-        <div>
-          <label for="cvc" class="block text-sm font-semibold text-gray-700 mb-2">Security code</label>
-            {{ form.cvc }}
-        </div>
-      </div>
-
-      <button type="submit" class="btn btn-primary w-full mt-4">Pay now</button>
-    </form>
-  </div>
 </dialog>
