@@ -2,23 +2,22 @@ import dataclasses
 import json
 import math
 from dataclasses import dataclass
-from datetime import timedelta, datetime
+from datetime import datetime
 
 from django.contrib import auth, messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.views.decorators.http import require_GET, require_http_methods
-from django.views.generic import FormView, TemplateView
+from django.views.generic import TemplateView
 from django.contrib.auth.decorators import login_required
 from backend.models import Driver, Message, ParkingLot, Slot, Payment
 from backend.models import Request, Admin
 from django.urls import reverse
-from django.contrib import messages
 
 from .forms import (
     QuoteForm,
@@ -26,7 +25,6 @@ from .forms import (
     TopUpForm,
     UserProfileForm,
     RegisterForm,
-    ParkingLotForm,
 )
 
 
