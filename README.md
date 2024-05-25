@@ -31,3 +31,5 @@ You need to make DjangoPMS/entrypoint.sh executable so run this command
 ```bash
 chmod +x DjangoPMS/entrypoint.sh
 ```
+
+This project has been completed. Friday 17th May 2024
